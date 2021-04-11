@@ -1,3 +1,7 @@
+# This Code follows closley the Matlab Code 2019. But it only uses the GMM/Meta Approach.
+# I can do a similar thing with the other 3 dimensions --> Translate the Matlab Code to R Code
+# for each dimension!
+
 Step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
   #Arguments:
   #X: point at which to evaluate cdf
@@ -450,6 +454,7 @@ EstimatingSelection <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames)
 
   Psi_grid=as.matrix(Psi_grid)
 
+  # Ab hier SelectionTableGMM
   sink(here("FiguresandTables","GMMEstimatesAllSelectionModel.tex"))
   columns_names<-c("$\\Theta$","$\\Sigma$")
   if (length(Psihat)==1) {
