@@ -5,64 +5,64 @@ VariationVarianceLogLikelihoodControls <- function(lambdabar, tauhat, betap, cut
   #%regressors for step function p
   TT=X/sigma;
 
-  
+
   # Tpowers
-  Tpowers=matrix (0,n,length(cutoffs)+1);
-  
+  Tpowers <-  zeros(n,length(cutoffs)+1);
+
   if (symmetric==1 ) {
 
     Tpowers[,1]=abs(TT)<cutoffs[1];
-  
-  
+
+
      if (length(cutoffs)>1) {
          for (m in (2:length(cutoffs))) {
               Tpowers[,m]=(abs(TT)<cutoffs[m])*(abs(TT)>=cutoffs[m-1]);
           }
-          Tpowers[,length(cutoffs)+1]=abs(TT)>=cutoffs[length(cutoffs)];  
+          Tpowers[,length(cutoffs)+1]=abs(TT)>=cutoffs[length(cutoffs)];
      }
     Tpowers[,length(cutoffs)+1]=abs(TT)>=cutoffs[length(cutoffs)];
     } else {
-           
-        Tpowers[,1]=TT<cutoffs[1];      
-           
-            
+
+        Tpowers[,1]=TT<cutoffs[1];
+
+
     if (length(cutoffs)>1) {
           for (m in 2:length(cutoffs)) {
-              Tpowers[,m]=(TT<cutoffs[m])*(TT>=cutoffs[m-1]);  
+              Tpowers[,m]=(TT<cutoffs[m])*(TT>=cutoffs[m-1]);
           }
-       
-         
-    }
-        Tpowers[,length(cutoffs)+1]=(TT)>=cutoffs[length(cutoffs)]; 
-  }
- 
-  
 
- 
-  
+
+    }
+        Tpowers[,length(cutoffs)+1]=(TT)>=cutoffs[length(cutoffs)];
+  }
+
+
+
+
+
 # Calculate objective function LLH
-  
+
 # Calculating components of the likelihood
 # vector of estimated publication probabilities
 
-phat <- matrix (0, dim(Tpowers)[1], 1);
+phat <- zeros(nrow(Tpowers), 1)
 
-for (m in (1:dim(Tpowers)[2])) {
-  Cmat <- matrix(rep(Tpowers[, m], dim(C)[2]), ncol=dim(C)[2], byrow = FALSE) * C  
-  phat <- phat + Cmat %*% betap[m]
-  
+for (m in (1:ncol(Tpowers))) {
+  Cmat <- repmat(Tpowers[ ,m],1,ncol(as.matrix(C)))*C
+  phat <- phat + Cmat * betap[m]
+
 }
 
 #vector of un-truncated likelihoods
 if (symmetric==1){
-  
+
   if (numerical_integration==1){
     #likelihoods calculated by numerical integration, gamma distribution
     g <- function(theta) {(0.5*dnorm((X-theta)/sigma)+0.5*dnorm((-X-theta)/sigma))/sigma*dgamma(theta,lambdabar,tauhat)}
     fX <- integrate(g,-Inf,Inf, subdivisions=2000)$value # numerically solving the function
-    
+
   } else {
-    
+
     #Monte-carlo integration
     set.seed(1)
     draw <- matrix(runif(10^5),1)
@@ -72,9 +72,9 @@ if (symmetric==1){
     sigma_mat=matrix(rep(sigma,length(theta_vec)),ncol=length(theta_vec),byrow = FALSE);
     g <-  (0.5*((X_mat-theta_mat)/sigma_mat)+0.5*dnorm((-X_mat-theta_mat)/sigma_mat))/sigma_mat
     fX <- mean(g,2)
-  
+
     }
-  
+
 } else {
   fX <- dnorm(X,lambdabar, sqrt(sigma^2 + tauhat^2))
 }
@@ -109,12 +109,12 @@ if (symmetric==1){
 
 normalizingconst <- zeros(n,1)
 parameter_space_violation <- 0
-for (m in (1:dim(mean_Z1)[2])){
-  Cmat <- C*matrix(rep(mean_Z1[,m],dim(C)[2]), ncol = dim(C)[2],byrow = FALSE)
+for (m in (1:ncol(mean_Z1))){
+  Cmat <- repmat(Tpowers[ ,m],1,ncol(as.matrix(C)))*C
   normalizingconst <- normalizingconst+Cmat*betap[m]
-  if (min(Cmat*betap[m] < 0)){
-    parameter_space_violation <- 1
-  }
+  # if (min(Cmat * betap[m]) < 0){
+  #   parameter_space_violation <- 1
+  # }
 }
 
 #vector of likelihoods
@@ -125,23 +125,11 @@ LLH <- -sum(log(L)) #objective function; note the sign flip, since minimization
 if (parameter_space_violation==1){
   LLH <- 10^5
 }
+return(LLH)
+
 }
 
 
 
-# 
-# test<-TRUE
-# if (test) {
-#   C <- matrix(1,10,1)
-#   cutoffs=c(1.96);
-#   betap = c(-1,0.099);
-#   symmetric<-1
-#   tauhat<-1
-#   numerical_integration<-1
-#   X<-1:10
-#   sigma<-1:10
-#   lambdabar<-1
-#   cdf<-VariationVarianceLogLikelihoodControls(lambdabar, tauhat, betap, cutoffs, symmetric, X, sigma,C,numerical_integration)
-# }
 
 

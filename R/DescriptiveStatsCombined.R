@@ -1,15 +1,15 @@
 DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
-  
+
   critval<-1.96
   significant<-(abs(X_rep[,1])>critval);
   ll<-floor(min(min(X_rep)));
   uu<-ceiling(max(max(X_rep)));
- 
+
   dat<-data.frame(xvar = X_rep[,1],
                   yvar = X_rep[,2],
                   significant = significant)
-  
-  # Plot scatter and scatterslides (with letters A,B)    
+
+  # Plot scatter and scatterslides (with letters A,B)
   p1<- ggplot(dat, aes(x=xvar, y=yvar)) +geom_vline(xintercept =critval,color="grey")+
     geom_hline(yintercept =critval,color="grey")+
     geom_abline(intercept = 0,slope=1,color="grey")+
@@ -18,7 +18,7 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
     xlim(c(max(ll,0),uu))+
     ylim(c(ll,uu))+
     geom_point(shape=21,size = 2,aes(fill = significant))
-  
+
   significant<-(abs(X_meta/sigma_meta)>critval);
   #%added to exclude psych outlier
   nooutlier<-sigma<50;
@@ -31,12 +31,12 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
     ylim(c(min(sigma)-0.03,rangeX/critval))+
     xlab("|X|")+
     ylab(expression("sigma" ))+
-    geom_abline(intercept = 0,slope=1/critval,color="grey")+ 
+    geom_abline(intercept = 0,slope=1/critval,color="grey")+
     geom_abline(intercept = 0,slope=-1/critval,color="grey")+
     geom_point(shape=21,size = 2,aes(fill = significant))
-  
+
   p12<-grid.arrange(p1, p2, ncol = 2)
-  filepath<-paste0(pathname,'/FiguresandTables/',name, 'CombinedScatter.pdf')
+  filepath<-paste0(getwd(),'/FiguresandTables/',name, 'CombinedScatter.pdf')
   save_plot(filepath,p12,ncol=2,base_width = 4, base_height=3)
   dev.off()
   #####
@@ -44,7 +44,7 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
   ll=floor(min(Zuse));
   lleven=floor(ll/2)*2;
   uu=ceiling(max(Zuse));
-  
+
   if (symmetric == 0) {
     if (n>=30) {
       uu2<-ceiling((uu-.36)/.32)*.32+.36;
@@ -79,13 +79,13 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
                       to=uu2,
                       by=0.64))
     }
-    
+
   }
-  
-  
-  
+
+
+
   if (symmetric == 0) {
-    
+
     h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
       geom_histogram(aes(y = ..density..),
                      fill = 'blue',
@@ -95,8 +95,8 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
       xlab('X/sigma')+
       ylab('Density')+
       xlim(c(min(edges),max(edges)))
-    
-    
+
+
   } else {
     h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
       geom_histogram(aes(y = ..density..),
@@ -107,9 +107,9 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
       ylab('Density')+
       xlim(c(min(edges),max(edges)))
   }
-  
+
   p123<-grid.arrange(h,p1, p2, ncol = 3)
-  filepath<-paste0(pathname,'/FiguresandTables/',name, 'CombinedScatterHist.pdf')
+  filepath<-paste0(getwd(),'/FiguresandTables/',name, 'CombinedScatterHist.pdf')
   save_plot(filepath,p123,ncol=3,base_width = 4, base_height=3)
   dev.off()
 }

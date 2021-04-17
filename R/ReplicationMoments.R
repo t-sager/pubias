@@ -1,10 +1,9 @@
 ReplicationMoments <- function(betap, cutoffs, symmetric, Z, sigmaZ2,momentchoice){
 #Calculate GMM moments for replication applications
 
-n<-dim(Z)[1];
-k<-length(betap);
-betap<-as.matrix(betap,length(betap),1); # @TSA: betap in matrix umgewandelt /Transpose?. Auch in anderen Skripten nötig?
-
+n <- nrow(Z)
+k <- length(betap)
+betap <- t(betap)
 ###create step function publication probability
 Z1_dummies<-matrix(0,n,length(cutoffs)+1);
 
@@ -32,11 +31,11 @@ if (symmetric ==1) {
         }
     }
     Z1_dummies[,length(cutoffs)+1]<-Z[,1]>=cutoffs[length(cutoffs)];
-    
+
 }
 
 
-phat <- Z1_dummies*betap #vector of estimated publication probabilities, step function model
+phat <- Z1_dummies%*%betap #vector of estimated publication probabilities, step function model
 
 ###create moments for latent variables
 if (momentchoice == 1){
@@ -49,7 +48,7 @@ if (symmetric==1){
         c <- cutoffs
         lmoment1 <- (dnorm((c-Z[,1])/sigma_adj1)-dnorm((-c-Z[,1])/sigma_adj1))
         lmoment2 <- (dnorm((c-Z[,2])/sigma_adj2)-dnorm((-c-Z[,2])/sigma_adj2))
-        lmoments <- lmoment1.*(1-lmoment2)-lmoment2.*(1-lmoment1)
+        lmoments <- lmoment1*(1-lmoment2)-lmoment2*(1-lmoment1)
     } else if (length(cutoffs)==2){
         c1 <- cutoffs(1)
         lmoment1 <- (dnorm((c1-Z[,1])/sigma_adj1)-dnorm((-c1-Z[,1])/sigma_adj1))
@@ -73,7 +72,7 @@ if (symmetric==1){
 }
 }
 
-moments <- lmoments/matrix(rep(phat,dim(lmoments)[2]),ncol=dim(lmoments)[2],byrow=FALSE)
-
+moments <- lmoments/repmat(phat,1,ncol(as.matrix(lmoments)))
+return(moments)
 }
 

@@ -8,10 +8,10 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
     #  % normalized by sigma1; sigma is SE2/SE1
     # % for approach 2:
     #   % X has 1 column, initial estimate unscaled, sigma=sigma1
-    
+
     # Significance
     critval<-1.96;
-    
+
     if (identificationapproach==1) {
         ll<-floor(min(min(X)));
         uu<-ceiling(max(max(X)));
@@ -19,8 +19,8 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
         dat<-data.frame(xvar = X[,1],
                         yvar = X[,2],
                         significant = significant)
-        
-        # Plot scatter and scatterslides (with letters A,B)    
+
+        # Plot scatter and scatterslides (with letters A,B)
         p<- ggplot(dat, aes(x=xvar, y=yvar)) +geom_vline(xintercept =critval,color="grey")+
             geom_hline(yintercept =critval,color="grey")+
             geom_abline(intercept = 0,slope=1,color="grey")+
@@ -29,17 +29,17 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
             xlim(c(max(ll,0),uu))+
             ylim(c(ll,uu))+
             geom_point(shape=21,size = 2,aes(fill = significant))
-        filepath<-paste0(pathname,'/FiguresandTables/',name, 'Scatter.pdf')
+        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'Scatter.pdf')
         pdf(filepath, width=5, height=5)
         print(p)
         dev.off()
         q<-p+ annotate("text", x = 4, y = 1, label = "A")+
             annotate("text", x = 1, y = 4, label = "B")
-        filepath<-paste0(pathname,'/FiguresandTables/',name, 'SlidesScatter.pdf')
+        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'SlidesScatter.pdf')
         pdf(filepath, width=5, height=5)
         print(q)
         dev.off()
-        
+
     } else  if (identificationapproach==2)  {
         significant<-(abs(X/sigma)>critval);
         nooutlier<-sigma<50;
@@ -52,31 +52,31 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
             ylim(c(min(sigma)-0.03,rangeX/critval))+
             xlab("X")+
             ylab(expression("sigma" ))+
-            geom_abline(intercept = 0,slope=1/critval,color="grey")+ 
+            geom_abline(intercept = 0,slope=1/critval,color="grey")+
             geom_abline(intercept = 0,slope=-1/critval,color="grey")+
             geom_point(shape=21,size = 2,aes(fill = significant))
-        
-        filepath<-paste0(pathname,'/FiguresandTables/',name, 'Scatter.pdf')
+
+        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'Scatter.pdf')
         pdf(filepath, width=5, height=5)
         print(p)
         dev.off()
-        
+
     }
     # Create histogram plot for both identifiactionapproach = 1 and 2
-    
+
     if (identificationapproach==1) {
         Zuse = Z[,1];
-        
+
     } else {
         Zuse = X/sigma;
         if (max(abs(Zuse))>10) {
             Zuse<-Zuse[abs(Zuse)<6];
-        } 
+        }
     }
     ll=floor(min(Zuse));
     lleven=floor(ll/2)*2;
     uu=ceiling(max(Zuse));
-    
+
     if (symmetric == 0) {
         if (n>=30) {
             uu2<-ceiling((uu-.36)/.32)*.32+.36;
@@ -111,13 +111,13 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
                             to=uu2,
                             by=0.64))
         }
-        
+
     }
-    
-    
-    
+
+
+
     if (symmetric == 0) {
-        
+
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
             geom_histogram(aes(y = ..density..),
                            fill = 'blue',
@@ -127,8 +127,8 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
             xlab('X/sigma')+
             ylab('Density')+
             xlim(c(min(edges),max(edges)))
-        
-        
+
+
     } else {
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
             geom_histogram(aes(y = ..density..),
@@ -140,42 +140,40 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
             xlim(c(min(edges),max(edges)))
     }
     # If  histogram is for both id approachaes, just remove if clause below
-    
+
     if ( identificationapproach == 2) {
         # handp<-multiplot(h,p,cols=2)
         handp<-grid.arrange(h, p, ncol = 2)
-        filepath<-paste0(pathname,'/FiguresandTables/',name, 'ScatterHist.pdf')
+        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'ScatterHist.pdf')
         save_plot(filepath,handp,ncol=2,base_width = 4, base_height=3)
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     #  %Meta-regression estimates
     if (identificationapproach==2 && symmetric==0) {
-        source("MetaRegressionTable.R")
-        source("Clustered_covariance_estimate.R")
         do_metatable<-function(sigma,Zstats) {
             R = cbind(rep(1,length(X)),sigma);
             betahat<-solve(t(R)%*%R)%*%t(R)%*%X
             ehat<-X-R%*%betahat
-            
-            Sigma_base<-R*matrix(rep(ehat,dim(R)[2]),ncol=dim(R)[2],byrow=FALSE)
+
+            Sigma_base<-R*matrix(rep(ehat,ncol(R)),ncol=ncol(R),byrow=FALSE)
             Sigma<-Clustered_covariance_estimate(Sigma_base,cluster_ID);
             Vhat<-n*solve((t(R)%*%R))%*%Sigma%*%solve((t(R)%*%R))
             se_robust<-sqrt(diag(Vhat))
-            
+
             betahat<-as.vector(betahat)
             MetaRegressionTable(pathname,betahat,se_robust,name,Zstats)
         }
-        
+
         do_metatable(sigma,0)
-        
+
         do_metatable(sigma^(-1),1)
-        
+
     }
-    
-    
+
+
 }
 

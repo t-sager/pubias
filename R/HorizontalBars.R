@@ -17,13 +17,12 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   bonf_alpha <- 0.04
   bonf_beta <- 0.01
 
-  #Pad Psihat_use with additional zeros in symmetric specifications to make
-  #dimensions conform
+  #Pad Psihat_use with additional zeros in symmetric specifications to make dimensions conform
   if (symmetric==1){
     Psihat_use <- Psihat
   } else {
     if (symmetric_p==1){
-      Psihat_use <- cbind(Psihat[1], Psihat[2], 1, Psihat[3:length(Psihat)], t(apply(Psihat[3:length(Psihat)],1,rev)))
+      Psihat_use <- cbind(Psihat[1], Psihat[2], 1, Psihat[3:length(Psihat)], fliplr(Psihat[3:length(Psihat)]))
     } else {
       if (asymmetric_likelihood_spec==2){
         Psihat_use <- Psihat[2:length(Psihat)]
@@ -36,12 +35,12 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
 
   #Calculate corrected estimates and confidence bounds
 
-  Z1_U=matrix(0,length(Z1),1)
-  Z1_L=matrix(0,length(Z1),1)
-  Z1_M=matrix(0,length(Z1),1)
+  Z1_U <- zeros(length(Z1),1)
+  Z1_L <- zeros(length(Z1),1)
+  Z1_M <- zeros(length(Z1),1)
 
-  stepsize=10^-3
-  for (n in c(1:length(Z1))) {
+  stepsize <- 10^-3
+  for (n in (1:length(Z1))) {
     g_U <- function(lambda) {
       (alpha/2-Step_function_normal_cdf(Z1[n],lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
     }
@@ -65,12 +64,12 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   }
 
   #Calculate bonferroni corrected estimates and confidence bounds
-  Z1_UB=matrix(0,length(Z1),1)
-  Z1_LB=matrix(0,length(Z1),1)
-  sigma_U=matrix(0,length(Z1),1)
-  sigma_L=matrix(0,length(Z1),1)
+  Z1_UB <- zeros(length(Z1),1)
+  Z1_LB <- zeros(length(Z1),1)
+  sigma_U <- zeros(length(Z1),1)
+  sigma_L <- zeros(length(Z1),1)
 
-  for (n in c(1:length(Z1))) {
+  for (n in (1:length(Z1))) {
     g_UB <- function(lambda) {
       (bonf_alpha/2-Step_function_normal_cdf(Z1[n],lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
     }
@@ -99,9 +98,9 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
     F_Lminus=Step_function_normal_cdf(Z1[n],thetaL_minus,1,cbind(Psihat_use,1),cutoffs,symmetric)
     dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
 
-    dFUdbeta=matrix(0,length(Psihat_use),1)
-    dFLdbeta=matrix(0,length(Psihat_use),1)
-    for (n1 in c(1:length(Psihat_use))) {
+    dFUdbeta <- zeros(length(Psihat_use),1)
+    dFLdbeta <- zeros(length(Psihat_use),1)
+    for (n1 in (1:length(Psihat_use))) {
       Psi_plus=Psihat_use
       Psi_plus[n1]=Psi_plus[n1]+stepsize
       Psi_minus=Psihat_use
@@ -161,7 +160,7 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   pdf(here("FiguresandTables","GMMresultsOriginalAndAdjusted.pdf"), width = 6, height = 3.5)
   par(mgp = c(3,0.5,0), mar = c(1, 13, 2, 1))
   plot(x = Z1/R*W, y = c(1:n)/n*H,
-       pch = 4, frame = FALSE, xlab="", ylab="",yaxt='n', xaxt = "n",
+       pch = 4,   xlab="", ylab="",yaxt='n', xaxt = "n",
        xlim = c(Rl/R*W,Ru/R*W), ylim = c(0,H), col = BLUE,cex = 0.3); #original
   par(new=TRUE)
   lines(c(0,0),c(0,n+1),col=GREY, xlab="", ylab="");
@@ -171,11 +170,11 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   lines(c(-1.96/R*W,-1.96/R*W),c(0,n+1), xlab="", ylab="",col=GREY);
   par(new=TRUE)
   plot(x = Z1/R*W, y = c(1:n)/n*H,
-       pch = 4, frame = FALSE, xlab="", ylab="",yaxt='n', xaxt = "n",
+       pch = 4,   xlab="", ylab="",yaxt='n', xaxt = "n",
        xlim = c(Rl/R*W,Ru/R*W), ylim = c(0,H), col = BLUE,cex = 0.3,add=TRUE); #original
   par(new=TRUE)
   plot(x = Z1_M/R*W, y = (c(1:n)-0.3)/n*H,yaxt='n',
-       pch = 19, frame = FALSE, xlab="", ylab="",xaxt = "n",
+       pch = 19,   xlab="", ylab="",xaxt = "n",
        xlim = c(Rl/R*W,Ru/R*W), ylim = c(0,H),cex = 0.3); #adjusted
   par(new=TRUE)
   for (i in c(1:n)) {
@@ -206,7 +205,7 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   par(mgp = c(3,0.5,0), mar = c(1, 13, 2, 1))
   par(new=TRUE)
   plot(x = Z1/R*W, y = c(1:n)/n*H,
-       pch = 4, frame = FALSE, xlab="", ylab="",yaxt='n', xaxt = "n",
+       pch = 4,   xlab="", ylab="",yaxt='n', xaxt = "n",
        xlim = c(Rl/R*W,Ru/R*W), ylim = c(1,n)*H/n, col = BLUE,cex = 0.3); #original
   lines(c(0,0),c(0,n+1),col=GREY, xlab="", ylab="");
   par(new=TRUE)
@@ -215,11 +214,11 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   lines(c(-1.96/R*W,-1.96/R*W),c(0,n+1), xlab="", ylab="",col=GREY);
   par(new=TRUE)
   plot(x = Z1/R*W, y = c(1:n)/n*H,
-       pch = 4, frame = FALSE, xlab="", ylab="",yaxt='n', xaxt = "n",
+       pch = 4,   xlab="", ylab="",yaxt='n', xaxt = "n",
        xlim = c(Rl/R*W,Ru/R*W), ylim = c(1,n)*H/n, col = BLUE,cex = 0.3,add=TRUE); #original
   par(new=TRUE)
   plot(x = Z1_M/R*W, y = (c(1:n)-0.35)/n*H,yaxt='n',
-       pch = 19, frame = FALSE, xlab="", ylab="",xaxt = "n",
+       pch = 19,   xlab="", ylab="",xaxt = "n",
        xlim = c(Rl/R*W,Ru/R*W), ylim = c(1,n)*H/n ,cex = 0.3); #adjusted
   par(new=TRUE)
   for (i in c(1:n)) {
@@ -477,23 +476,23 @@ HorizontalBars <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,S
   lines(xgrid,xgrid+1.96, xlab="", ylab="",col=GREY,lwd=1.5);
   par(new=TRUE)
   lines(x = xgrid, y = Theta_L_store,
-        lty = 1, frame = FALSE, xlab=TeX('$X$'), ylab=TeX('Estimation $\\theta$'),
+        lty = 1,   xlab=TeX('$X$'), ylab=TeX('Estimation $\\theta$'),
         xlim=c(xmin,xmax), ylim=c(ymin,ymax),
         col = BLUE,lwd=1.5);
   par(new=TRUE)
   lines(x = xgrid, y = Theta_M_store,
-        lty = 1, frame = FALSE, xlab="", ylab="",
+        lty = 1,   xlab="", ylab="",
         col = BLUE,lwd=3);
   par(new=TRUE)
   lines(x = xgrid, y = Theta_LB_store,
-        lty = 1, frame = FALSE, xlab="", ylab="",
+        lty = 1,   xlab="", ylab="",
         col = "black");
   par(new=TRUE)
   lines(x = xgrid, y = Theta_UB_store,
-        lty = 1, frame = FALSE, xlab="", ylab="",
+        lty = 1,   xlab="", ylab="",
         col = "black");
   lines(x = xgrid, y = Theta_U_store,
-        lty = 1, frame = FALSE, xlab="", ylab="",
+        lty = 1,   xlab="", ylab="",
         col = BLUE,lwd=1.5);
 
   legend(0,7,legend=c("95% confidence Bounds", "Bonferroni Corrected 95% Bounds", "Median Unbiased Estimator"),col=c(BLUE,"black",BLUE), lty=1, lwd=c(1.5,1,3), cex=0.6)

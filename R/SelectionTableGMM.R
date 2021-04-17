@@ -1,10 +1,11 @@
-SelectionTableGMM <- function(pathname,Psihat,se_robust,name,S,Psigrid,dof){
-     FID = sink(paste0(pathname,"/FiguresandTables/", name, "SelectionModel.tex"));
-     
+SelectionTableGMM <- function(Psihat,se_robust,name,S,Psigrid,dof){
+
+     FID = sink(paste0(getwd(),"/FiguresandTables/", name, "SelectionModel.tex"));
+
     len <- length(Psihat)
     cat(sprintf( paste0("\\begin{tabular}{cc |", rep("c", 1, len),"}")),"\n");
 
-#################    
+#################
 
 if (len==1){
     cat(sprintf( "& $\\beta_p$ \\\\ \n \\hline \n"));
@@ -16,32 +17,32 @@ if (len==1){
     cat(sprintf( "\\\\ \n \\hline \n"));
 }
 
-################# 
-    
+#################
+
     cat(sprintf( "%.3f ", Psihat[1]));
     for (j in (2:length(Psihat))) {
         cat(sprintf( "& %.3f ", Psihat[j]));
     }
-    
+
     cat(sprintf( "\\\\  \n"));
-    
+
     cat(sprintf( "(%.3f) ", se_robust[1]));
     for (j in (2:length(Psihat))) {
         cat(sprintf( "& (%.3f) ", se_robust[j]));
     }
-    
-    
+
+
     cat(sprintf( "\\\\  \n"));
     cat(sprintf( "\\end{tabular}\n"));
     sink(FID);
-    
-#################    
+
+#################
 
 if (len==1){
-    CS_LB <- min(Psigrid(S<qchisq(0.95,dof),1,0))
-    CS_UB <- max(Psigrid(S<qchisq(0.95,dof),1,0))
+    CS_LB = min(Psi_grid[S_store<qchisq(0.95,dof)])
+    CS_UB = max(Psi_grid[S_store<qchisq(0.95,dof)])
 
-    FID = sink(paste0(pathname,"/FiguresandTables/", name, "SelectionModelCS.tex"));
+    FID = sink(paste0(getwd(),"/FiguresandTables/", name, "SelectionModelCS.tex"));
 
     cat(sprintf( paste0("\\begin{tabular}{cc |", rep("c", 1, len),"}")),"\n");
     cat(sprintf( "$\\beta_p$ Lower Bound "));
