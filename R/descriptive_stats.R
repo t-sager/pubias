@@ -1,13 +1,10 @@
-#Potential issues: Z^r, sigma
-# Figure size
-# Stopped at histogram
+descriptive_stats <- function(X, sigma, identificationapproach,name,symmetric,cluster_ID) {
 
-DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,cluster_ID) {
-    #% for approach 1:
-    #  % X has 2 columns, initial estimate Zstat, and replication estimate
-    #  % normalized by sigma1; sigma is SE2/SE1
-    # % for approach 2:
-    #   % X has 1 column, initial estimate unscaled, sigma=sigma1
+    # for approach 1:
+    #   X has 2 columns, initial estimate Zstat, and replication estimate
+    #   normalized by sigma1; sigma is SE2/SE1
+    # for approach 2:
+    #   X has 1 column, initial estimate unscaled, sigma=sigma1
 
     # Significance
     critval<-1.96;
@@ -139,41 +136,9 @@ DescriptiveStats<-function(X, sigma, identificationapproach,name,symmetric,clust
             ylab('Density')+
             xlim(c(min(edges),max(edges)))
     }
-    # If  histogram is for both id approachaes, just remove if clause below
 
-    if ( identificationapproach == 2) {
-        # handp<-multiplot(h,p,cols=2)
-        handp<-grid.arrange(h, p, ncol = 2)
-        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'ScatterHist.pdf')
-        save_plot(filepath,handp,ncol=2,base_width = 4, base_height=3)
-    }
-
-
-
-
-
-    #  %Meta-regression estimates
-    if (identificationapproach==2 && symmetric==0) {
-        do_metatable<-function(sigma,Zstats) {
-            R = cbind(rep(1,length(X)),sigma);
-            betahat<-solve(t(R)%*%R)%*%t(R)%*%X
-            ehat<-X-R%*%betahat
-
-            Sigma_base<-R*matrix(rep(ehat,ncol(R)),ncol=ncol(R),byrow=FALSE)
-            Sigma<-Clustered_covariance_estimate(Sigma_base,cluster_ID);
-            Vhat<-n*solve((t(R)%*%R))%*%Sigma%*%solve((t(R)%*%R))
-            se_robust<-sqrt(diag(Vhat))
-
-            betahat<-as.vector(betahat)
-            MetaRegressionTable(pathname,betahat,se_robust,name,Zstats)
-        }
-
-        do_metatable(sigma,0)
-
-        do_metatable(sigma^(-1),1)
-
-    }
-
-
+    handp<-grid.arrange(h, p, ncol = 2)
+    filepath<-paste0(getwd(),'/FiguresandTables/',name, 'ScatterHist.pdf')
+    save_plot(filepath,handp,ncol=2,base_width = 4, base_height=3)
 }
 

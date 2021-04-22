@@ -1,4 +1,5 @@
-RobustVariance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
+robust_variance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
+  thetahat <- Psihat
   Info <- zeros(length(thetahat),length(thetahat))
   for (n1 in 1:length(thetahat)) {
     for (n2 in 1:length(thetahat)) {
@@ -7,27 +8,26 @@ RobustVariance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
       thetaminusplus<-thetahat
       thetaminusminus<-thetahat
 
-
-
-      thetaplusplus[n1]<-thetaplusplus[n1]+stepsize
-      thetaplusplus[n2]<-thetaplusplus[n2]+stepsize
-      LLH_plusplus<-LLH(thetaplusplus)
+      thetaplusplus[n1]<-thetaplusplus[n1]+stepsize;
+      thetaplusplus[n2]<-thetaplusplus[n2]+stepsize;
+      LLH_plusplus<-LLH(thetaplusplus);
       LLH_plusplus<-LLH_plusplus$LLH
 
-      thetaplusminus[n1]<-thetaplusminus[n1]+stepsize
-      thetaplusminus[n2]<-thetaplusminus[n2]-stepsize
-      LLH_plusminus<-LLH(thetaplusminus)
+      thetaplusminus[n1]<-thetaplusminus[n1]+stepsize;
+      thetaplusminus[n2]<-thetaplusminus[n2]-stepsize;
+      LLH_plusminus<-LLH(thetaplusminus);
       LLH_plusminus<-LLH_plusminus$LLH
 
-      thetaminusplus[n1]<-thetaminusplus[n1]-stepsize
-      thetaminusplus[n2]<-thetaminusplus[n2]+stepsize
-      LLH_minusplus<-LLH(thetaminusplus)
+      thetaminusplus[n1]<-thetaminusplus[n1]-stepsize;
+      thetaminusplus[n2]<-thetaminusplus[n2]+stepsize;
+      LLH_minusplus<-LLH(thetaminusplus);
       LLH_minusplus<-LLH_minusplus$LLH
 
-      thetaminusminus[n1]<-thetaminusminus[n1]-stepsize
-      thetaminusminus[n2]<-thetaminusminus[n2]-stepsize
-      LLH_minusminus<-LLH(thetaminusminus)
+      thetaminusminus[n1]<-thetaminusminus[n1]-stepsize;
+      thetaminusminus[n2]<-thetaminusminus[n2]-stepsize;
+      LLH_minusminus<-LLH(thetaminusminus);
       LLH_minusminus<-LLH_minusminus$LLH
+
 
       Info[n1,n2] <- ((LLH_plusplus-LLH_plusminus)/(2*stepsize)-(LLH_minusplus-LLH_minusminus)/(2*stepsize))/(2*stepsize)
     }

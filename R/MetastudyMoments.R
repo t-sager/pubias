@@ -2,11 +2,6 @@ MetastudyMoments <- function(betap, cutoffs, symmetric, X, sigma) {
     #Calculate GMM Moments for metastudy applications
     n = length(X)
 
-    #betap = as.matrix(betap)
-
-    betap <- t(betap)
-    #betap = rbind(betap, 1)
-
     #regressors for step function p
     T = X / sigma
 
@@ -36,7 +31,7 @@ MetastudyMoments <- function(betap, cutoffs, symmetric, X, sigma) {
         Tpowers[, length(cutoffs) + 1] = ifelse(T >= cutoffs[length(cutoffs)], 1, 0)
     }
 
-    phat = Tpowers %*% betap
+    phat <- Tpowers %*% t(t(betap))
 
 
     Xmat1 = matrix(X, length(X), length(X))
@@ -79,7 +74,7 @@ MetastudyMoments <- function(betap, cutoffs, symmetric, X, sigma) {
 
             base_moments = base_moments - diag(diag(base_moments))
             base_moments[is.nan(base_moments)] = 0
-            moment_mean[1, k] = nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
+            moment_mean[1, k] = pracma::nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
             #Built normalization to variance into rhat to ensure correct answers with culstered variance estimators
             rhat[, k] = 2 * ((n - 1) ^ -1) * as.matrix(rowSums(base_moments, na.rm =
                                                                    FALSE))
@@ -93,7 +88,7 @@ MetastudyMoments <- function(betap, cutoffs, symmetric, X, sigma) {
                                                                             Xmat1) / sigmadiff) - (ifelse(Xmat2 <= c * sigmamat2, 1, 0)))
             base_moments = base_moments - diag(diag(base_moments))
             base_moments[is.nan(base_moments)] = 0
-            moment_mean[1, k] = nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
+            moment_mean[1, k] = pracma::nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
             #Built normalization to variance into rhat to ensure correct answers with culstered variance estimators
             rhat[, k] = 2 * ((n - 1) ^ -1) * as.matrix(rowSums(base_moments, na.rm =
                                                                    FALSE))

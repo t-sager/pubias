@@ -1,7 +1,11 @@
 gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
-  # Estimate model with metastudy specifications
+
+  # Starting Values
+  Psihat0<-c(rep(1,length(cutoffs)))
+
+  # GMM Objective Function
   GMM_obj <- function(Psi) {
-    MetastudyGMMObjective(cbind(Psi, 1), cutoffs, symmetric, X, sigma, cluster_ID) +
+    MetastudyGMMObjective(c(Psi, 1), cutoffs, symmetric, X, sigma, cluster_ID) +
       max(-min(Psi), 0) * 10 ^ 5
   }
 
@@ -10,7 +14,7 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
   Psihat <- mini$par
   Objval <- mini$value
 
-  mom = MetastudyMoments(cbind(Psihat, 1), cutoffs, symmetric, X, sigma)
+  mom = MetastudyMoments(c(Psihat, 1), cutoffs, symmetric, X, sigma)
   moments = mom$moment_mean
   Sigma_temp = mom$moment_var
   rhat = mom$raw_moments
@@ -23,11 +27,11 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
   for (n1 in 1:length(Psihat)) {
     beta_plus = Psihat
     beta_plus[n1] = beta_plus[n1] + stepsize
-    mom = MetastudyMoments(cbind(beta_plus, 1), cutoffs, symmetric, X, sigma)
+    mom = MetastudyMoments(c(beta_plus, 1), cutoffs, symmetric, X, sigma)
     moments_plus = mom$moment_mean
     beta_minus = Psihat
     beta_minus[n1] = beta_minus[n1] - stepsize
-    mom = MetastudyMoments(cbind(beta_minus, 1), cutoffs, symmetric, X, sigma)
+    mom = MetastudyMoments(c(beta_minus, 1), cutoffs, symmetric, X, sigma)
     moments_minus = mom$moment_mean
     G[, n1] = t(moments_plus - moments_minus) / (2 * stepsize)
   }
@@ -66,16 +70,16 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
       }
 
     }
-    Psi_grid <- cbind(t(Psi_grid1), t(Psi_grid2))
+    Psi_grid <- c(t(Psi_grid1), t(Psi_grid2))
 
   } else {
     Psi_grid <- c(seq(0.001, 5, 0.001), 10, 10 ^ 5)
     S_store <- zeros(length(Psi_grid), 1)
   }
 
-  Psi_grid = as.matrix(Psi_grid)
+  Psi_grid <- as.matrix(Psi_grid)
 
-  SelectionTableGMM(Psihat, se_robust, name, S_store, Psi_grid, dof)
+  #SelectionTableGMM(Psihat, se_robust, name, S_store, Psi_grid, dof)
 
   return(list("Psihat"= Psihat, "Varhat" = Varhat))
 }

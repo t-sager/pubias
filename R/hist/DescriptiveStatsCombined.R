@@ -20,7 +20,8 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
     geom_point(shape=21,size = 2,aes(fill = significant))
 
   significant<-(abs(X_meta/sigma_meta)>critval);
-  #%added to exclude psych outlier
+
+  # added to exclude psych outlier
   nooutlier<-sigma<50;
   dat<-data.frame(xvar=X_meta,
                   yvar=sigma_meta,
@@ -112,4 +113,5 @@ DescriptiveStatsCombined <-function(X_rep,X_meta,sigma_meta,name,symmetric) {
   filepath<-paste0(getwd(),'/FiguresandTables/',name, 'CombinedScatterHist.pdf')
   save_plot(filepath,p123,ncol=3,base_width = 4, base_height=3)
   dev.off()
+
 }

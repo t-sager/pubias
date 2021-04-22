@@ -1,5 +1,10 @@
 VariationVarianceLogLikelihoodtdist <- function(lambdabar, tauhat, nuhat, betap, cutoffs, symmetric, X, sigma,C,numerical_integration) {
 
+  # lambdabar <- Psihat0[1]
+  # tauhat <- Psihat0[2]
+  # nuhat <- Psihat0[3]
+  # betap <- c(1, Psihat0[-c(1,2,3)], rev(c(Psihat0[-c(1,2,3)])), 1)
+
   n=length(X);
 
   #%regressors for step function p
@@ -7,7 +12,7 @@ VariationVarianceLogLikelihoodtdist <- function(lambdabar, tauhat, nuhat, betap,
 
 
   # Tpowers
-  Tpowers <- zeros(n,length(cutoffs)+1)
+  Tpowers <-  zeros(n,length(cutoffs)+1);
 
   if (symmetric==1 ) {
 
@@ -20,7 +25,7 @@ VariationVarianceLogLikelihoodtdist <- function(lambdabar, tauhat, nuhat, betap,
       }
       Tpowers[,length(cutoffs)+1]=abs(TT)>=cutoffs[length(cutoffs)];
     }
-    Tpowers[,length(cutoffs)+1]=abs(TT)>=cutoffs[length(cutoffs)];
+    Tpowers[,ncol(Tpowers)]=abs(TT)>=cutoffs[length(cutoffs)];
   } else {
 
     Tpowers[,1]=TT<cutoffs[1];
@@ -79,11 +84,11 @@ VariationVarianceLogLikelihoodtdist <- function(lambdabar, tauhat, nuhat, betap,
   #Normalizing constant, t distribution
   for (m in (1:length(cutoffs))){
       if (numerical_integration==1){
-        g <- function(theta) {dnorm(cutoffs[m]-theta/sigma)*dt((theta-lambdabar)/tauhat,nuhat)/tauhat}
+        g <- function(theta) {pnorm(cutoffs[m]-theta/sigma)*dt((theta-lambdabar)/tauhat,nuhat)/tauhat}
         prob_vec[,m+1] <- integrate(g,-Inf,Inf, subdivisions=2000)$value
       } else {
         #Monte Carlo Integration
-        g <- dnorm(cutoffs[m]-theta_mat/sigma_mat)
+        g <- pnorm(cutoffs[m]-theta_mat/sigma_mat)
         prob_vec[,m+1] <- mean(g,2)
       }
   }
@@ -102,6 +107,6 @@ logL <- log(L)
 
 LLH <- -sum(log(L)) #objective function; note the sign flip, since minimization
 
-return(LLH)
+return(list("LLH"= LLH, "logL" = logL))
 }
 

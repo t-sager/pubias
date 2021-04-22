@@ -1,28 +1,23 @@
 gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
-  # Estimate model with replication moments
-  GMM_obj <- function(Psi) {
-    ReplicationGMMObjective(cbind(Psi, 1), cutoffs, symmetric, Z, sigmaZ2, momentchoice) +
-      max(-min(Psi), 0) * 10 ^ 5
 
+  # Starting Values
+  Psihat0<-c(rep(1,length(cutoffs)))
+
+  # GMM Objective Function
+  GMM_obj <- function(Psi) {
+    ReplicationGMMObjective(c(Psi, 1), cutoffs, symmetric, Z, sigmaZ2) +
+      max(-min(Psi), 0) * 10 ^ 5
   }
 
-  mini <-
-    optim(
-      par = Psihat0,
-      fn = GMM_obj,
-      method = "BFGS",
-      control = list(abstol = 10 ^ -8, maxit = 10 ^ 5)
-    )
+  mini <- optim(par = Psihat0, fn = GMM_obj, method = "BFGS", control = list(abstol = 10 ^ -8, maxit = 10 ^ 5))
 
   Psihat <- mini$par
   Objval <- mini$value
 
-  moments <-ReplicationMoments(cbind(Psihat, 1), cutoffs, symmetric, Z, sigmaZ2, momentchoice)
+  moments <-ReplicationMoments(c(Psihat, 1), cutoffs, symmetric, Z, sigmaZ2)
   Sigma_hat <- cov(moments)
   stepsize <- 10 ^ -3
   G <- zeros(ncol(moments), length(Psihat))
-
-
 
   for (n1 in 1:length(Psihat)) {
     beta_plus <- Psihat
@@ -30,24 +25,22 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
     beta_plus[n1] <- beta_plus[n1] + stepsize
 
     moments_plus <-
-      ReplicationMoments(cbind(beta_plus, 1),
+      ReplicationMoments(c(beta_plus, 1),
                          cutoffs,
                          symmetric,
                          Z,
-                         sigmaZ2,
-                         momentchoice)
+                         sigmaZ2)
 
     beta_minus <- Psihat
 
     beta_minus[n1] <- beta_minus[n1] - stepsize
 
     moments_minus <-
-      ReplicationMoments(cbind(beta_minus, 1),
+      ReplicationMoments(c(beta_minus, 1),
                          cutoffs,
                          symmetric,
                          Z,
-                         sigmaZ2,
-                         momentchoice)
+                         sigmaZ2)
 
     G[, n1] = t(mean((moments_plus - moments_minus) / (2 * stepsize)))
   }
@@ -59,7 +52,7 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
 
 
   if (length(cutoffs) == 1) {
-    Psi_grid <- cbind(seq(from = 0.001, to = 5, by = 0.001), 10, 10 ^ 5)
+    Psi_grid <- c(seq(from = 0.001, to = 5, by = 0.001), 10, 10 ^ 5)
     S_store <- zeros(length(Psi_grid), 1)
 
     for (m in 1:length(Psi_grid)) {
@@ -82,13 +75,13 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
 
     }
 
-    Psi_grid <- cbind(t(Psi_grid1), t(Psi_grid2))
+    Psi_grid <- c(t(Psi_grid1), t(Psi_grid2))
 
   }
 
-  Psi_grid = as.matrix(Psi_grid)
+  Psi_grid <- as.matrix(Psi_grid)
 
-  SelectionTableGMM(Psihat, se_robust, name, S_store, Psi_grid, dof)
+  # SelectionTableGMM(Psihat, se_robust, name, S_store, Psi_grid, dof)
 
   return(list("Psihat"= Psihat, "Varhat" = Varhat))
 

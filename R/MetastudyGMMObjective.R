@@ -1,9 +1,4 @@
 MetastudyGMMObjective <- function(betap,cutoffs,symmetric,X,sigma,cluster_ID) {
-  # betap=c(beta_theta,betap)
-  # betap=as.matrix(betap)
-  # betap=t(betap)
-  # betap=cbind(betap,1)
-  #Calculate continuously updating GMM objective
   mom=MetastudyMoments(betap,cutoffs,symmetric,X,sigma);
   moments_mean=mom$moment_mean;
   rhat=mom$raw_moments;
