@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param Z
+#' @param sigmaZ2
+#' @param symmetric
+#' @param cluster_ID
+#' @param cutoffs
+#' @param Studynames
+#'
+#' @return
+#' @export
+#'
+#' @examples
 gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
 
   # Starting Values
@@ -14,7 +27,7 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
   Psihat <- mini$par
   Objval <- mini$value
 
-  moments <-ReplicationMoments(c(Psihat, 1), cutoffs, symmetric, Z, sigmaZ2)
+  moments <-replication_moments(c(Psihat, 1), cutoffs, symmetric, Z, sigmaZ2)
   Sigma_hat <- cov(moments)
   stepsize <- 10 ^ -3
   G <- zeros(ncol(moments), length(Psihat))
@@ -25,7 +38,7 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
     beta_plus[n1] <- beta_plus[n1] + stepsize
 
     moments_plus <-
-      ReplicationMoments(c(beta_plus, 1),
+      replication_moments(c(beta_plus, 1),
                          cutoffs,
                          symmetric,
                          Z,
@@ -36,7 +49,7 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
     beta_minus[n1] <- beta_minus[n1] - stepsize
 
     moments_minus <-
-      ReplicationMoments(c(beta_minus, 1),
+      replication_moments(c(beta_minus, 1),
                          cutoffs,
                          symmetric,
                          Z,

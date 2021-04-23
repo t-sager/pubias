@@ -1,3 +1,18 @@
+#' Title
+#'
+#' @param nuhat
+#' @param tauhat
+#' @param betap
+#' @param cutoffs
+#' @param symmetric
+#' @param Z
+#' @param sigmaZ2
+#' @param C
+#'
+#' @return
+#' @export
+#'
+#' @examples
 replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,sigmaZ2,C) {
 
 # arguments: mean and stdev of distribution pi of mu

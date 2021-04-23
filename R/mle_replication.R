@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param X
+#' @param sigma
+#' @param symmetric
+#' @param cluster_ID
+#' @param cutoffs
+#' @param Studynames
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mle_replication <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
 
     # Stepsize

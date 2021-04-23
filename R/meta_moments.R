@@ -1,4 +1,16 @@
-MetastudyMoments <- function(betap, cutoffs, symmetric, X, sigma) {
+#' Title
+#'
+#' @param betap
+#' @param cutoffs
+#' @param symmetric
+#' @param X
+#' @param sigma
+#'
+#' @return
+#' @export
+#'
+#' @examples
+meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
     #Calculate GMM Moments for metastudy applications
     n = length(X)
 

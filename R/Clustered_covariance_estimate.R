@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param g
+#' @param cluster_ID
+#'
+#' @return
+#' @export
+#'
+#' @examples
 clustered_covariance_estimate <- function(g,cluster_ID) {
   sorted <- sort(cluster_ID,decreasing=FALSE,index.return=TRUE)
   cluster_ID <- as.matrix(sorted$x)

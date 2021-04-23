@@ -1,5 +1,5 @@
 Package: pubias
-Title: Identification & Correction of Publication Bias
+Title: Identification & Correction for Publication Bias
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Till",
@@ -8,10 +8,28 @@ Authors@R:
            email = "tillsager@gmx.ch",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+License: `use_mit_license("Till Sager")`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 URL: https://github.com/t-sager/pubias
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports:
+    devtools,
+    tidyverse,
+    RColorBrewer,
+    latex2exp,
+    xtable,
+    here,
+    invgamma,
+    matlab,
+    PEIP,
+    mvtnorm,
+    ggplot2,
+    gridExtra,
+    cowplot

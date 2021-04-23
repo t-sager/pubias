@@ -1,5 +1,16 @@
-ReplicationMoments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
-#Calculate GMM moments for replication applications
+#' Title
+#'
+#' @param betap
+#' @param cutoffs
+#' @param symmetric
+#' @param Z
+#' @param sigmaZ2
+#'
+#' @return
+#' @export
+#'
+#' @examples
+replication_moments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
 
 n <- nrow(Z)
 k <- length(betap)

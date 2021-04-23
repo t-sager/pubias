@@ -1,3 +1,16 @@
+#' Title
+#'
+#' @param X
+#' @param sigma
+#' @param symmetric
+#' @param cluster_ID
+#' @param cutoffs
+#' @param Studynames
+#'
+#' @return
+#' @export
+#'
+#' @examples
 gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
 
   # Starting Values
@@ -5,7 +18,7 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
 
   # GMM Objective Function
   GMM_obj <- function(Psi) {
-    MetastudyGMMObjective(c(Psi, 1), cutoffs, symmetric, X, sigma, cluster_ID) +
+    meta_gmm_objective(c(Psi, 1), cutoffs, symmetric, X, sigma, cluster_ID) +
       max(-min(Psi), 0) * 10 ^ 5
   }
 

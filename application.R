@@ -1,35 +1,5 @@
-# Funktionen laden
-source("R/clustered_covariance_estimate.R")
-source("R/gmm_meta.R")
-source("R/gmm_replication.R")
-source("R/descriptive_stats.R")
-source("R/bias_correction.R")
-source("R/plot_correction.R")
-source("R/MetastudyGMMObjective.R")
-source("R/MetastudyMoments.R")
-source("R/mle_meta.R")
-source("R/mle_replication.R")
-source("R/replication_analytic_llh.R")
-source("R/ReplicationGMMObjective.R")
-source("R/ReplicationMoments.R")
-source("R/robust_variance.R")
-source("R/step_function_normal_cdf.R")
-source("R/variation_variance_llh.R")
-
-# Packages laden
-pacman::p_load(tidyverse,
-               RColorBrewer,
-               latex2exp,
-               xtable,
-               here,
-               invgamma,
-               matlab,
-               PEIP,
-               mvtnorm,
-               ggplot2,
-               gridExtra,
-               cowplot)
-
+# Lade package
+load_all()
 
 
 
@@ -87,15 +57,13 @@ Psihat <- Estimates$Psihat
 Varhat <- Estimates$Varhat
 
 # Producing bias-corrected estimates and confidence sets
-HorizontalBars(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,Studynames,identificationapproach)
+plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,Studynames,identificationapproach)
 
 #Producing figures
 if (identificationapproach==1){
-DescriptiveStats(Z,sigmaZ2, 1,name,symmetric,cluster_ID)
-DescriptiveStats(data[,1],data[,2], 2,paste0(name, "SanityCheck"),symmetric,cluster_ID)
-DescriptiveStatsCombined(Z,data[,1],data[,2],name,symmetric)
+descriptive_stats(Z,sigmaZ2, 1,name,symmetric,cluster_ID)
 }else{
-  DescriptiveStats(X, sigma, identificationapproach,name,symmetric,cluster_ID);
+  descriptive_stats(X, sigma, identificationapproach,name,symmetric,cluster_ID);
 }
 
 

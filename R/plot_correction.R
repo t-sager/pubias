@@ -1,4 +1,20 @@
-correction_plots <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,Studynames,identificationapproach) {
+#' Title
+#'
+#' @param X
+#' @param sigma
+#' @param Psihat
+#' @param Varhat
+#' @param cutoffs
+#' @param symmetric
+#' @param symmetric_p
+#' @param Studynames
+#' @param identificationapproach
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,Studynames,identificationapproach) {
 
   color <- brewer.pal(8,"Greys")
   GREY <- color[3]

@@ -1,6 +1,19 @@
+#' Title
+#'
+#' @param X
+#' @param theta
+#' @param sigma
+#' @param betap
+#' @param cutoffs
+#' @param symmetric
+#'
+#' @return
+#' @export
+#'
+#' @examples
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
-theta <- 1
-    #Arguments:
+
+        #Arguments:
     #X: point at which to evaluate cdf
     #theta: parameter value under which to evaluate cdf
     #sigma:standarad deviation of (untruncated) normal variable

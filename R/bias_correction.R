@@ -1,4 +1,19 @@
-bias_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,Studynames,identificationapproach) {
+#' Title
+#'
+#' @param X
+#' @param sigma
+#' @param Psihat
+#' @param Varhat
+#' @param cutoffs
+#' @param symmetric
+#' @param symmetric_p
+#' @param identificationapproach
+#'
+#' @return
+#' @export
+#'
+#' @examples
+bias_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,identificationapproach) {
 
   #normalize estimates from initial study
   if (identificationapproach==1){
