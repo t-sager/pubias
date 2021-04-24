@@ -11,13 +11,13 @@
 #' @export
 #'
 #' @examples
-mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
+mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, studynames, includeinestimation) {
 
-  # Stepsize
+    # Stepsize
   stepsize<-10^(-6)
 
   if (symmetric_p == 1) { # symmetric
-        Psihat0<-c(0,1,rep(1,length(cutoffs)))
+
         LLH <-
           function (Psi) {
             f <- variation_variance_llh(
@@ -28,14 +28,13 @@ mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
               symmetric,
               X[includeinestimation],
               sigma[includeinestimation],
-              C[includeinestimation, ],
-              numerical_integration
+              C[includeinestimation, ]
             )
             return(f)
           }
         nn = sum(includeinestimation)
   } else { # not symmetric
-        Psihat0<-c(0,1,rep(1,length(cutoffs)))
+
         #Run model with normal distribution for latent effects
         LLH <-
           function (Psi) {
@@ -47,8 +46,7 @@ mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
               symmetric,
               X[includeinestimation],
               sigma[includeinestimation],
-              C[includeinestimation, ],
-              numerical_integration
+              C[includeinestimation, ]
             )
             return(f)
           }
@@ -62,6 +60,7 @@ mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
 
     #########################
     # find maximum likelihood estimator using just LLH
+    Psihat0<-c(0,1,rep(1,length(cutoffs)))
     mini<-optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
     Psihat <- mini$par
@@ -70,9 +69,7 @@ mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
     Varhat <- robust_variance(stepsize, nn, Psihat, LLH,cluster_ID)
     se_robust <- sqrt(diag(Varhat))
 
-    SelectionTable(Psihat,se_robust,name,(identificationapproach==1),symmetric)
-
-    return(list("Psihat"= Psihat, "Varhat" = Varhat))
+    return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
 }
 
 

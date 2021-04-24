@@ -15,15 +15,9 @@
 #' @examples
 replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,sigmaZ2,C) {
 
-# arguments: mean and stdev of distribution pi of mu
-# coefficient vector for step function p, in increasing order
-# vector of thresholds for step function p, in increasing order
-# dummy for symmetric step function: if one, all cutoffs should be positive
-# n by 2 matrix of estimates
-# vector of stdevs of X2
-
   n <- nrow(Z)
   k <- length(betap)
+  betap <- t(t(betap))
   Z1_dummies <- zeros(n,length(cutoffs)+1)
 
   if (all(sort(cutoffs)!=cutoffs)) {
@@ -58,7 +52,7 @@ replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,si
 phat <- zeros(nrow(Z1_dummies), 1)
 
 for (m in (1:ncol(Z1_dummies))) {
-    Cmat <- matrix(rep(Z1_dummies[, m], ncol(C)), ncol=ncol(C), byrow = FALSE) * C
+    Cmat <- repmat(Z1_dummies[ ,m],1,ncol(C)) * C
     phat <- phat + Cmat * betap[m]
   }
 
@@ -69,11 +63,11 @@ if (symmetric==1){
     #Monte-carlo integration
     set.seed(1)
     draw <- matrix(runif(10^5),1)
-    theta_vec=qgamma(draw, nuhat,scale = tauhat);
-    theta_mat=matrix(theta_vec,n,length(theta_vec))
-    Z1mat=repmat(Z[,1],1,length(theta_vec))
-    Z2mat=repmat(Z[,2],1,length(theta_vec))
-    sigmaZ2mat=repmat(sigmaZ2,1,length(theta_vec))
+    theta_vec <- qgamma(draw, nuhat,scale = tauhat)
+    theta_mat <- matrix(theta_vec,n,length(theta_vec))
+    Z1mat <- repmat(Z[,1],1,length(theta_vec))
+    Z2mat <- repmat(Z[,2],1,length(theta_vec))
+    sigmaZ2mat <- repmat(sigmaZ2,1,length(theta_vec))
     g <-  (0.5*dnorm(Z1mat-theta_mat)+0.5*dnorm(-Z1mat-theta_mat))*dnorm((Z2mat-theta_mat)/sigmaZ2mat)/sigmaZ2mat
     piZ1Z2 <- rowMeans(g,2)
 

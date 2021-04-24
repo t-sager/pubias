@@ -4,7 +4,7 @@
 \alias{gmm_meta}
 \title{Title}
 \usage{
-gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs, Studynames)
+gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames)
 }
 \arguments{
 \item{Studynames}{}

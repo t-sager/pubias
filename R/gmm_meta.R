@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
+gmm_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames) {
 
   # Starting Values
   Psihat0<-c(rep(1,length(cutoffs)))
@@ -27,12 +27,12 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
   Psihat <- mini$par
   Objval <- mini$value
 
-  mom = MetastudyMoments(c(Psihat, 1), cutoffs, symmetric, X, sigma)
+  mom = meta_moments(c(Psihat, 1), cutoffs, symmetric, X, sigma)
   moments = mom$moment_mean
   Sigma_temp = mom$moment_var
   rhat = mom$raw_moments
 
-  Sigma_hat = Clustered_covariance_estimate(rhat, cluster_ID)
+  Sigma_hat <- clustered_covariance_estimate(rhat, cluster_ID)
 
   stepsize = 10 ^ -3
   G = matrix(0, dim(moments)[2], length(Psihat))
@@ -40,21 +40,19 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
   for (n1 in 1:length(Psihat)) {
     beta_plus = Psihat
     beta_plus[n1] = beta_plus[n1] + stepsize
-    mom = MetastudyMoments(c(beta_plus, 1), cutoffs, symmetric, X, sigma)
+    mom = meta_moments(c(beta_plus, 1), cutoffs, symmetric, X, sigma)
     moments_plus = mom$moment_mean
     beta_minus = Psihat
     beta_minus[n1] = beta_minus[n1] - stepsize
-    mom = MetastudyMoments(c(beta_minus, 1), cutoffs, symmetric, X, sigma)
+    mom = meta_moments(c(beta_minus, 1), cutoffs, symmetric, X, sigma)
     moments_minus = mom$moment_mean
     G[, n1] = t(moments_plus - moments_minus) / (2 * stepsize)
   }
 
 
-  Varhat = solve(t(G) %*% solve(Sigma_hat) %*% G) / length(X)
-
-  se_robust = sqrt(diag(Varhat))
-
-  dof = dim(moments)[2]
+  Varhat <- solve(t(G) %*% solve(Sigma_hat) %*% G) / length(X)
+  se_robust <- sqrt(diag(Varhat))
+  dof <- ncol(moments)
 
   if (length(cutoffs) == 1) {
     Psi_grid = c(seq(0.001, 5, 0.001), 10, 10 ^ 5)
@@ -92,7 +90,5 @@ gmm_meta <- function(X,sigma,symmetric,cluster_ID,cutoffs,Studynames) {
 
   Psi_grid <- as.matrix(Psi_grid)
 
-  #SelectionTableGMM(Psihat, se_robust, name, S_store, Psi_grid, dof)
-
-  return(list("Psihat"= Psihat, "Varhat" = Varhat))
+  return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
 }

@@ -4,7 +4,7 @@
 \alias{gmm_replication}
 \title{Title}
 \usage{
-gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, Studynames)
+gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
 }
 \arguments{
 \item{Studynames}{}

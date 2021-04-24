@@ -12,12 +12,11 @@ variation_variance_llh(
   symmetric,
   X,
   sigma,
-  C,
-  numerical_integration
+  C
 )
 }
 \arguments{
-\item{numerical_integration}{}
+\item{C}{}
 }
 \value{
 

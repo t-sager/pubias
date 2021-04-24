@@ -1,60 +1,56 @@
-# Lade package
-load_all()
 
+pacman::p_load(devtools,
+tidyverse,
+RColorBrewer,
+latex2exp,
+xtable,
+here,
+invgamma,
+matlab,
+PEIP,
+mvtnorm,
+ggplot2,
+gridExtra,
+cowplot)
 
+library(pubias)
 
 #Import data
 #Deworming --> Meta example
-# data <- read.csv(here("data","deworming","cleaned_deworming_data.csv"),header = FALSE)
-# data <- as.matrix(data)
-#
-# Studynames <- read.csv(here("data","deworming","sorted_names.csv"))
-# Studynames <- as.character(Studynames[,1])
+data <- read.csv(here("data","deworming","cleaned_deworming_data.csv"),header = FALSE)
+data <- as.matrix(data)
+
+studynames <- read.csv(here("data","deworming","sorted_names.csv"))
+studynames <- as.character(studynames[,1])
+
+pubias_meta(data, studynames, symmetric = 1, symmetric_p = 0, GMM = FALSE)
+
 
 #EconExperiments --> Replication example
 data <- read.csv(here("data","EconExperiments","cleaned_econ_data.csv"),header = FALSE)
 data <- as.matrix(data)
 
-Studynames <- read.csv(here("data","EconExperiments","sorted_names.csv"))
-Studynames <- as.character(Studynames[,1])
+studynames <- read.csv(here("data","EconExperiments","sorted_names.csv"))
+studynames <- as.character(studynames[,1])
 
-Z <- cbind(data[,1]/data[,2], data[,3]/data[,2])
-sigmaZ2 <- data[,4]/data[,2]
-X <- as.matrix(data[,1])
-sigma <- as.matrix(data[,2])
-cluster_ID <- as.matrix(data[,3])
-n <- length(X)
-C <- matrix(1,n,1)
-name <- 'MLEResults'
-
-symmetric <- 1
-symmetric_p <- 0 # nur für mle_meta relevant!
-cutoffs <- 1.96
-# cutoffs <- c(-1.96, 0, 1.96)
-vcutoff <- 1.96
-
-asymmetric_likelihood_spec <- 1
-
-includeinfigure <<- as.logical(rep(1,n))
-includeinestimation <- as.logical(rep(1,n))
+pubias_replication(data, studynames, symmetric = 1, cutoffs = 1.96, GMM = FALSE)
 
 ##############################
 # Get estimates
-# identificationapproach <- 2
 # Estimates <- gmm_meta(X,sigma,symmetric,cluster_ID,cutoffs,Studynames)
 
-identificationapproach <- 1
-Estimates <- gmm_replication(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames)
+# Estimates <- gmm_replication(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames)
 
-# identificationapproach <- 2
 # Estimates <- mle_meta(X,sigma,symmetric,cluster_ID,cutoffs,Studynames)
-
-# identificationapproach <- 1
+#
 # Estimates <- mle_replication(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames)
 
 # Result
 Psihat <- Estimates$Psihat
 Varhat <- Estimates$Varhat
+
+# correcting estimates
+bias_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,identificationapproach)
 
 # Producing bias-corrected estimates and confidence sets
 plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,Studynames,identificationapproach)

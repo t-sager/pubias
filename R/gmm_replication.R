@@ -11,14 +11,14 @@
 #' @export
 #'
 #' @examples
-gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
+gmm_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames) {
 
   # Starting Values
   Psihat0<-c(rep(1,length(cutoffs)))
 
   # GMM Objective Function
   GMM_obj <- function(Psi) {
-    ReplicationGMMObjective(c(Psi, 1), cutoffs, symmetric, Z, sigmaZ2) +
+    replication_gmm_objective(c(Psi, 1), cutoffs, symmetric, Z, sigmaZ2) +
       max(-min(Psi), 0) * 10 ^ 5
   }
 
@@ -60,8 +60,8 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
 
 
   Varhat <- solve(t(G)%*%solve(Sigma_hat)%*%G) / nrow(moments)
-  se_robust=sqrt(diag(Varhat))
-  dof=ncol(moments)
+  se_robust <- sqrt(diag(Varhat))
+  dof <- ncol(moments)
 
 
   if (length(cutoffs) == 1) {
@@ -94,8 +94,6 @@ gmm_replication <- function(Z,sigmaZ2,symmetric,cluster_ID,cutoffs,Studynames) {
 
   Psi_grid <- as.matrix(Psi_grid)
 
-  # SelectionTableGMM(Psihat, se_robust, name, S_store, Psi_grid, dof)
-
-  return(list("Psihat"= Psihat, "Varhat" = Varhat))
+  return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
 
 }

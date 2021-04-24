@@ -11,14 +11,12 @@
 #' @export
 #'
 #' @examples
-mle_replication <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames) {
+mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames) {
 
     # Stepsize
     stepsize <- 10^(-6)
 
     # Starting Values
-    Psihat0<-c(1,1, rep(1,length(cutoffs)))
-
     LLH <- function(Psi) {
         f <- replication_analytic_llh(
           Psi[1],
@@ -43,6 +41,7 @@ mle_replication <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames
 
     #########################
     # find maximum likelihood estimator using just LLH
+    Psihat0<-c(1,1, rep(1,length(cutoffs)))
     mini <- optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
     Psihat <- mini$par
@@ -51,7 +50,5 @@ mle_replication <- function(X, sigma, symmetric, cluster_ID, cutoffs, Studynames
     Varhat <- robust_variance(stepsize, nn, Psihat, LLH,cluster_ID)
     se_robust <- sqrt(diag(Varhat))
 
-    SelectionTable(Psihat,se_robust,name,(identificationapproach==1),symmetric)
-
-    return(list("Psihat"= Psihat, "Varhat" = Varhat))
+    return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
   }
