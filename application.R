@@ -23,7 +23,7 @@ data <- as.matrix(data)
 studynames <- read.csv(here("data","deworming","sorted_names.csv"))
 studynames <- as.character(studynames[,1])
 
-pubias_meta(data, studynames, symmetric = 1, symmetric_p = 0, GMM = FALSE)
+pubias_meta(data, studynames, symmetric = 1, symmetric_p = 1, cutoffs = 1.96, GMM = FALSE)
 
 
 #EconExperiments --> Replication example
@@ -33,7 +33,12 @@ data <- as.matrix(data)
 studynames <- read.csv(here("data","EconExperiments","sorted_names.csv"))
 studynames <- as.character(studynames[,1])
 
-pubias_replication(data, studynames, symmetric = 1, cutoffs = 1.96, GMM = FALSE)
+pubias_replication(data, studynames, symmetric = 1, cutoffs = 1.96, GMM = TRUE)
+
+
+####
+# bias corretion
+bias_correction(X,Z,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,identificationapproach)
 
 ##############################
 # Get estimates

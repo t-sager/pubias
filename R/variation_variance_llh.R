@@ -13,20 +13,24 @@
 #' @export
 #'
 #' @examples
-variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric, X, sigma,C) {
+variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric, X, sigma, C) {
+  # lambdabar <- Psihat0[1]
+  # tauhat <- Psihat0[2]
+  # symmetric_p == 1
+  # betap <- c(1, Psihat0[-c(1,2)], rev(c(Psihat0[-c(1,2)])), 1)
+  # symmetric_p == 0
+  # betap <- c(reshape(t(Psihat0[-c(1,2)]), c(length(Psihat0[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1)
 
   n <- nrow(X)
-  betap <- t(t(betap))
-  #%regressors for step function p
+  betap <- t(betap)
   TT <- X/sigma
-
 
   # Tpowers
   Tpowers <-  zeros(n,length(cutoffs)+1)
 
   if (symmetric==1 ) {
 
-    Tpowers[,1]=abs(TT)<cutoffs[1];
+    Tpowers[,1] <- abs(TT)<cutoffs[1]
 
 
      if (length(cutoffs)>1) {
@@ -38,17 +42,17 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
     Tpowers[,ncol(Tpowers)]=abs(TT)>=cutoffs[length(cutoffs)];
     } else {
 
-        Tpowers[,1]=TT<cutoffs[1];
+        Tpowers[,1] <- TT<cutoffs[1];
 
 
     if (length(cutoffs)>1) {
           for (m in 2:length(cutoffs)) {
-              Tpowers[,m]=(TT<cutoffs[m])*(TT>=cutoffs[m-1]);
+              Tpowers[,m] <- (TT<cutoffs[m])*(TT>=cutoffs[m-1]);
           }
 
 
     }
-        Tpowers[,length(cutoffs)+1]=(TT)>=cutoffs[length(cutoffs)];
+        Tpowers[,length(cutoffs)+1] <- (TT)>=cutoffs[length(cutoffs)];
   }
 
 
@@ -64,7 +68,7 @@ phat <- zeros(nrow(Tpowers), 1)
 
 for (m in (1:ncol(Tpowers))) {
   Cmat <- repmat(Tpowers[ ,m],1,ncol(as.matrix(C)))*C
-  phat <- phat + Cmat * betap[m]
+  phat <- phat + Cmat * betap[,m]
 
 }
 
@@ -111,10 +115,7 @@ normalizingconst <- zeros(n,1)
 parameter_space_violation <- 0
 for (m in (1:ncol(mean_Z1))){
   Cmat <- C*repmat(mean_Z1[,m],1,ncol(as.matrix(C)))
-  normalizingconst <- normalizingconst+Cmat*betap[m]
-  # if (min(Cmat * betap[m]) < 0){
-  #   parameter_space_violation <- 1
-  # }
+  normalizingconst <- normalizingconst+Cmat*betap[,m]
 }
 
 #vector of likelihoods
@@ -122,9 +123,6 @@ L <- phat*fX/normalizingconst
 logL <- log(phat)+log(fX)-log(normalizingconst)
 
 LLH <- -sum(log(L)) #objective function; note the sign flip, since minimization
-if (parameter_space_violation==1){
-  LLH <- 10^5
-}
 
 return(list("LLH"= LLH, "logL" = logL))
 }

@@ -27,15 +27,15 @@ gmm_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames) {
   Psihat <- mini$par
   Objval <- mini$value
 
-  mom = meta_moments(c(Psihat, 1), cutoffs, symmetric, X, sigma)
-  moments = mom$moment_mean
-  Sigma_temp = mom$moment_var
-  rhat = mom$raw_moments
+  mom <- meta_moments(c(Psihat, 1), cutoffs, symmetric, X, sigma)
+  moments <- mom$moment_mean
+  Sigma_temp <- mom$moment_var
+  rhat <- mom$raw_moments
 
   Sigma_hat <- clustered_covariance_estimate(rhat, cluster_ID)
 
-  stepsize = 10 ^ -3
-  G = matrix(0, dim(moments)[2], length(Psihat))
+  stepsize <- 10 ^ -3
+  G <- zeros(ncol(moments), length(Psihat))
 
   for (n1 in 1:length(Psihat)) {
     beta_plus = Psihat

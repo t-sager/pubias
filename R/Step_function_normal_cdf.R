@@ -13,17 +13,6 @@
 #' @examples
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
 
-        #Arguments:
-    #X: point at which to evaluate cdf
-    #theta: parameter value under which to evaluate cdf
-    #sigma:standarad deviation of (untruncated) normal variable
-    #sigma: stdev of distribution pi of mu
-    #cutoffs: vector of thresholds for step function p, in increasing order
-    #cutoffs are given in terms of X, not z statistics
-    #Symmetric: dummy indicating whether publication probability is symmetric around zero.
-    #In symmetric case, cutoffs should include only positive values
-    #Note: publication probability for largest category (i.e. for those points beyond largest cutoff) normalized to one.
-
     if (length(betap)!=(length(cutoffs)+1)) {
         stop("length of betap must be one greater than length of cutoffs ")
     }
@@ -45,7 +34,7 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
         cutoffs_u <- cutoffs
         betap_u <- betap
     }
-betap_u<-as.matrix(betap_u)
+betap_u <- as.matrix(betap_u)
 
     # Calculate denominator in cdf
     prob_vec<- zeros(length(cutoffs_u)+1,1)
@@ -54,9 +43,9 @@ betap_u<-as.matrix(betap_u)
         prob_vec[m+1]=pnorm((cutoffs_u[m]-theta)/sigma)
     }
 
-    prob_vec[length(prob_vec),1] <- 1
-    mean_Z1 <- as.matrix(prob_vec[2:length(prob_vec),1])-as.matrix(prob_vec[1:(length(prob_vec)-1),1])
-    denominator <- t(mean_Z1)%*%t(betap_u)
+    prob_vec <- rbind(prob_vec,1)
+    mean_Z1 <- prob_vec[2:length(prob_vec),1]-prob_vec[1:(length(prob_vec)-1),1]
+    denominator <- t(mean_Z1)%*%t(t(betap_u))
 
     #Calculate numerator in cdf
     cutoffs_u[length(cutoffs_u)+1] <- Inf

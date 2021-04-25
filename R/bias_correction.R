@@ -13,7 +13,10 @@
 #' @export
 #'
 #' @examples
-bias_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,identificationapproach) {
+bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach, GMM) {
+
+  Psihat <- result$Psihat
+  Varhat <- result$Varhat
 
   #normalize estimates from initial study
   if (identificationapproach==1){
@@ -45,8 +48,10 @@ bias_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,
   # Diff between MLE and GMM
   if (GMM == TRUE) {
     Psihat_use <- Psihat_use
+    Varhat <- Varhat
   } else {
     Psihat_use <- Psihat_use[-c(1,2)]
+    Varhat <- Varhat[-c(1,2), -c(1,2)]
   }
 
   # Calculate corrected estimates and confidence bounds
@@ -371,11 +376,15 @@ if (symmetric == 1 | symmetric_p == 1) {
 
   }
 
-  return(list("Z1_U" = Z1_U,
+  return(list("Z1" = Z1,
+              "Z1_U" = Z1_U,
               "Z1_L" = Z1_L,
               "Z1_M "= Z1_M,
               "Z1_UB" = Z1_UB,
               "Z1_LB" = Z1_LB,
+              "Theta_U_store" = Theta_U_store,
+              "Theta_L_store" = Theta_L_store,
+              "Theta_M_store" = Theta_M_store,
               "Theta_UB_store" = Theta_UB_store,
               "Theta_LB_store" = Theta_LB_store,
               "xgrid" = xgrid))

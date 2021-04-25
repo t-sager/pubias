@@ -11,32 +11,29 @@
 #'
 #' @examples
 meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
-    #Calculate GMM Moments for metastudy applications
-    n = length(X)
 
+    n <- length(X)
     #regressors for step function p
-    T = X / sigma
+    T <- X / sigma
 
+    Tpowers <- zeros(n, length(cutoffs) + 1)
 
-    Tpowers = matrix(0, n, length(cutoffs) + 1)
     if (symmetric == 1) {
-        Tpowers[, 1] = ifelse(abs(T) < cutoffs[1], 1, 0)
+        Tpowers[, 1] <- ifelse(abs(T) < cutoffs[1], 1, 0)
         if (length(cutoffs) > 1) {
-            for (m in c(2:length(cutoffs))) {
-                Tpowers[, m] = (ifelse(abs(T) < cutoffs[m], 1, 0)) * (ifelse(abs(T) >= cutoffs[m -
-                                                                                                   1]))
+            for (m in (2:length(cutoffs))) {
+                Tpowers[, m] <- (ifelse(abs(T) < cutoffs[m], 1, 0)) * (ifelse(abs(T) >= cutoffs[m-1], 1, 0))
 
             }
         }
-        Tpowers[, length(cutoffs) + 1] = ifelse(abs(T) >= cutoffs[length(cutoffs)], 1, 0)
+        Tpowers[, length(cutoffs) + 1] <- ifelse(abs(T) >= cutoffs[length(cutoffs)], 1, 0)
 
     } else {
         Tpowers[, 1] = ifelse(T < cutoffs[1], 1, 0)
 
         if (length(cutoffs) > 1) {
             for (m in c(2:length(cutoffs))) {
-                Tpowers[, m] = (ifelse(T < cutoffs[m], 1, 0)) * (ifelse(T >= cutoffs[m -
-                                                                                         1], 1, 0))
+                Tpowers[, m] = (ifelse(T < cutoffs[m], 1, 0)) * (ifelse(T >= cutoffs[m-1], 1, 0))
 
             }
         }
@@ -44,15 +41,10 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
     }
 
     phat <- Tpowers %*% t(t(betap))
-
-
-    Xmat1 = matrix(X, length(X), length(X))
-
-    Xmat2 = t(Xmat1)
-
-    sigmamat1 = matrix(sigma, length(X), length(X))
-
-    sigmamat2 = t(sigmamat1)
+    Xmat1 <- matrix(X, length(X), length(X))
+    Xmat2 <- t(Xmat1)
+    sigmamat1 <- matrix(sigma, length(X), length(X))
+    sigmamat2 <- t(sigmamat1)
 
     indicator = ifelse(sigmamat1 >= sigmamat2, 1, 0)
 

@@ -11,10 +11,11 @@
 #' @export
 #'
 #' @examples
-mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, studynames, includeinestimation) {
+mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, studynames, C) {
 
-    # Stepsize
-  stepsize<-10^(-6)
+  # Stepsize
+  stepsize <- 10^(-6)
+  n <- length(X)
 
   if (symmetric_p == 1) { # symmetric
 
@@ -26,13 +27,12 @@ mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, study
               c(1, Psi[-c(1,2)], rev(c(Psi[-c(1,2)])), 1),
               cutoffs,
               symmetric,
-              X[includeinestimation],
-              sigma[includeinestimation],
-              C[includeinestimation, ]
+              X,
+              sigma,
+              C
             )
             return(f)
           }
-        nn = sum(includeinestimation)
   } else { # not symmetric
 
         #Run model with normal distribution for latent effects
@@ -44,14 +44,15 @@ mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, study
               c(reshape(t(Psi[-c(1,2)]), c(length(Psi[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1),
               cutoffs,
               symmetric,
-              X[includeinestimation],
-              sigma[includeinestimation],
-              C[includeinestimation, ]
+              X,
+              sigma,
+              C
             )
             return(f)
           }
-        nn = sum(includeinestimation)
-      }
+  }
+
+  nn <- n
 
     LLH_only<-function (Psi){
       f<-LLH(Psi);
@@ -60,10 +61,10 @@ mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, study
 
     #########################
     # find maximum likelihood estimator using just LLH
-    Psihat0<-c(0,1,rep(1,length(cutoffs)))
-    mini<-optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+    Psihat0<-c(1,1,rep(1,length(cutoffs)))
+    mini <- optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
-    Psihat <- mini$par
+    Psihat <<- mini$par
     Objval <- mini$value
 
     Varhat <- robust_variance(stepsize, nn, Psihat, LLH,cluster_ID)

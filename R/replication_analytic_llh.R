@@ -14,6 +14,9 @@
 #'
 #' @examples
 replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,sigmaZ2,C) {
+  # nuhat <- Psihat0[1]
+  # taushat <- Psihat0[2]
+  # betap <- c(reshape(t(Psihat0[-c(1,2)]), c(length(Psihat0[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1)
 
   n <- nrow(Z)
   k <- length(betap)
@@ -117,7 +120,7 @@ prob_vec<-rep(0,length(cutoffs)+2);
       normalizingconst=normalizingconst+Cmat*betap[m];
   }
 
-  L=as.vector(phat)*as.vector(piZ1Z2)/normalizingconst;
+  L <- as.vector(phat)*as.vector(piZ1Z2)/normalizingconst;
 
   logL=log(L)
 

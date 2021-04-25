@@ -11,16 +11,16 @@
 #' @export
 #'
 #' @examples
-descriptive_stats <- function(X, sigma, identificationapproach,name,symmetric,cluster_ID) {
+descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric, cluster_ID) {
 
     # for approach 1:
     #   X has 2 columns, initial estimate Zstat, and replication estimate
     #   normalized by sigma1; sigma is SE2/SE1
     # for approach 2:
     #   X has 1 column, initial estimate unscaled, sigma=sigma1
-
+    n <- nrow(X)
     # Significance
-    critval<-1.96;
+    critval <- 1.96
 
     if (identificationapproach==1) {
         ll<-floor(min(min(X)));
@@ -30,7 +30,7 @@ descriptive_stats <- function(X, sigma, identificationapproach,name,symmetric,cl
                         yvar = X[,2],
                         significant = significant)
 
-        # Plot scatter and scatterslides (with letters A,B)
+        # Plot scatter
         p<- ggplot(dat, aes(x=xvar, y=yvar)) +geom_vline(xintercept =critval,color="grey")+
             geom_hline(yintercept =critval,color="grey")+
             geom_abline(intercept = 0,slope=1,color="grey")+
@@ -39,16 +39,11 @@ descriptive_stats <- function(X, sigma, identificationapproach,name,symmetric,cl
             xlim(c(max(ll,0),uu))+
             ylim(c(ll,uu))+
             geom_point(shape=21,size = 2,aes(fill = significant))
-        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'Scatter.pdf')
+        filepath<-paste0(getwd(),'/FiguresandTables/',name, '_Scatter.pdf')
         pdf(filepath, width=5, height=5)
         print(p)
         dev.off()
-        q<-p+ annotate("text", x = 4, y = 1, label = "A")+
-            annotate("text", x = 1, y = 4, label = "B")
-        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'SlidesScatter.pdf')
-        pdf(filepath, width=5, height=5)
-        print(q)
-        dev.off()
+
 
     } else  if (identificationapproach==2)  {
         significant<-(abs(X/sigma)>critval);
@@ -66,14 +61,14 @@ descriptive_stats <- function(X, sigma, identificationapproach,name,symmetric,cl
             geom_abline(intercept = 0,slope=-1/critval,color="grey")+
             geom_point(shape=21,size = 2,aes(fill = significant))
 
-        filepath<-paste0(getwd(),'/FiguresandTables/',name, 'Scatter.pdf')
+        filepath<-paste0(getwd(),'/FiguresandTables/',name, '_Scatter.pdf')
         pdf(filepath, width=5, height=5)
         print(p)
         dev.off()
 
     }
-    # Create histogram plot for both identifiactionapproach = 1 and 2
 
+    # Create histogram plot for both identifiactionapproach = 1 and 2
     if (identificationapproach==1) {
         Zuse = Z[,1];
 
@@ -151,7 +146,7 @@ descriptive_stats <- function(X, sigma, identificationapproach,name,symmetric,cl
     }
 
     handp<-grid.arrange(h, p, ncol = 2)
-    filepath<-paste0(getwd(),'/FiguresandTables/',name, 'ScatterHist.pdf')
+    filepath<-paste0(getwd(),'/FiguresandTables/',name, '_Scatter_Hist.pdf')
     save_plot(filepath,handp,ncol=2,base_width = 4, base_height=3)
 }
 
