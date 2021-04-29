@@ -31,7 +31,7 @@ pubias_replication <- function(data, studynames, symmetric = 1, cutoffs = 1.96, 
     corrected_estimates <<- bias_correction(X,Z,sigma,result,cutoffs,symmetric,symmetric_p=0,identificationapproach,GMM)
     plot_correction(Z,sigmaZ2,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
   } else {
-    name <- 'MLE_replication'
+    name <- 'MLE_Replication'
     result <<- mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
     descriptive_stats(Z, sigmaZ2, identificationapproach, name, symmetric, cluster_ID)
     corrected_estimates <<- bias_correction(X,Z,sigma,result,cutoffs,symmetric,symmetric_p=0,identificationapproach,GMM)
