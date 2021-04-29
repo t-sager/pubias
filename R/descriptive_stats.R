@@ -45,7 +45,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             xlim(c(max(ll,0),uu))+
             ylim(c(ll,uu))+
             geom_point(shape=21,size = 2,aes(fill = significant)) +
-            scale_fill_manual(values=c("#8B0000", blue1))+
+            scale_fill_manual(values=c("#FF0000", blue2))+
             theme_minimal()+ theme(axis.title.x = element_blank(),
                                    axis.title.y = element_blank(),
                                    panel.grid.minor = element_blank(),
@@ -68,7 +68,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             geom_abline(intercept = 0,slope=1/critval,color="grey")+
             geom_abline(intercept = 0,slope=-1/critval,color="grey")+
             geom_point(shape=21,size = 2,aes(fill = significant))+
-            scale_fill_manual(values=c("#8B0000", blue1))+
+            scale_fill_manual(values=c("#FF0000", blue2))+
             theme_minimal()+ theme(axis.title.x = element_blank(),
                                    axis.title.y = element_blank(),
                                    panel.grid.minor = element_blank(),
@@ -165,5 +165,11 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
 
     handp<-grid.arrange(h, p, ncol = 2)
     ggsave(plot = handp, "Scatter_Hist.pdf", width = 10, height = 6.5)
+
+    h <- ggplotly(h)
+    p <- ggplotly(p)
+
+    return(list("hist"= h,"scatter"= p))
+
 }
 

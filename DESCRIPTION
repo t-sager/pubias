@@ -32,4 +32,7 @@ Imports:
     mvtnorm,
     ggplot2,
     gridExtra,
-    cowplot
+    cowplot,
+    plotly,
+    flexdashboard,
+    rprojroot

@@ -1,0 +1,67 @@
+---
+title: "Publication Bias correction"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+knitr::opts_knit$set(root.dir = 'C:/Users/tills/Documents/UniBe/02 Master/03 FS21/Workshop Econometrics/R/pubias')
+
+```
+
+```{r}
+load("plots.RData")
+load("descriptives.RData")
+```
+
+Descriptives
+===================================== 
+
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Histogram
+
+```{r}
+descriptives$hist
+```
+
+Column {data-width=500}
+-----------------------------------------------------------------------
+
+### Funnelplot
+
+```{r}
+descriptives$scatter
+```
+
+
+Correction Plots 
+===================================== 
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Correction Plot
+
+```{r}
+plots$CorrectionPlot
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Original and adjusted estimates
+
+```{r}
+plots$OriginalAndAdjusted
+```
+
+### Original and adjusted estimates, including Bonferroni CIs
+
+```{r}
+plots$OriginalAndAdjustedBonferroni
+```

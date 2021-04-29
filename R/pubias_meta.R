@@ -25,14 +25,22 @@ pubias_meta <- function(data, studynames, symmetric = 1, symmetric_p = 1, cutoff
   if (GMM == TRUE) {
     name <- 'GMM_Meta'
     result <<- gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames)
-    descriptive_stats(X, sigma, identificationapproach, name, symmetric, cluster_ID)
+    descriptives <<- descriptive_stats(X, sigma, identificationapproach, name, symmetric, cluster_ID)
+    save(descriptives, file = "descriptives.RData")
     corrected_estimates <<- bias_correction(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach,GMM)
-    plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
-  } else {
+    plots <<- plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
+    save(plots, file = "plots.RData")
+    rmarkdown::render("R/dashboard.Rmd", output_file = paste0(rprojroot::find_rstudio_root_file(), "/dashboard.html"))
+
+    } else {
     name <- 'MLE_Meta'
     result <<- mle_meta(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, studynames, C)
-    descriptive_stats(X, sigma, identificationapproach, name, symmetric, cluster_ID)
+    descriptives <<- descriptive_stats(X, sigma, identificationapproach, name, symmetric, cluster_ID)
+    save(descriptives, file = "descriptives.RData")
     corrected_estimates <<- bias_correction(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach,GMM)
-    plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
-  }
+    plots <<- plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
+    save(plots, file = "plots.RData")
+    rmarkdown::render("R/dashboard.Rmd", output_file = paste0(rprojroot::find_rstudio_root_file(), "/dashboard.html"))
+
+    }
 }

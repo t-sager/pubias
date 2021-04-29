@@ -85,6 +85,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
   ggsave("OriginalAndAdjusted.pdf", width = 10, height = 6.5)
 
+  OriginalAndAdjusted <- ggplotly(g)
 
   # GGPLOT: Original and adjusted confidence sets, including bonferroni ------------------------------
   Rl=min(min(Z1_LB),min(Z1)-2)-0.5
@@ -133,6 +134,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   g
 
   ggsave("OriginalAndAdjustedBonferroni.pdf", width = 10, height = 6.5)
+
+  OriginalAndAdjustedBonferroni <- ggplotly(g)
 
   # GGPLOT: Original and adjusted confidence sets, including bonferroni ------------------------------
   if (identificationapproach == 1) {
@@ -186,6 +189,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
   ggsave("OriginalReplicationAndAdjusted.pdf", width = 10, height = 6.5)
 
+  OriginalReplicationAndAdjusted <- ggplotly(g)
+
   }
 
   # GGPLOT: Correction Plot  ------------------------------
@@ -223,4 +228,12 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
   ggsave("CorrectionPlot.pdf", width = 10, height = 6.5)
 
+  CorrectionPlot <- ggplotly(g)
+
+  if (identificationapproach == 1) {
+  return(list("OriginalAndAdjusted"= OriginalAndAdjusted,"OriginalAndAdjustedBonferroni"= OriginalAndAdjustedBonferroni, "OriginalReplicationAndAdjusted" = OriginalReplicationAndAdjusted, "CorrectionPlot" = CorrectionPlot))
+  } else {
+    return(list("OriginalAndAdjusted"= OriginalAndAdjusted,"OriginalAndAdjustedBonferroni"= OriginalAndAdjustedBonferroni, "CorrectionPlot" = CorrectionPlot))
 }
+
+    }
