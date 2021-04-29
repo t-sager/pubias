@@ -35,7 +35,7 @@ plot_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,
   color <- brewer.pal(8,"Blues")
   blue1 <- color[8]
   blue2 <- color[5]
-  blue3 <- color[2]
+  blue3 <- color[3]
 
   # GGPLOT: Plot original and adjusted confidence sets ------------------------------
   Rl=min(min(Z1_L),min(Z1)-2)-0.5
@@ -135,8 +135,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   ggsave("OriginalAndAdjustedBonferroni.pdf", width = 10, height = 6.5)
 
   # GGPLOT: Original and adjusted confidence sets, including bonferroni ------------------------------
-
-    if (identificationapproach == 1) {
+  if (identificationapproach == 1) {
     Z2 <- X[ ,2]
     Z2_rescaled <- Z2
 
@@ -161,14 +160,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     yend = c(1:n)/n*H
   )
 
-  segment_data_rep <- data.frame(
-    x = Z2_rescaled/R*W,
-    xend = Z2_rescaled/R*W,
-    y = c(1:n)/n*H+0.2,
-    yend = c(1:n)/n*H+0.2
-  )
-
-  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8], "Replication Estimates"=color[2])
+  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8], "Replication Estimates"=color[3])
 
   g <- ggplot()+
     geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
@@ -176,7 +168,6 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_point(aes(x = Z2_rescaled/R*W, y = c(1:n)/n*H+0.2, colour = "Replication Estimates")) + # replication
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
-    geom_segment(data = segment_data_rep, aes(x = x, y = y, xend = xend, yend = yend), color = blue3) + # adjusted
     geom_line(aes(x = c(1.96/R*W,1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     geom_line(aes(x = c(-1.96/R*W,-1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.1, labels=ylabel) +

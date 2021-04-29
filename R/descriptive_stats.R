@@ -22,6 +22,12 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
     # Significance
     critval <- 1.96
 
+    # Define blue colors
+    color <- brewer.pal(8,"Blues")
+    blue1 <- color[8]
+    blue2 <- color[5]
+    blue3 <- color[3]
+
     if (identificationapproach==1) {
         ll<-floor(min(min(X)));
         uu<-ceiling(max(max(X)));
@@ -31,19 +37,21 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
                         significant = significant)
 
         # Plot scatter
-        p<- ggplot(dat, aes(x=xvar, y=yvar)) +geom_vline(xintercept =critval,color="grey")+
+        p <- ggplot(dat, aes(x=xvar, y=yvar)) +geom_vline(xintercept =critval,color="grey")+
             geom_hline(yintercept =critval,color="grey")+
             geom_abline(intercept = 0,slope=1,color="grey")+
             xlab("Z")+
             ylab("ZRep" )+
             xlim(c(max(ll,0),uu))+
             ylim(c(ll,uu))+
-            geom_point(shape=21,size = 2,aes(fill = significant))
-        filepath<-paste0(getwd(),'/FiguresandTables/',name, '_Scatter.pdf')
-        pdf(filepath, width=5, height=5)
-        print(p)
-        dev.off()
+            geom_point(shape=21,size = 2,aes(fill = significant)) +
+            scale_fill_manual(values=c("#8B0000", blue1))+
+            theme_minimal()+ theme(axis.title.x = element_blank(),
+                                   axis.title.y = element_blank(),
+                                   panel.grid.minor = element_blank(),
+                                   panel.grid.major.x = element_blank())
 
+        ggsave("Scatter.pdf", width = 10, height = 6.5)
 
     } else  if (identificationapproach==2)  {
         significant<-(abs(X/sigma)>critval);
@@ -59,12 +67,14 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             ylab(expression("sigma" ))+
             geom_abline(intercept = 0,slope=1/critval,color="grey")+
             geom_abline(intercept = 0,slope=-1/critval,color="grey")+
-            geom_point(shape=21,size = 2,aes(fill = significant))
+            geom_point(shape=21,size = 2,aes(fill = significant))+
+            scale_fill_manual(values=c("#8B0000", blue1))+
+            theme_minimal()+ theme(axis.title.x = element_blank(),
+                                   axis.title.y = element_blank(),
+                                   panel.grid.minor = element_blank(),
+                                   panel.grid.major.x = element_blank())
 
-        filepath<-paste0(getwd(),'/FiguresandTables/',name, '_Scatter.pdf')
-        pdf(filepath, width=5, height=5)
-        print(p)
-        dev.off()
+        ggsave("Scatter.pdf", width = 10, height = 6.5)
 
     }
 
@@ -125,28 +135,35 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
 
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
             geom_histogram(aes(y = ..density..),
-                           fill = 'blue',
+                           fill = blue1,
                            breaks=edges)+
             geom_vline(xintercept =-1.96,color='grey')+
             geom_vline(xintercept =1.96, color='grey')+
             xlab('X/sigma')+
             ylab('Density')+
-            xlim(c(min(edges),max(edges)))
+            xlim(c(min(edges),max(edges)))+
+            theme_minimal()+ theme(axis.title.x = element_blank(),
+                                   axis.title.y = element_blank(),
+                                   panel.grid.minor = element_blank(),
+                                   panel.grid.major.x = element_blank())
 
 
     } else {
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
             geom_histogram(aes(y = ..density..),
-                           fill = 'blue',
+                           fill = blue1,
                            breaks=edges)+
             geom_vline(xintercept =1.96, color='grey')+
             xlab('|X|/sigma')+
             ylab('Density')+
-            xlim(c(min(edges),max(edges)))
+            xlim(c(min(edges),max(edges)))+
+            theme_minimal()+ theme(axis.title.x = element_blank(),
+                                   axis.title.y = element_blank(),
+                                   panel.grid.minor = element_blank(),
+                                   panel.grid.major.x = element_blank())
     }
 
     handp<-grid.arrange(h, p, ncol = 2)
-    filepath<-paste0(getwd(),'/FiguresandTables/',name, '_Scatter_Hist.pdf')
-    save_plot(filepath,handp,ncol=2,base_width = 4, base_height=3)
+    ggsave(plot = handp, "Scatter_Hist.pdf", width = 10, height = 6.5)
 }
 
