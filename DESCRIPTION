@@ -34,5 +34,4 @@ Imports:
     gridExtra,
     cowplot,
     plotly,
-    flexdashboard,
-    rprojroot
+    flexdashboard

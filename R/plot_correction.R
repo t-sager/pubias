@@ -212,8 +212,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_line(aes(x = xgrid, y = xgrid - 1.96), color = "grey") +
     geom_line(aes(x = xgrid, y = xgrid), color = "grey") +
     geom_line(aes(x = xgrid, y = xgrid + 1.96), color = "grey") +
-    xlab(TeX('$X$')) +
-    ylab(TeX('Estimation $\\theta$')) +
+    xlab(TeX('X')) +
+    ylab(TeX('Estimation')) +
     scale_colour_manual(values=cols) +
     xlim(c(xmin, xmax)) +
     ylim(c(ymin, ymax)) +
