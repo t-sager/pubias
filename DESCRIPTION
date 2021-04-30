@@ -19,7 +19,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports:
+Depends:
     devtools,
     tidyverse,
     RColorBrewer,
