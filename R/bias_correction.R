@@ -37,13 +37,10 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,ident
     if (symmetric_p==1){
       Psihat_use <- cbind(Psihat[1], Psihat[2], 1, Psihat[3:length(Psihat)], fliplr(Psihat[3:length(Psihat)]))
     } else {
-      if (asymmetric_likelihood_spec==2){
-        Psihat_use <- Psihat[2:length(Psihat)]
-      } else {
         Psihat_use <- Psihat
       }
     }
-  }
+
 
   # Diff between MLE and GMM
   if (GMM == TRUE) {

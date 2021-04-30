@@ -2,9 +2,11 @@
 #'
 #' @param data
 #' @param studynames
-#' @param symmertic
 #' @param cutoffs
 #' @param GMM
+#' @param symmetric
+#' @param symmetric_p
+#' @param print_plots
 #'
 #' @return
 #' @export
@@ -33,7 +35,7 @@ pubias_meta <- function(data, studynames, symmetric = 1, symmetric_p = 1, cutoff
     corrected_estimates <- bias_correction(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach,GMM)
     descriptives <- descriptive_stats(X, sigma, identificationapproach, name, symmetric, cluster_ID)
     plots <- plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
-    rmarkdown::render("R/dashboard.Rmd", params = list(plots=plots, descriptives = descriptives, pub_prob = result$Psihat),output_file = paste0(rprojroot::find_rstudio_root_file(), "/dashboard.html"))
+    rmarkdown::render("R/dashboard.Rmd", params = list(plots=plots, descriptives = descriptives, pub_prob = result$Psihat),output_file = paste0(rprojroot::find_rstudio_root_file(), "/", name,"_Dashboard.html"))
     pubias_result <<- list("GMM Meta Results" = result, "Corrected Estimates" = corrected_estimates, "Descriptive Plots" = descriptives, "Correction Plots" = plots)
     }
 
@@ -50,7 +52,7 @@ pubias_meta <- function(data, studynames, symmetric = 1, symmetric_p = 1, cutoff
     corrected_estimates <- bias_correction(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach,GMM)
     descriptives <- descriptive_stats(X, sigma, identificationapproach, name, symmetric, cluster_ID)
     plots <- plot_correction(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates)
-    rmarkdown::render("R/dashboard.Rmd", params = list(plots=plots, descriptives = descriptives, pub_prob = result$Psihat[-c(1,2)]),output_file = paste0(rprojroot::find_rstudio_root_file(), "/dashboard.html"))
+    rmarkdown::render("R/dashboard.Rmd", params = list(plots=plots, descriptives = descriptives, pub_prob = result$Psihat[-c(1,2)]),output_file = paste0(rprojroot::find_rstudio_root_file(), "/", name,"_Dashboard.html"))
     pubias_result <<- list("MLE Meta Results" = result, "Corrected Estimates" = corrected_estimates, "Descriptive Plots" = descriptives, "Correction Plots" = plots)
     rm(corrected_estimates, result, plots, descriptives)
     }
