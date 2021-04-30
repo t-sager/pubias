@@ -40,8 +40,15 @@ params$descriptives$scatter
 Correction Plots 
 ===================================== 
 
-Column {data-width=650}
+Column {data-width=500}
 -----------------------------------------------------------------------
+
+### Publication Probability
+
+```{r}
+valueBox(value = "2.9%", caption = "Results which are insignificant at the 5% level are 2.9% as likely to be
+published as significant results.", icon = "fa-pencil")
+```
 
 ### Correction Plot
 
@@ -49,7 +56,7 @@ Column {data-width=650}
 params$plots$CorrectionPlot
 ```
 
-Column {data-width=350}
+Column {data-width=500}
 -----------------------------------------------------------------------
 
 ### Original and adjusted estimates
