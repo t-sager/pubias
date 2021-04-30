@@ -4,16 +4,14 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+params: 
+  plots: plots
+  descriptives: descriptives
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_knit$set(root.dir = 'C:/Users/tills/Documents/UniBe/02 Master/03 FS21/Workshop Econometrics/R/pubias')
 
-```
 
-```{r}
-load("plots.RData")
-load("descriptives.RData")
 ```
 
 Descriptives
@@ -26,7 +24,7 @@ Column {data-width=500}
 ### Histogram
 
 ```{r}
-descriptives$hist
+params$descriptives$hist
 ```
 
 Column {data-width=500}
@@ -35,7 +33,7 @@ Column {data-width=500}
 ### Funnelplot
 
 ```{r}
-descriptives$scatter
+params$descriptives$scatter
 ```
 
 
@@ -48,7 +46,7 @@ Column {data-width=650}
 ### Correction Plot
 
 ```{r}
-plots$CorrectionPlot
+params$plots$CorrectionPlot
 ```
 
 Column {data-width=350}
@@ -57,11 +55,11 @@ Column {data-width=350}
 ### Original and adjusted estimates
 
 ```{r}
-plots$OriginalAndAdjusted
+params$plots$OriginalAndAdjusted
 ```
 
 ### Original and adjusted estimates, including Bonferroni CIs
 
 ```{r}
-plots$OriginalAndAdjustedBonferroni
+params$plots$OriginalAndAdjustedBonferroni
 ```
