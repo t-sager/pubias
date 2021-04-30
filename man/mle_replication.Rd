@@ -4,7 +4,7 @@
 \alias{mle_replication}
 \title{Title}
 \usage{
-mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
+mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
 }
 \arguments{
 \item{Studynames}{}

@@ -4,7 +4,7 @@
 \alias{mle_meta}
 \title{Title}
 \usage{
-mle_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames)
+mle_meta(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, studynames, C)
 }
 \arguments{
 \item{Studynames}{}

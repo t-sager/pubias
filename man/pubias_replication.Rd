@@ -7,13 +7,14 @@
 pubias_replication(
   data,
   studynames,
-  symmertic = 1,
+  symmetric = 1,
   cutoffs = 1.96,
-  GMM = FALSE
+  GMM = FALSE,
+  print_plots = FALSE
 )
 }
 \arguments{
-\item{GMM}{}
+\item{print_plots}{}
 }
 \value{
 

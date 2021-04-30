@@ -6,13 +6,14 @@
 \usage{
 bias_correction(
   X,
+  Z,
   sigma,
-  Psihat,
-  Varhat,
+  result,
   cutoffs,
   symmetric,
   symmetric_p,
-  identificationapproach
+  identificationapproach,
+  GMM
 )
 }
 \arguments{

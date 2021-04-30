@@ -11,8 +11,11 @@ data <- as.matrix(data)
 studynames <- read.csv(here("data","deworming","sorted_names.csv"))
 studynames <- as.character(studynames[,1])
 
-pubias_meta(data, studynames, symmetric = 1, symmetric_p = 1, cutoffs = 1.96, GMM = TRUE, print_plots = TRUE)
+setwd("C:/Users/tills/Desktop/output")
 
+pubias_meta(data, studynames, GMM = TRUE, print_plots = FALSE, print_dashboard = TRUE)
+
+setwd("~/UniBe/02 Master/03 FS21/Workshop Econometrics/R/pubias")
 ##############################
 # Example: Replication Studies - EconExperiments
 data <- read.csv(here("data","EconExperiments","cleaned_econ_data.csv"),header = FALSE)
@@ -21,5 +24,7 @@ data <- as.matrix(data)
 studynames <- read.csv(here("data","EconExperiments","sorted_names.csv"))
 studynames <- as.character(studynames[,1])
 
-pubias_replication(data, studynames, symmetric = 1, cutoffs = 1.96, GMM = TRUE, print_plots = TRUE)
+setwd("C:/Users/tills/Desktop/output")
 
+pubias_replication(data, studynames, GMM = TRUE, print_plots = TRUE)
+setwd("~/UniBe/02 Master/03 FS21/Workshop Econometrics/R/pubias")

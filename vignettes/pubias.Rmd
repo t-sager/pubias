@@ -1,16 +1,16 @@
 ---
 title: "pubias: Idenfiication and correction for publication bias"
-output: rmarkdown::html_vignette
+output:   
+  pdf_document:
+    latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{pubias: Idenfiication and correction of publication bias}
+  %\VignetteIndexEntry{pubias: Idenfiication and correction for publication bias}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
 )
 ```
 

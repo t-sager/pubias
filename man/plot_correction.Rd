@@ -12,8 +12,9 @@ plot_correction(
   cutoffs,
   symmetric,
   symmetric_p,
-  Studynames,
-  identificationapproach
+  studynames,
+  identificationapproach,
+  corrected_estimates
 )
 }
 \arguments{

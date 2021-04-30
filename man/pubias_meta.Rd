@@ -4,10 +4,18 @@
 \alias{pubias_meta}
 \title{Title}
 \usage{
-pubias_meta(data, studynames, symmertic = 1, cutoffs = 1.96, GMM = FALSE)
+pubias_meta(
+  data,
+  studynames,
+  symmetric = 1,
+  symmetric_p = 1,
+  cutoffs = 1.96,
+  GMM = FALSE,
+  print_plots = FALSE
+)
 }
 \arguments{
-\item{GMM}{}
+\item{print_plots}{}
 }
 \value{
 
