@@ -7,6 +7,8 @@ output:
 params: 
   plots: plots
   descriptives: descriptives
+  pub_prob: result$Psihat
+  
 ---
 
 ```{r setup, include=FALSE}
@@ -46,8 +48,7 @@ Column {data-width=500}
 ### Publication Probability
 
 ```{r}
-valueBox(value = "2.9%", caption = "Results which are insignificant at the 5% level are 2.9% as likely to be
-published as significant results.", icon = "fa-pencil")
+valueBox(value = paste0(round(100*params$pub_prob,1),"%"), caption = paste0("Results which are insignificant at the 5% level are ",round(100*params$pub_prob,1),"%"," as likely to be published as significant results."), icon = "fa-pencil")
 ```
 
 ### Correction Plot

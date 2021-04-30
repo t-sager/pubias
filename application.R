@@ -11,7 +11,7 @@ data <- as.matrix(data)
 studynames <- read.csv(here("data","deworming","sorted_names.csv"))
 studynames <- as.character(studynames[,1])
 
-pubias_meta(data, studynames, symmetric = 1, symmetric_p = 1, cutoffs = 1.96, GMM = TRUE, print_plots = TRUE)
+pubias_meta(data, studynames, symmetric = 1, symmetric_p = 1, cutoffs = 1.96, GMM = FALSE, print_plots = TRUE)
 
 ##############################
 # Example: Replication Studies - EconExperiments
@@ -21,5 +21,5 @@ data <- as.matrix(data)
 studynames <- read.csv(here("data","EconExperiments","sorted_names.csv"))
 studynames <- as.character(studynames[,1])
 
-pubias_replication(data, studynames, symmetric = 1, cutoffs = 1.96, GMM = TRUE, print_plots = TRUE)
+pubias_replication(data, studynames, symmetric = 1, cutoffs = 1.96, GMM = FALSE, print_plots = TRUE)
 
