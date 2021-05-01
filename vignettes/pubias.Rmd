@@ -15,5 +15,35 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(pubias)
+
 ```
+
+# Introduction
+
+# Methods and assumption
+
+## Replication Studies
+
+## Meta Analysis
+
+## MLE
+
+## GMM
+
+# Main functions
+
+## Syntax
+
+## Description
+
+## Arguments
+
+## Results
+
+## Applications
+
+### Replication Study
+
+### Meta Analysis
+
+# Final remarks

@@ -13,7 +13,7 @@ studynames <- as.character(studynames[,1])
 
 setwd("C:/Users/tills/Desktop/output")
 
-pubias_meta(data, studynames, GMM = TRUE, print_plots = TRUE, print_dashboard = TRUE)
+pubias_meta(data, studynames, GMM = F, print_plots = F, print_dashboard = F)
 
 setwd("~/UniBe/02 Master/03 FS21/Workshop Econometrics/R/pubias")
 ##############################
@@ -26,5 +26,5 @@ studynames <- as.character(studynames[,1])
 
 setwd("C:/Users/tills/Desktop/output")
 
-pubias_replication(data, studynames, GMM = TRUE, print_plots = TRUE, print_dashboard = TRUE)
+pubias_replication(data, studynames, GMM = TRUE, print_plots = F, print_dashboard = F)
 setwd("~/UniBe/02 Master/03 FS21/Workshop Econometrics/R/pubias")

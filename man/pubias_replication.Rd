@@ -2,7 +2,7 @@
 % Please edit documentation in R/pubias_replication.R
 \name{pubias_replication}
 \alias{pubias_replication}
-\title{Title}
+\title{Identification of and correction for publication bias in replication studies}
 \usage{
 pubias_replication(
   data,
@@ -10,15 +10,40 @@ pubias_replication(
   symmetric = 1,
   cutoffs = 1.96,
   GMM = FALSE,
-  print_plots = FALSE
+  print_plots = FALSE,
+  print_dashboard = FALSE
 )
 }
 \arguments{
-\item{print_plots}{}
+\item{data}{A \verb{n x 4} matrix where the first (third) column contains the original estimates (replication estimates), the second (fourth) column the associated
+standard errors of the original estimates (replication estimates), where \code{n} is the number of estimates.}
+
+\item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
+
+\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+
+\item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
+vector of size \verb{k x 1} where \code{k} is the number of cutoffs. By default, the cutoff is set at 1.96.}
+
+\item{GMM}{If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
+method for estimation.}
+
+\item{print_plots}{If set to TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.}
+
+\item{print_dashboard}{If set to TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
+The dashboard is saved in the working directory. Only possbile if \code{print_plots} is set to TRUE.}
 }
 \value{
+Returns a list object called \code{pubias_result} with the elements \code{Results} and \verb{Corrected Estimates}.
+If specified, the list also includes the descriptive, as well as the correction plots as \code{ggplot} objects.
 
+\code{Results} contains the publication probability \code{Psihat}, the variance as well as the robust standard error.
+
+\verb{Corrected Estimates} contains the original estimates with their 95\% confidence bonds (\code{Z1}, \code{Z1_L}, \code{Z1_U})
+as well as the corrected estimates (\code{Z1_M}) and in addition the Bonferroni corrected 95\% confidence bonds (\code{Z1_LB}, \code{Z1_UB}).
+There are additional elements which are mainly used for plotting the results.
 }
 \description{
-Title
+\code{pubias_replication()} calculates the publication probability either by a Maximum Likelihood or a GMM approach and
+then reports the corrected estimates for a set of replication studies.
 }

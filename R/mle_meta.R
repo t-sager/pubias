@@ -70,7 +70,7 @@ mle_meta <- function(X, sigma, symmetric, symmetric_p,cluster_ID, cutoffs, study
     Varhat <- robust_variance(stepsize, nn, Psihat, LLH,cluster_ID)
     se_robust <- sqrt(diag(Varhat))
 
-    return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
+    return(list("Psihat"= Psihat[-c(1,2)], "Varhat" = Varhat[-c(1,2), -c(1,2)], "se_robust" = se_robust[-c(1,2)]))
 }
 
 

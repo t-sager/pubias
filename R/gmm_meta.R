@@ -90,5 +90,5 @@ gmm_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames) {
 
   Psi_grid <- as.matrix(Psi_grid)
 
-  return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
+  return(list("Psihat"= Psihat[-c(1,2)], "Varhat" = Varhat[-c(1,2), -c(1,2)], "se_robust" = se_robust[-c(1,2)]))
 }
