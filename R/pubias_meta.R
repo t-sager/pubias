@@ -20,9 +20,9 @@
 #' @return Returns a list object called `pubias_result` with the elements `Results` and `Corrected Estimates`.
 #' If specified, the list also includes the descriptive, as well as the correction plots as `ggplot` objects.
 #'
-#' `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
+#' - `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
 #'
-#' `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
+#' - `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
 #' as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bonds (`Z1_LB`, `Z1_UB`).
 #' There are additional elements which are mainly used for plotting the results.
 #'
