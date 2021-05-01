@@ -1,15 +1,4 @@
-#' Title
-#'
-#' @param stepsize
-#' @param n
-#' @param thetahat
-#' @param LLH
-#' @param cluster_ID
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 robust_variance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
   thetahat <- Psihat
   Info <- zeros(length(thetahat),length(thetahat))

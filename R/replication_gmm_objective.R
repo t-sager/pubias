@@ -1,15 +1,4 @@
-#' Title
-#'
-#' @param betap
-#' @param cutoffs
-#' @param symmetric
-#' @param Z
-#' @param sigmaZ2
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 replication_gmm_objective <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
 moments <- replication_moments(betap, cutoffs, symmetric, Z, sigmaZ2)
 moments_mean <- mean(moments)

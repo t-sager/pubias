@@ -1,16 +1,4 @@
-#' Title
-#'
-#' @param betap
-#' @param cutoffs
-#' @param symmetric
-#' @param X
-#' @param sigma
-#' @param cluster_ID
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 meta_gmm_objective <- function(betap,cutoffs,symmetric,X,sigma,cluster_ID) {
   mom <- meta_moments(betap,cutoffs,symmetric,X,sigma)
   moments_mean <- mom$moment_mean

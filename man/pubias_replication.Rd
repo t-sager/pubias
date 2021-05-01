@@ -15,8 +15,8 @@ pubias_replication(
 )
 }
 \arguments{
-\item{data}{A \verb{n x 4} matrix where the first (third) column contains the original estimates (replication estimates), the second (fourth) column the associated
-standard errors of the original estimates (replication estimates), where \code{n} is the number of estimates.}
+\item{data}{A \verb{n x 4} matrix where the first (third) column contains the standardized original estimates (replication estimates), the second (fourth) column the associated
+standard errors of the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
 
 \item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 

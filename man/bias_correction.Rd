@@ -17,10 +17,31 @@ bias_correction(
 )
 }
 \arguments{
-\item{identificationapproach}{}
+\item{X}{A \verb{n x 1} matrix containing the estimates, where \code{n} is the number of estimates.}
+
+\item{Z}{A \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
+
+\item{sigma}{A \verb{n x 1} matrix containing the standard errors of the estimates, where \code{n} is the number of estimates.}
+
+\item{result}{List obJect which contains the results (\code{Psihat}, \code{Varhat}, \code{se_robust}) of the publication probability estimation.}
+
+\item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
+vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
+
+\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+
+\item{symmetric_p}{If set to \code{1}, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
+If set to \code{0}, asymmetry is allowed and cutoffs should be specified in increasing order.}
+
+\item{identificationapproach}{Indication if we are dealing with replication studies (== 1) or a met analysis (== 2).}
+
+\item{GMM}{If set to TRUE, the publication probability will be estimated via GMM. Setting it to FALSE uses the MLE
+method for estimation.}
 }
 \value{
-
+Returns a list containing the original estimates with their 95\% confidence bonds (\code{Z1}, \code{Z1_L}, \code{Z1_U})
+as well as the corrected estimates (\code{Z1_M}) and in addition the Bonferroni corrected 95\% confidence bonds (\code{Z1_LB}, \code{Z1_UB}).
+There are additional elements which are mainly used for plotting the results.
 }
 \description{
 Title

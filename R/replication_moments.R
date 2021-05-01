@@ -1,15 +1,4 @@
-#' Title
-#'
-#' @param betap
-#' @param cutoffs
-#' @param symmetric
-#' @param Z
-#' @param sigmaZ2
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 replication_moments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
 
 n <- nrow(Z)

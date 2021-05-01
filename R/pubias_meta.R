@@ -20,15 +20,14 @@
 #' @return Returns a list object called `pubias_result` with the elements `Results` and `Corrected Estimates`.
 #' If specified, the list also includes the descriptive, as well as the correction plots as `ggplot` objects.
 #'
-#' - `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
+#' `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
 #'
-#' - `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
+#' `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
 #' as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bonds (`Z1_LB`, `Z1_UB`).
 #' There are additional elements which are mainly used for plotting the results.
 #'
 #' @export
 #'
-#' @examples
 pubias_meta <-
   function(data,
            studynames,
@@ -149,6 +148,7 @@ pubias_meta <-
             identificationapproach,
             GMM
           )
+        result <- list("Psihat" = result$Psihat[-c(1,2)], "Varhat" = result$Varhat[-c(1,2), -c(1,2)], "se_robust" = result$se_robust[-c(1,2)])
         pubias_result <<-
           list("MLE Meta Results" = result,
                "Corrected Estimates" = corrected_estimates)
@@ -201,11 +201,12 @@ pubias_meta <-
             params = list(
               plots = plots,
               descriptives = descriptives,
-              pub_prob = result$Psihat
+              pub_prob = result$Psihat[-c(1,2)]
             ),
             output_file = paste0(wd, "/", name, "_Dashboard.html")
           )
         }
+        result <- list("Psihat" = result$Psihat[-c(1,2)], "Varhat" = result$Varhat[-c(1,2), -c(1,2)], "se_robust" = result$se_robust[-c(1,2)])
         pubias_result <<-
           list(
             "MLE Meta Results" = result,

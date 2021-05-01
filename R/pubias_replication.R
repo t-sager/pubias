@@ -3,8 +3,8 @@
 #'`pubias_replication()` calculates the publication probability either by a Maximum Likelihood or a GMM approach and
 #'then reports the corrected estimates for a set of replication studies.
 #'
-#' @param data A `n x 4` matrix where the first (third) column contains the original estimates (replication estimates), the second (fourth) column the associated
-#' standard errors of the original estimates (replication estimates), where `n` is the number of estimates.
+#' @param data A `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates), the second (fourth) column the associated
+#' standard errors of the standardized original estimates (replication estimates), where `n` is the number of estimates.
 #' @param studynames A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs. By default, the cutoff is set at 1.96.
@@ -18,15 +18,14 @@
 #' @return Returns a list object called `pubias_result` with the elements `Results` and `Corrected Estimates`.
 #' If specified, the list also includes the descriptive, as well as the correction plots as `ggplot` objects.
 #'
-#' - `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
+#' `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
 #'
-#' - `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
+#' `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
 #' as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bonds (`Z1_LB`, `Z1_UB`).
 #' There are additional elements which are mainly used for plotting the results.
 #'
 #' @export
 #'
-#' @examples
 pubias_replication <-
   function(data,
            studynames,
@@ -56,7 +55,7 @@ pubias_replication <-
           bias_correction(
             X,
             Z,
-            sigma,
+            sigmaZ2,
             result,
             cutoffs,
             symmetric,
@@ -74,7 +73,7 @@ pubias_replication <-
           bias_correction(
             X,
             Z,
-            sigma,
+            sigmaZ2,
             result,
             cutoffs,
             symmetric,
@@ -132,7 +131,7 @@ pubias_replication <-
           bias_correction(
             X,
             Z,
-            sigma,
+            sigmaZ2,
             result,
             cutoffs,
             symmetric,
@@ -140,6 +139,7 @@ pubias_replication <-
             identificationapproach,
             GMM
           )
+        result <- list("Psihat" = result$Psihat[-c(1,2)], "Varhat" = result$Varhat[-c(1,2), -c(1,2)], "se_robust" = result$se_robust[-c(1,2)])
         pubias_result <<-
           list("MLE Replication Results" = result,
                "Corrected Estimates" = corrected_estimates)
@@ -150,7 +150,7 @@ pubias_replication <-
           bias_correction(
             X,
             Z,
-            sigma,
+            sigmaZ2,
             result,
             cutoffs,
             symmetric,
@@ -184,11 +184,12 @@ pubias_replication <-
             params = list(
               plots = plots,
               descriptives = descriptives,
-              pub_prob = result$Psihat
+              pub_prob = result$Psihat[-c(1,2)]
             ),
             output_file = paste0(wd, "/", name, "_Dashboard.html")
           )
         }
+        result <- list("Psihat" = result$Psihat[-c(1,2)], "Varhat" = result$Varhat[-c(1,2), -c(1,2)], "se_robust" = result$se_robust[-c(1,2)])
         pubias_result <<-
           list(
             "MLE Replication Results" = result,

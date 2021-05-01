@@ -1,16 +1,4 @@
-#' Title
-#'
-#' @param X
-#' @param sigma
-#' @param identificationapproach
-#' @param name
-#' @param symmetric
-#' @param cluster_ID
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric, cluster_ID) {
 
     # for approach 1:

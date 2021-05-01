@@ -1,18 +1,23 @@
 #' Title
 #'
-#' @param X
-#' @param sigma
-#' @param Psihat
-#' @param Varhat
-#' @param cutoffs
-#' @param symmetric
-#' @param symmetric_p
-#' @param identificationapproach
+#' @param X A `n x 1` matrix containing the estimates, where `n` is the number of estimates.
+#' @param Z A `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.
+#' @param sigma A `n x 1` matrix containing the standard errors of the estimates, where `n` is the number of estimates.
+#' @param result List obJect which contains the results (`Psihat`, `Varhat`, `se_robust`) of the publication probability estimation.
+#' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
+#' vector of size `k x 1` where `k` is the number of cutoffs.
+#' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
+#' @param symmetric_p If set to `1`, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
+#' If set to `0`, asymmetry is allowed and cutoffs should be specified in increasing order.
+#' @param identificationapproach Indication if we are dealing with replication studies (== 1) or a met analysis (== 2).
+#' @param GMM If set to TRUE, the publication probability will be estimated via GMM. Setting it to FALSE uses the MLE
+#' method for estimation.
 #'
-#' @return
+#' @return Returns a list containing the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
+#' as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bonds (`Z1_LB`, `Z1_UB`).
+#' There are additional elements which are mainly used for plotting the results.
 #' @export
 #'
-#' @examples
 bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach, GMM) {
 
   Psihat <- result$Psihat

@@ -1,19 +1,4 @@
-#' Title
-#'
-#' @param X
-#' @param sigma
-#' @param Psihat
-#' @param Varhat
-#' @param cutoffs
-#' @param symmetric
-#' @param symmetric_p
-#' @param studynames
-#' @param identificationapproach
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 plot_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates) {
 
   Z1 <- corrected_estimates$Z1

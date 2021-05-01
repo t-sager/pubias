@@ -2,16 +2,28 @@
 % Please edit documentation in R/mle_replication.R
 \name{mle_replication}
 \alias{mle_replication}
-\title{Title}
+\title{Computing the publication probability in replication studies}
 \usage{
 mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
 }
 \arguments{
-\item{Studynames}{}
+\item{Z}{A \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
+
+\item{sigmaZ2}{A \verb{n x 1} matrix containing the standard errors (se_replication divided by se_original) of the estimates, where \code{n} is the number of estimates.}
+
+\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+
+\item{cluster_ID}{A \verb{n x 1} matrix containing IDs going from 1 to \code{n}, where \code{n} is the number of estimates.}
+
+\item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
+vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
+
+\item{C}{A \verb{n x 1} matrix with all values being 1. Controls.}
 }
 \value{
-
+Returns a list object with the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard errors (\code{se_robust}).
 }
 \description{
-Title
+\code{mle_replication()} calculates the publication probability, its variance and robust standard errors
+of replication studies by a GMM approach.
 }

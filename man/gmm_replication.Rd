@@ -2,16 +2,28 @@
 % Please edit documentation in R/gmm_replication.R
 \name{gmm_replication}
 \alias{gmm_replication}
-\title{Title}
+\title{Computing the publication probability in replication studies}
 \usage{
 gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
 }
 \arguments{
-\item{Studynames}{}
+\item{Z}{A \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
+
+\item{sigmaZ2}{A \verb{n x 1} matrix containing the standard errors (se_replication divided by se_original) of the estimates, where \code{n} is the number of estimates.}
+
+\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+
+\item{cluster_ID}{A \verb{n x 1} matrix containing IDs going from 1 to \code{n}, where \code{n} is the number of estimates.}
+
+\item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
+vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
+
+\item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 }
 \value{
-
+Returns a list object with the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard errors (\code{se_robust}).
 }
 \description{
-Title
+\code{gmm_replication()}  calculates the publication probability, its variance and robust standard errors
+of meta-analyses by a GMM approach.
 }

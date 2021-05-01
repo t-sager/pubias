@@ -1,10 +1,13 @@
 ---
-title: "pubias: Idenfiication and correction for publication bias"
+title: "pubias: Identification of and Correction for Publication Bias"
 output:   
   pdf_document:
+    toc: true
+    toc_depth: 3  
+    number_sections: true 
     latex_engine: xelatex
 vignette: >
-  %\VignetteIndexEntry{pubias: Idenfiication and correction for publication bias}
+  %\VignetteIndexEntry{pubias: Identification of and Correction for Publication Bias"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,6 +20,9 @@ knitr::opts_chunk$set(
 ```{r setup}
 
 ```
+
+\newpage
+
 
 # Introduction
 

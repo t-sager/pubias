@@ -1,18 +1,4 @@
-#' Title
-#'
-#' @param lambdabar
-#' @param tauhat
-#' @param betap
-#' @param cutoffs
-#' @param symmetric
-#' @param X
-#' @param sigma
-#' @param C
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric, X, sigma, C) {
   # lambdabar <- Psihat0[1]
   # tauhat <- Psihat0[2]

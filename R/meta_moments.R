@@ -1,15 +1,4 @@
-#' Title
-#'
-#' @param betap
-#' @param cutoffs
-#' @param symmetric
-#' @param X
-#' @param sigma
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
 
     n <- length(X)

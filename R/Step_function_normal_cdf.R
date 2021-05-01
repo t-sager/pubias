@@ -1,16 +1,4 @@
-#' Title
-#'
-#' @param X
-#' @param theta
-#' @param sigma
-#' @param betap
-#' @param cutoffs
-#' @param symmetric
-#'
-#' @return
-#' @export
-#'
-#' @examples
+
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
 
     if (length(betap)!=(length(cutoffs)+1)) {

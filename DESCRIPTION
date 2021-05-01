@@ -25,7 +25,6 @@ Depends:
     RColorBrewer,
     latex2exp,
     xtable,
-    here,
     invgamma,
     matlab,
     PEIP,

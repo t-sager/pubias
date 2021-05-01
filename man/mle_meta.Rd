@@ -2,16 +2,33 @@
 % Please edit documentation in R/mle_meta.R
 \name{mle_meta}
 \alias{mle_meta}
-\title{Title}
+\title{Computing the publication probability in meta analyses}
 \usage{
 mle_meta(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, studynames, C)
 }
 \arguments{
-\item{Studynames}{}
+\item{X}{A \verb{n x 1} matrix containing the estimates, where \code{n} is the number of estimates.}
+
+\item{sigma}{A \verb{n x 1} matrix containing the standard errors of the estimates, where \code{n} is the number of estimates.}
+
+\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+
+\item{symmetric_p}{If set to \code{1}, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
+If set to \code{0}, asymmetry is allowed and cutoffs should be specified in increasing order.}
+
+\item{cluster_ID}{A \verb{n x 1} matrix containing IDs going from 1 to \code{n}, where \code{n} is the number of estimates.}
+
+\item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
+vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
+
+\item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
+
+\item{C}{A \verb{n x 1} matrix with all values being 1. Controls.}
 }
 \value{
-
+Returns a list object with the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard errors (\code{se_robust}).
 }
 \description{
-Title
+\code{mle_meta()}  calculates the publication probability, its variance and robust standard errors
+of replication studies by a Maximum Likelihood approach.
 }
