@@ -59,7 +59,6 @@ pubias_replication <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p = 0,
             identificationapproach,
             GMM
           )
@@ -77,7 +76,6 @@ pubias_replication <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p = 0,
             identificationapproach,
             GMM
           )
@@ -96,7 +94,6 @@ pubias_replication <-
             Varhat,
             cutoffs,
             symmetric,
-            symmetric_p,
             studynames,
             identificationapproach,
             corrected_estimates
@@ -135,7 +132,6 @@ pubias_replication <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p = 0,
             identificationapproach,
             GMM
           )
@@ -154,7 +150,6 @@ pubias_replication <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p = 0,
             identificationapproach,
             GMM
           )
@@ -173,7 +168,6 @@ pubias_replication <-
             Varhat,
             cutoffs,
             symmetric,
-            symmetric_p,
             studynames,
             identificationapproach,
             corrected_estimates

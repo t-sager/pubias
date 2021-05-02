@@ -82,7 +82,6 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
             base_moments = base_moments - diag(diag(base_moments))
             base_moments[is.nan(base_moments)] = 0
             moment_mean[1, k] = pracma::nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
-            #Built normalization to variance into rhat to ensure correct answers with culstered variance estimators
             rhat[, k] = 2 * ((n - 1) ^ -1) * as.matrix(rowSums(base_moments, na.rm =
                                                                    FALSE))
         }

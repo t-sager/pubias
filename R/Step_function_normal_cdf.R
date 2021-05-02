@@ -18,11 +18,11 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
             betap_u[length(cutoffs)+n] <- betap[n]
         }
         betap_u[length(betap_u)+1] <- 1
+        betap_u <- as.matrix(betap_u)
     } else {
         cutoffs_u <- cutoffs
-        betap_u <- betap
+        betap_u <- t(betap)
     }
-betap_u <- as.matrix(betap_u)
 
     # Calculate denominator in cdf
     prob_vec<- zeros(length(cutoffs_u)+1,1)
