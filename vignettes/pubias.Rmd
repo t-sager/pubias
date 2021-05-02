@@ -1,47 +1,131 @@
 ---
 title: "pubias: Identification of and Correction for Publication Bias^[This package was created as part of the seminar Workshop in Econometrics (Spring Semester 2021) and follows the implementation by *Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.*]"
+abstract:
+  "Following Andrews and Kasy (2019), this package implements the identification of and correction for publiaction bias. Also 
+  known as the file drawer problem, the publication bias occures when researchers submit their papers based on the likelihood of their      publication. Therefore, some results have a higher publication probability than others.This package identifies the said bias and          corrects   for it by differentiating between replication and meta-studies as well as between a likelihood and GMM estimation procedure."
 author: "Till Sager^[University of Bern, till.sager@students.unibe.ch]"
 date: "May, 2021"
 output:   
   pdf_document:
-    toc: true
+    toc: false
     toc_depth: 3  
     number_sections: true 
     latex_engine: xelatex
+fontsize: 11pt
+header-includes:
+ \usepackage{float}
 vignette: >
-  %\VignetteIndexEntry{pubias: Identification of and Correction for Publication Bias"}
+  %\VignetteIndexEntry{pubias: Identification of and Correction for Publication Bias^[This package was created as part of the seminar Workshop in Econometrics (Spring Semester 2021) and follows the implementation by *Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.*]"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-)
+knitr::opts_chunk$set(fig.pos = 'H')
+
 ```
 
 ```{r setup}
 
 ```
 
+\centering
+\raggedright
+\newpage
+\tableofcontents
 
 \newpage
 
 
 # Introduction
 
-# Methods and assumption
+# Publication Bias: Illustrative Example
 
-## Replication Studies
+Instead of going into detail about the theory and mathematics Andrews and Kasy (2019) used in their paper, I use an illustrative example they provided to show how a publication bias arises, how it can be identified and ultimately, how one can correct for it. 
 
-## Meta Analysis
+Journals usually receive a lot of studies with different estimates and the journals need to decide which papers will be published and which are not. Let us assume that the reported estimates are normally distributed i.e. $X ~ N(Θ, Σ^2)$ where $Θ$ are the the treatment effects, and $Σ$ are the corresponding standard errors. Additionally, each study examines different treatments.
+In this example, the journal publishes significant results at the 5% with probability 1 ($p(z) = 1$) and insignificant results with probability 0.2 ($p(Z) = 0.2$, with $Z ∈ [-1.96, 1.96]$). This indicate a clear preference for publishing significant results. Namely, significant result are 5 times more likely to be published than insignificant results.
+Because of this behavior, it is clear that the published results over-estimate the magnitude of the treatment effect.The same holds for the confidence set. Small values are underestimates, while large values are overestimated. Although the introduction focused on the publication probability by researches, the behavior of the journals applies to the researchers as well or we can even say it applies to both at the same time. 
 
-## MLE
 
-## GMM
+# Methods and assumptions
+
+This chapter summarizes the methods used to identify and correct for the publication bias following Andrews and Kasy (2019). In their paper, they differ between two approaches of identification. The first approach uses replication studies while the second one uses meta studies to determine the publication probability. Given a certain publication probability, they propose a method to construct the median unbiased estimators and confidence bounds.
+
+## Identification
+
+The procedure of identifying the publication probability differs between the two approaches. A replication study uses the *same* methods as the original study and applies them to a new sample from the *same* population. From the package perspective, we therefore need the original estimates as well as the replication estimates to determine the given publication probability. Additionally, it is assumed that the publication probability only depends on the original estimates.
+On the other hand, a meta study is a study which collects multiple estimates from studies which cover more or less the same topic. One crucial assumption regarding meta studies is the independence between the different estimates. In contrast to the replication studies, meta studies only have one set of estimates as input for the estimation of the publication probability.
+
+
+### Replication Studies
+
+Again, to illustrate the identification approach using
+replication studies, the illustrative example from the beginning is used.Remember, we assumed that $p(Z) = 1$ when $|Z| > 1.96$ , and that
+$p(Z) = 0.2$ otherwise. A further assumption is that the original as well as the replication estimates both have a variance of 1 ($Σ^r = Σ = 1$).
+Figure **3** shows how the identification using replication studies is done. The left panel shows 100 random draws $(Z, Z^r)$. Draws which are insigificant on the 5% level are marked as grey $(|Z| ≤ 1.96)$ whereas draws which are significant are drawn blue $(|Z| > 1.96)$.
+The right panel shows the draws $(Z, Z^r)$ which are published. These are exactly the same draws as before but now 80% of the statistically insigfnicant results are deleted because the journal only publishes 20% of the statistically insigifcant results.
+To proof that some selective publication exists, we can take a closer look at the regions $A$ and $B$. In $A$, we deal with the situation that $Z$ is statistically significant while $Z^R$ is not. Clearly, in region $B$ it is just the other way around.
+Here, the assumption of the symmetry in the data generating process comes into play. Because of this assumption, $Z$ or $Z^r$ should fall in either region with the same probility. Due to the fact that we clearly observe more data points in region A than in region B, we have evidence for selective publication. That is why it is possible to estimate $p(.)$.*TODO: p() up to scale?*
+
+
+```{r plot1, echo=FALSE, fig.cap="Identifcation Using Replication Studies",fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("replication.png")
+
+```
+
+
+### Meta Studies
+
+Using the same set up as in the identification approach using replication studies and adding the crucial assumption that $Σ$ is independent of $Θ$ across the studies, we can take a closer look at Figure 2 which shows the identification approach using meta studies.
+Instead of dealing with original and replication estimates and having them on the X and Y axis, we now have the original estimates $X$ on the X axis and the corresponding standard errors $Σ$ on the Y axis.
+As before, the left panel shows 100 random draws $(X, Σ)$. Draws which are insignificant on the 5% level are marked as grey $(|X/Σ| ≤ 1.96)$ whereas draws which are significant are drawn blue $(|X/Σ| > 1.96)$.
+The right panel shows the draws $(X,Σ)$ which are published. These are exactly the same draws as before but now 80% of the statistically insigfnicant results are deleted because the journal only publishes 20% of the statistically insigifcant results.
+Intead of looking at two reagions as in the case of replication studies, we now tae a closer look at two different values of $Σ$, shown in the figure by $A$ and $B$.
+Since we have assumed independence between $Σ$ and $Θ$, the distribution of $X$ given greater values of $Σ$ is an inflated version of the same distribution for smaller values of $Σ$. Thus, to the degree that the same is not true for the distribution of the published estimates $X$ given $Σ$, this has to be due to selectivity in the publication process. In this example, statistically insignificant observations are absent for greater values of $Σ$. Since the likelihood of publication is hiher if the result is significant, the estimated values $X$ tend to be larger on average for greater values of $Σ$. This allows for an estimate of $p(.)$.
+*TODO: p() up to scale? + Text noch überarbeiten, letzter Teil nicht klar*
+
+
+```{r plot2, echo=FALSE, fig.cap="Identifcation Using Meta-Studies",fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("meta.png")
+
+```
+
+## Correction
+
+After computing the publication probability, Andrews and Kasy show, that one can derive corrected estimators and confidence sets. Putting it as simple as possible, the selective publication weights the distribution of $Z$, where $Z$ is equal the original estimates divided by their standard errors, by the publication probability. To obtain the corrected estimates and confidence set, one only need to correct for this weighting. 
+In their approach, they define the distribution function for published results $Z$ given their *true* effect. By using procedures applied in Andrews (1993) and Stock and Watson (1998), and inverting the distribution function leads to the median unbiased estimator as well as the equal-tailed confidence sets which fully correct for the and bias produced by the selective publication. 
+To get an intuition for their result, the illustrative example is continued.
+Comparing the median unbiased estimator with the uncorrected estimator, we can clearly see that the median unbiased estimator lies below the original estimator, given $Z$ is small. With an increasing $Z$, we observe that the median unbiased estimator converges to the original estimator. The same observation holds for the confidence intervals. In the example from figure two, the corrected estimates are nearly equal the original estimates is $Z > 5$.
+
+```{r plot3, echo=FALSE, fig.cap="Bias correction", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("correction.png")
+
+```
 
 # Main functions
 
 ## Syntax
+
+Meta Studies
+```{r, eval = FALSE}
+library(pubias)
+
+pubias_meta(data, studynames, GMM = FALSE, symmetric = 1, cutoffs = 1.96)
+
+pubias_meta(data, studynames, GMM = TRUE, symmetric = 1, cutoffs = 1.96)
+```
+
+Replication Studies
+```{r, eval = FALSE}
+pubias_replication(data, studynames, GMM = FALSE, symmetric = 1, cutoffs = 1.96)
+
+pubias_replication(data, studynames, GMM = TRUE, symmetric = 1, cutoffs = 1.96)
+
+```
 
 ## Description
 

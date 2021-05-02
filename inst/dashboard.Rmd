@@ -32,7 +32,7 @@ params$descriptives$hist
 Column {data-width=500}
 -----------------------------------------------------------------------
 
-### Funnelplot
+### Identification
 
 ```{r}
 params$descriptives$scatter
