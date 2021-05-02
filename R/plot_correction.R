@@ -1,5 +1,5 @@
 
-plot_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,symmetric_p,studynames,identificationapproach, corrected_estimates) {
+plot_correction <- function(X,sigma,Psihat,Varhat,cutoffs,symmetric,studynames,identificationapproach, corrected_estimates) {
 
   Z1 <- corrected_estimates$Z1
   Z1_U <- corrected_estimates$Z1_U

@@ -4,7 +4,7 @@
 \alias{mle_meta}
 \title{Computing the publication probability in meta analyses}
 \usage{
-mle_meta(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, studynames, C)
+mle_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C)
 }
 \arguments{
 \item{X}{A \verb{n x 1} matrix containing the estimates, where \code{n} is the number of estimates.}
@@ -12,9 +12,6 @@ mle_meta(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, studynames, C)
 \item{sigma}{A \verb{n x 1} matrix containing the standard errors of the estimates, where \code{n} is the number of estimates.}
 
 \item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
-
-\item{symmetric_p}{If set to \code{1}, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
-If set to \code{0}, asymmetry is allowed and cutoffs should be specified in increasing order.}
 
 \item{cluster_ID}{A \verb{n x 1} matrix containing IDs going from 1 to \code{n}, where \code{n} is the number of estimates.}
 

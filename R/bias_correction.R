@@ -7,8 +7,6 @@
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs.
 #' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
-#' @param symmetric_p If set to `1`, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
-#' If set to `0`, asymmetry is allowed and cutoffs should be specified in increasing order.
 #' @param identificationapproach Indication if we are dealing with replication studies (== 1) or a met analysis (== 2).
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. Setting it to FALSE uses the MLE
 #' method for estimation.
@@ -18,7 +16,7 @@
 #' There are additional elements which are mainly used for plotting the results.
 #' @export
 #'
-bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,identificationapproach, GMM) {
+bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
 
   Psihat <- result$Psihat
   Varhat <- result$Varhat
@@ -34,17 +32,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,ident
   alpha <- 0.05
   bonf_alpha <- 0.04
   bonf_beta <- 0.01
-
-  # Pad Psihat_use with additional zeros in symmetric specifications to make dimensions conform
-  if (symmetric==1){
-    Psihat_use <- Psihat
-  } else {
-    if (symmetric_p==1){
-      Psihat_use <- cbind(Psihat[1], Psihat[2], 1, Psihat[3:length(Psihat)], fliplr(Psihat[3:length(Psihat)]))
-    } else {
-        Psihat_use <- Psihat
-      }
-    }
+  Psihat_use <- Psihat
 
 
   # Diff between MLE and GMM
@@ -172,7 +160,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,symmetric_p,ident
   #######################
 
 
-if (symmetric == 1 | symmetric_p == 1) {
+if (symmetric == 1) {
 
     xgrid=seq(0,5,0.01)
     alpha=0.05

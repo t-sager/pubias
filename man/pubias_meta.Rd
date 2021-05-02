@@ -8,7 +8,6 @@ pubias_meta(
   data,
   studynames,
   symmetric = 1,
-  symmetric_p = 1,
   cutoffs = 1.96,
   GMM = FALSE,
   print_plots = FALSE,
@@ -22,9 +21,6 @@ standard errors of the estimates and in the third column an ID going from 1 to \
 \item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 
 \item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
-
-\item{symmetric_p}{If set to \code{1}, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
-If set to \code{0}, asymmetry is allowed and cutoffs should be specified in increasing order.}
 
 \item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 vector of size \verb{k x 1} where \code{k} is the number of cutoffs. By default, the cutoff is set at 1.96.}

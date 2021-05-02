@@ -11,7 +11,6 @@ bias_correction(
   result,
   cutoffs,
   symmetric,
-  symmetric_p,
   identificationapproach,
   GMM
 )
@@ -29,9 +28,6 @@ bias_correction(
 vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
 
 \item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
-
-\item{symmetric_p}{If set to \code{1}, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
-If set to \code{0}, asymmetry is allowed and cutoffs should be specified in increasing order.}
 
 \item{identificationapproach}{Indication if we are dealing with replication studies (== 1) or a met analysis (== 2).}
 

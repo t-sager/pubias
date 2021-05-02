@@ -6,8 +6,6 @@
 #' @param X A `n x 1` matrix containing the estimates, where `n` is the number of estimates.
 #' @param sigma A `n x 1` matrix containing the standard errors of the estimates, where `n` is the number of estimates.
 #' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
-#' @param symmetric_p If set to `1`, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
-#' If set to `0`, asymmetry is allowed and cutoffs should be specified in increasing order.
 #' @param cluster_ID A `n x 1` matrix containing IDs going from 1 to `n`, where `n` is the number of estimates.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs.
@@ -17,29 +15,11 @@
 #' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard errors (`se_robust`).
 #' @export
 #'
-mle_meta <- function(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, studynames, C) {
+mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C) {
 
   # Stepsize
   stepsize <- 10^(-6)
   n <- length(X)
-
-  if (symmetric_p == 1) { # symmetric
-
-        LLH <-
-          function (Psi) {
-            f <- variation_variance_llh(
-              Psi[1],
-              Psi[2],
-              c(1, Psi[-c(1,2)], rev(c(Psi[-c(1,2)])), 1),
-              cutoffs,
-              symmetric,
-              X,
-              sigma,
-              C
-            )
-            return(f)
-          }
-  } else { # not symmetric
 
         #Run model with normal distribution for latent effects
         LLH <-
@@ -56,7 +36,7 @@ mle_meta <- function(X, sigma, symmetric, symmetric_p, cluster_ID, cutoffs, stud
             )
             return(f)
           }
-  }
+
 
   nn <- n
 

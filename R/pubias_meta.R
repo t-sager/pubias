@@ -11,8 +11,6 @@
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
 #' method for estimation.
 #' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
-#' @param symmetric_p If set to `1`, the publication probability is assumed to be symmetric around zero and all cutoffs should be positive.
-#' If set to `0`, asymmetry is allowed and cutoffs should be specified in increasing order.
 #' @param print_plots If set to TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
 #' @param print_dashboard If set to TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
 #' The dashboard is saved in the working directory. Only possbile if `print_plots` is set to TRUE.
@@ -32,7 +30,6 @@ pubias_meta <-
   function(data,
            studynames,
            symmetric = 1,
-           symmetric_p = 1,
            cutoffs = 1.96,
            GMM = FALSE,
            print_plots = FALSE,
@@ -60,7 +57,6 @@ pubias_meta <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p,
             identificationapproach,
             GMM
           )
@@ -79,7 +75,6 @@ pubias_meta <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p,
             identificationapproach,
             GMM
           )
@@ -98,7 +93,6 @@ pubias_meta <-
             Varhat,
             cutoffs,
             symmetric,
-            symmetric_p,
             studynames,
             identificationapproach,
             corrected_estimates
@@ -131,7 +125,6 @@ pubias_meta <-
           mle_meta(X,
                    sigma,
                    symmetric,
-                   symmetric_p,
                    cluster_ID,
                    cutoffs,
                    studynames,
@@ -144,7 +137,6 @@ pubias_meta <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p,
             identificationapproach,
             GMM
           )
@@ -158,7 +150,6 @@ pubias_meta <-
           mle_meta(X,
                    sigma,
                    symmetric,
-                   symmetric_p,
                    cluster_ID,
                    cutoffs,
                    studynames,
@@ -171,7 +162,6 @@ pubias_meta <-
             result,
             cutoffs,
             symmetric,
-            symmetric_p,
             identificationapproach,
             GMM
           )
@@ -190,7 +180,6 @@ pubias_meta <-
             Varhat,
             cutoffs,
             symmetric,
-            symmetric_p,
             studynames,
             identificationapproach,
             corrected_estimates
