@@ -151,7 +151,7 @@ To check the different arguments, one could also take a closer look at the helpf
 
 The following specifiactions a currently possible:
 
-```{r}
+```{r, eval = FALSE}
 
 pubias_meta(
   data,
