@@ -2,9 +2,6 @@
 variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric, X, sigma, C) {
   # lambdabar <- Psihat0[1]
   # tauhat <- Psihat0[2]
-  # symmetric_p == 1
-  # betap <- c(1, Psihat0[-c(1,2)], rev(c(Psihat0[-c(1,2)])), 1)
-  # symmetric_p == 0
   # betap <- c(reshape(t(Psihat0[-c(1,2)]), c(length(Psihat0[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1)
 
   n <- nrow(X)
@@ -83,7 +80,7 @@ if (symmetric==1){
 
       #Monte Carlo Integration
       g <- (pnorm(cutoffs[m]-theta_mat/sigma_mat)-pnorm(-cutoffs[m]-theta_mat/sigma_mat))
-      prob_vec[,m+1] <- mean(g,2)
+      prob_vec[,m+1] <- rowMeans(g)
 
   }
   prob_vec <- cbind(prob_vec,1)

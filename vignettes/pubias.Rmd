@@ -106,24 +106,35 @@ knitr::include_graphics("correction.png")
 
 ```
 
-# Main functions
+# Package functionalities
+
+## Install
+
+```{r, eval = FALSE}
+
+# Installing the package directly from github
+devtools::install_github("t-sager/pubias")
+
+# Load package into library
+library(pubias)
+
+```
+
 
 ## Syntax
 
 Meta Studies
 ```{r, eval = FALSE}
-library(pubias)
+pubias_meta(data, studynames)
 
-pubias_meta(data, studynames, GMM = FALSE, symmetric = 1, cutoffs = 1.96)
-
-pubias_meta(data, studynames, GMM = TRUE, symmetric = 1, cutoffs = 1.96)
+pubias_meta(data, studynames)
 ```
 
 Replication Studies
 ```{r, eval = FALSE}
-pubias_replication(data, studynames, GMM = FALSE, symmetric = 1, cutoffs = 1.96)
+pubias_replication(data, studynames)
 
-pubias_replication(data, studynames, GMM = TRUE, symmetric = 1, cutoffs = 1.96)
+pubias_replication(data, studynames)
 
 ```
 
