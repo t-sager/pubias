@@ -1,7 +1,7 @@
 #' Computing the publication probability in meta analyses
 #'
 #'`gmm_meta()` calculates the publication probability, its variance and robust standard errors
-#' of meta-analyses by a Maximum Likelihood approach.
+#' of meta-analyses by a Maximum Likelihood approach. Check package vignette for further information.
 #'
 #' @param X A `n x 1` matrix containing the estimates, where `n` is the number of estimates.
 #' @param sigma A `n x 1` matrix containing the standard errors of the estimates, where `n` is the number of estimates.

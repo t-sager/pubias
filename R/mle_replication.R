@@ -1,7 +1,7 @@
 #' Computing the publication probability in replication studies
 #'
 #'`mle_replication()` calculates the publication probability, its variance and robust standard errors
-#' of replication studies by a GMM approach.
+#' of replication studies by a GMM approach.  Check package vignette for further information.
 #'
 #' @param Z A `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.
 #' @param sigmaZ2 A `n x 1` matrix containing the standard errors (se_replication divided by se_original) of the estimates, where `n` is the number of estimates.

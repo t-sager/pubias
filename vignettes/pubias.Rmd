@@ -106,9 +106,11 @@ knitr::include_graphics("correction.png")
 
 ```
 
-# Package functionalities
+# Package Features
 
-## Install
+## Installing the Package
+
+The package is currently available on GitHub. Running the code below will directly install the package with all its dependencies on your local machine.
 
 ```{r, eval = FALSE}
 
@@ -123,28 +125,82 @@ library(pubias)
 
 ## Syntax
 
-Meta Studies
+There are two main functions in the package. The first `pubias_meta()` leads to the identification of and correction for the publication bias in meta studies while `pubias_replication` does the same for replication studies. The most simple syntax to get a result is the following:
+
+**Meta Studies**
 ```{r, eval = FALSE}
 pubias_meta(data, studynames)
 
-pubias_meta(data, studynames)
 ```
 
-Replication Studies
+**Replication Studies**
 ```{r, eval = FALSE}
 pubias_replication(data, studynames)
 
-pubias_replication(data, studynames)
-
 ```
 
-## Description
+This basic specification takes the data and the data and the studynames of the selected identification approach. The rest of the functions arguments are set to their default values. 
+
+Additionally, there are four functions which are, depending on their specification, called by the two functions above.  The four functions are as follows: `mle_meta()`, `mle_replication()`, `gmm_meta()` and `gmm_replication()`. For example: If the base specification for the meta studies `pubias_meta(data, studynames)` is used, then the function `mle_meta()` is called to calculate the publication probability by MLE. On the other hand, if one executes `pubias_meta(data, studynames GMM = TRUE)` the function `gmm_meta` will be called.
+Because the input for these functions heavily depend on he input from the two main function I will not go into further detail about the arguments for these functions. One can also take a closer look at the built in helpfile with `?mle_meta()`.
 
 ## Arguments
 
+We have seen that the function works even without specifying more than the data and studynames. Now we will take a closer look at the different arguments which could enter the function. Keep in mind: the arguments for both functions are the same. The only difference is, that in the case of replication studies, the data used hast twi columns because we also have to account for the replication estimates.
+To check the different arguments, one could also take a closer look at the helpfiles for the two functions with `?pubias_meta()` or `?pubias_replication()`.
+
+The following specifiactions a currently possible:
+
+```{r}
+
+pubias_meta(
+  data,
+  studynames,
+  symmetric = 1,
+  cutoffs = 1.96,
+  GMM = FALSE,
+  print_plots = FALSE,
+  print_dashboard = FALSE
+)
+
+```
+
+- `data`
+
+- `studynames`
+
+- `symmetric`
+
+- `cutoffs`
+
+- `GMM`
+
+- `print_plots`
+
+- `print_dashboard`
+
+
 ## Results
 
+The output of the functions is pretty simple. They return a list object called `pubias_results`. If only the base specification is run, the list contains two elements:
+
+- `Results`: This element contains the three results `Psihat` which is the estimated publication probability, `Varhat` its variance and`se_robust` containing the robust standard errors for the publication probability. For interpretation: If the function yields `Psihat = 0.25`, the publication of insignificant results is only 25% as likely as the publication of significant results. Or put differently, the publication of a significant result is 4 times more likely than an insignificant result.
+
+- `Corrected Estimates`:  As the name suggests, this element contains the original estimates with their 95% confidence bonds (Z1, Z1_L, Z1_U) as well as the corrected estimates (Z1_M) and in addition the Bonferroni corrected 95% confidence bonds (Z1_LB, Z1_UB). There are additional elements which are mainly used for plotting the results.
+
+If the functions are run with the option to print the plots and dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed as .pdf into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling for example: 
+
+```{r, eval = FALSE}
+
+pubias_result$`Descriptive Plots`$scatter
+
+```
+
+
 ## Applications
+
+To further illustrate the functionality of the package, we apply it to on replication study as well as one meta analysis.
+These examples are directly taken from the paper by Andrews and Kasy (2019).
 
 ### Replication Study
 

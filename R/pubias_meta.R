@@ -1,7 +1,7 @@
 #' Identification of and correction for publication bias in meta studies
 #'
 #'`pubias_meta()` calculates the publication probability either by a Maximum Likelihood or a GMM approach and
-#'then reports the corrected estimates for the estimates of a meta-analysis.
+#'then reports the corrected estimates for the estimates of a meta-analysis.  Check package vignette for further information.
 #'
 #' @param data A `n x 3` matrix where the first column contains the treatment effects, the second column the associated
 #' standard errors of the estimates and in the third column an ID going from 1 to `n`, where `n` is the number of estimates.

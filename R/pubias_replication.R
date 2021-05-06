@@ -1,7 +1,7 @@
 #' Identification of and correction for publication bias in replication studies
 #'
 #'`pubias_replication()` calculates the publication probability either by a Maximum Likelihood or a GMM approach and
-#'then reports the corrected estimates for a set of replication studies.
+#'then reports the corrected estimates for a set of replication studies.   Check package vignette for further information.
 #'
 #' @param data A `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates), the second (fourth) column the associated
 #' standard errors of the standardized original estimates (replication estimates), where `n` is the number of estimates.
