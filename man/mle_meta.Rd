@@ -27,5 +27,5 @@ Returns a list object with the publication probability (\code{Psihat}), its vari
 }
 \description{
 \code{mle_meta()}  calculates the publication probability, its variance and robust standard errors
-of replication studies by a Maximum Likelihood approach.
+of replication studies by a Maximum Likelihood approach.  Check package vignette for further information.
 }

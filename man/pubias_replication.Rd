@@ -6,9 +6,9 @@
 \usage{
 pubias_replication(
   data,
-  studynames,
+  studynames = NULL,
   symmetric = 1,
-  cutoffs = 1.96,
+  sign_lvl = 0.05,
   GMM = FALSE,
   print_plots = FALSE,
   print_dashboard = FALSE
@@ -18,12 +18,10 @@ pubias_replication(
 \item{data}{A \verb{n x 4} matrix where the first (third) column contains the standardized original estimates (replication estimates), the second (fourth) column the associated
 standard errors of the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
 
-\item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
+\item{studynames}{Optional. A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.#' @param sign_lvl A value indicating the significance level at which the estimation should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
+By default, the significance level is set at 5\%, hence \code{0.05}.}
 
 \item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
-
-\item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
-vector of size \verb{k x 1} where \code{k} is the number of cutoffs. By default, the cutoff is set at 1.96.}
 
 \item{GMM}{If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
 method for estimation.}
@@ -45,5 +43,5 @@ There are additional elements which are mainly used for plotting the results.
 }
 \description{
 \code{pubias_replication()} calculates the publication probability either by a Maximum Likelihood or a GMM approach and
-then reports the corrected estimates for a set of replication studies.
+then reports the corrected estimates for a set of replication studies.   Check package vignette for further information.
 }

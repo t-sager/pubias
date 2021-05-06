@@ -1,4 +1,6 @@
-#' Title
+#' Corrects given estimates for publication bias
+#'
+#'Check package vignette for further information.
 #'
 #' @param X A `n x 1` matrix containing the estimates, where `n` is the number of estimates.
 #' @param Z A `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.

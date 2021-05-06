@@ -5,9 +5,9 @@
 #'
 #' @param data A `n x 3` matrix where the first column contains the treatment effects, the second column the associated
 #' standard errors of the estimates and in the third column an ID going from 1 to `n`, where `n` is the number of estimates.
-#' @param studynames A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
-#' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
-#' vector of size `k x 1` where `k` is the number of cutoffs. By default, the cutoff is set at 1.96.
+#' @param studynames Optional. A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
+#' @param sign_lvl A value indicating the significance level at which the estimation should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
+#' By default, the significance level is set at 5%, hence `0.05`.
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
 #' method for estimation.
 #' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
@@ -28,13 +28,21 @@
 #'
 pubias_meta <-
   function(data,
-           studynames,
+           studynames = NULL,
            symmetric = 1,
-           cutoffs = 1.96,
+           sign_lvl = 0.05,
            GMM = FALSE,
            print_plots = FALSE,
            print_dashboard = FALSE) {
+
     # Preliminaries
+
+    ## No Studynames available
+    if (is.null(studynames)) {
+      studynames <<- as.character(data[, 3])
+    }
+
+    cutoffs <<- qnorm(sign_lvl/2, lower.tail = FALSE)
     X <<- as.matrix(data[, 1])
     sigma <- as.matrix(data[, 2])
     cluster_ID <<- as.matrix(data[, 3])
@@ -210,6 +218,6 @@ pubias_meta <-
     if (print_plots == FALSE && print_dashboard == TRUE) {
       stop("print_plots has to be set to TRUE if the dashboard wants to be printed!")
     }
-    rm(cluster_ID, X, envir = globalenv())
+    rm(cluster_ID, X, cutoffs, envir = globalenv())
 
   }

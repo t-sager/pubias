@@ -52,8 +52,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
-    geom_line(aes(x = c(1.96/R*W,1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
-    geom_line(aes(x = c(-1.96/R*W,-1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
+    geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
+    geom_line(aes(x = c(-cutoffs/R*W,-cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.05, labels=ylabel) +
     scale_x_continuous(breaks = seq(ceiling(Rl/2),floor(Ru/2),1)/R*W*2, labels=xlabel) +
     scale_colour_manual(values=cols)+
@@ -102,8 +102,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
-    geom_line(aes(x = c(1.96/R*W,1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
-    geom_line(aes(x = c(-1.96/R*W,-1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
+    geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
+    geom_line(aes(x = c(-cutoffs/R*W,-cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.05, labels=ylabel) +
     scale_x_continuous(breaks = seq(ceiling(Rl/2),floor(Ru/2),1)/R*W*2, labels=xlabel) +
     scale_colour_manual(values=cols)+
@@ -156,8 +156,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_point(aes(x = Z2_rescaled/R*W, y = c(1:n)/n*H+0.2, colour = "Replication Estimates")) + # replication
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
-    geom_line(aes(x = c(1.96/R*W,1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
-    geom_line(aes(x = c(-1.96/R*W,-1.96/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
+    geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
+    geom_line(aes(x = c(-cutoffs/R*W,-cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.1, labels=ylabel) +
     scale_x_continuous(breaks = seq(ceiling(Rl/2),floor(Ru/2),1)/R*W*2, labels=xlabel) +
     scale_colour_manual(values=cols)+
@@ -183,8 +183,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   xmin=min(xgrid)
   xmax=max(xgrid)
 
-  ymin=min(min(Theta_LB_store,xmin-1.96))
-  ymax=max(max(Theta_UB_store,xmax+1.96))
+  ymin=min(min(Theta_LB_store,xmin-cutoffs))
+  ymax=max(max(Theta_UB_store,xmax+cutoffs))
 
   cols <- c("95% confidence Bounds"=color[5],"Bonferroni Corrected 95% Bounds"=color[8], "Median Unbiased Estimator"=color[3])
 
@@ -194,11 +194,11 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_line(aes(x = xgrid, y = Theta_LB_store,colour = "Bonferroni Corrected 95% Bounds"), lwd = 1) +
     geom_line(aes(x = xgrid, y = Theta_UB_store,colour = "Bonferroni Corrected 95% Bounds"), lwd = 1) +
     geom_line(aes(x = xgrid, y = Theta_U_store,colour = "95% confidence Bounds"), lwd = 1) +
-    geom_line(aes(x = xgrid, y = xgrid - 1.96), color = "grey") +
+    geom_line(aes(x = xgrid, y = xgrid - cutoffs), color = "grey") +
     geom_line(aes(x = xgrid, y = xgrid), color = "grey") +
-    geom_line(aes(x = xgrid, y = xgrid + 1.96), color = "grey") +
-    xlab(TeX('X')) +
-    ylab(TeX('Estimation')) +
+    geom_line(aes(x = xgrid, y = xgrid + cutoffs), color = "grey") +
+    xlab('X') +
+    ylab('Estimation') +
     scale_colour_manual(values=cols) +
     xlim(c(xmin, xmax)) +
     ylim(c(ymin, ymax)) +

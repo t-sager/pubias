@@ -2,7 +2,7 @@
 % Please edit documentation in R/bias_correction.R
 \name{bias_correction}
 \alias{bias_correction}
-\title{Title}
+\title{Corrects given estimates for publication bias}
 \usage{
 bias_correction(
   X,
@@ -40,5 +40,5 @@ as well as the corrected estimates (\code{Z1_M}) and in addition the Bonferroni 
 There are additional elements which are mainly used for plotting the results.
 }
 \description{
-Title
+Check package vignette for further information.
 }

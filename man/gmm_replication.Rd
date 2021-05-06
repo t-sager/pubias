@@ -25,5 +25,5 @@ Returns a list object with the publication probability (\code{Psihat}), its vari
 }
 \description{
 \code{gmm_replication()}  calculates the publication probability, its variance and robust standard errors
-of meta-analyses by a GMM approach.
+of meta-analyses by a GMM approach.  Check package vignette for further information..
 }

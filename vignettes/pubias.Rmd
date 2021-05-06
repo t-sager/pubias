@@ -129,17 +129,16 @@ There are two main functions in the package. The first `pubias_meta()` leads to 
 
 **Meta Studies**
 ```{r, eval = FALSE}
-pubias_meta(data, studynames)
+pubias_meta(data)
 
 ```
 
 **Replication Studies**
 ```{r, eval = FALSE}
-pubias_replication(data, studynames)
+pubias_replication(data)
 
 ```
 
-This basic specification takes the data and the data and the studynames of the selected identification approach. The rest of the functions arguments are set to their default values. 
 
 Additionally, there are four functions which are, depending on their specification, called by the two functions above.  The four functions are as follows: `mle_meta()`, `mle_replication()`, `gmm_meta()` and `gmm_replication()`. For example: If the base specification for the meta studies `pubias_meta(data, studynames)` is used, then the function `mle_meta()` is called to calculate the publication probability by MLE. On the other hand, if one executes `pubias_meta(data, studynames GMM = TRUE)` the function `gmm_meta` will be called.
 Because the input for these functions heavily depend on he input from the two main function I will not go into further detail about the arguments for these functions. One can also take a closer look at the built in helpfile with `?mle_meta()`.
@@ -199,11 +198,113 @@ pubias_result$`Descriptive Plots`$scatter
 
 ## Applications
 
-To further illustrate the functionality of the package, we apply it to on replication study as well as one meta analysis.
-These examples are directly taken from the paper by Andrews and Kasy (2019).
+To further illustrate the functionality of the package, we apply it to a replication study as well as one meta analysis. These are the same examples used by Andrews and Kasy (2019).
 
-### Replication Study
+### Replication Study: Economics Laboratory Experiments
 
-### Meta Analysis
+Our first application uses data from a recent large-scale replication of experimental
+economics papers by Camerer et al. (2016). The authors replicated all 18
+between-subject laboratory experiment papers published in the American Economic
+Review and Quarterly Journal of Economics between 2011 and 2014.9 Further details
+on the selection and replication of results can be found in Camerer et al. (2016),
+while details on our handling of the data are discussed in the online Appendix.
+A strength of this dataset for our purposes, beyond the availability of replication
+estimates, is the fact that it replicates results from all papers in a particular subfield
+published in two leading economics journals over a fixed period of time. This mitigates
+concerns about the selection of which studies to replicate. Moreover, since the
+authors replicate 18 such studies, it seems likely that they would have published their
+results regardless of what they found, consistent with our assumption that selection
+operates only on the initial studies and not on the replications.
+A caveat to the interpretation of our results is that Camerer et al. (2016) select
+the most important statistically significant finding from each paper, as emphasized
+by the original authors, for replication. This selection changes the interpretation
+of p ( · ) , which has to be interpreted as the probability that a result was published
+and selected for replication. In this setting, our corrected estimates and confidence
+intervals provide guidance for interpreting the headline results of published studies.
+For consistency with the rest of the paper, however, we continue to shorthand p ( · )
+as the publication probability.
+
+```{r, eval = FALSE}
+pubias_replication(
+  data,
+  studynames,
+  GMM = FALSE,
+  symmetric = 1,
+  sign_lvl = 0.05,
+  print_plots = TRUE,
+  print_dashboard = TRUE
+)
+
+```
+
+```{r plot4, echo=FALSE, fig.cap="Economics Laboratory Experiments: Descriptives", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("scatter_hist_econ.pdf")
+
+```
+
+
+```{r plot5, echo=FALSE, fig.cap="Economics Laboratory Experiments: Original vs. Adjusted Estimates", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("org_adj_rep_econ.pdf")
+
+```
+
+
+```{r plot6, echo=FALSE, fig.cap="Economics Laboratory Experiments: Correction Plot", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("correction_plot_econ.pdf")
+
+```
+
+
+### Meta Analysis: Deworming
+
+Here we report results based on data from the recent meta-study Croke et al. (2016) on
+the effect of mass drug administration for deworming on child body weight. They collect
+results from randomized controlled trials which report child body weight as an outcome,
+and focus on intent-to-treat estimates from the longest follow-up reported in each study.
+They include all studies identified by the previous review of Taylor-Robinson et al. (2015),
+as well as additional trials identified by Welch et al. (2017). They then extract estimates
+as described in Croke et al. (2016) and obtain a final sample of 22 estimates drawn from
+20 studies, which we take as the basis for our analysis. For further discussion of sample
+construction, see Taylor-Robinson et al. (2015), Croke et al. (2016), andWelch et al. (2017).
+To account for the presence of multiple estimates in some studies, we again cluster by study
+
+```{r, eval = FALSE}
+pubias_meta(
+  data,
+  studynames,
+  GMM = TRUE,
+  symmetric = 1,
+  sign_lvl = 0.05,
+  print_plots = TRUE,
+  print_dashboard = TRUE
+)
+
+```
+
+```{r plot7, echo=FALSE, fig.cap="Deworming: Descriptives", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("scatter_hist_dew.pdf")
+
+```
+
+
+```{r plot8, echo=FALSE, fig.cap="Deworming: Original vs. Adjusted Estimates", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("org_adj_dew.pdf")
+
+```
+
+
+```{r plot9, echo=FALSE, fig.cap="Deworming: Correction Plot", fig.align="center", out.width = '100%'}
+
+knitr::include_graphics("correction_plot_dew.pdf")
+
+```
 
 # Final remarks
+
+
+# Literature
