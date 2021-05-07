@@ -50,8 +50,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   g <- ggplot()+
     geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
     geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
-    geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
-    geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
+    geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # original
+    geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # adjusted
     geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     geom_line(aes(x = c(-cutoffs/R*W,-cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.05, labels=ylabel) +
@@ -100,8 +100,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   g <- ggplot()+
     geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
     geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
-    geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
-    geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
+    geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # original
+    geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # adjusted
     geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     geom_line(aes(x = c(-cutoffs/R*W,-cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.05, labels=ylabel) +
@@ -154,8 +154,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
     geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
     geom_point(aes(x = Z2_rescaled/R*W, y = c(1:n)/n*H+0.2, colour = "Replication Estimates")) + # replication
-    geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # original
-    geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # adjusted
+    geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # original
+    geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # adjusted
     geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     geom_line(aes(x = 0,y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
     scale_y_continuous(breaks = c(1:n)/n*H+0.1, labels=ylabel) +
