@@ -33,4 +33,5 @@ Depends:
     gridExtra,
     cowplot,
     plotly,
-    flexdashboard
+    flexdashboard,
+    R (>= 2.10)

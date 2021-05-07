@@ -226,6 +226,21 @@ For consistency with the rest of the paper, however, we continue to shorthand p 
 as the publication probability.
 
 ```{r, eval = FALSE}
+
+# Import data
+data <- data_econ
+
+# Has to be matrix
+class(data)
+dim(data) # 18x4 matrix
+
+# Import Studynames
+studynames <- studynames_econ
+
+# Has to be character
+class(studynames)
+
+# Apply the main function
 pubias_replication(
   data,
   studynames,
@@ -261,26 +276,25 @@ knitr::include_graphics("correction_plot_econ.pdf")
 
 ### Meta Analysis: Deworming
 
-This application uses a meta-study by Croke et al. (2016). They look at the effect of drug for deworming on the body weight of children. The authors collect a total of 22 estimates frm 20 different studies. These 22 estimates together with thei associated standard errors build the main data input for our function `pubias_meta()`.
-Loading the data the studynames as well as apllying the main function is donw as follows.
+This application uses a meta-study by Croke et al. (2016). They look at the effect of drug for deworming on the body weight of children. The authors collect a total of 22 estimates frm 20 different studies. These 22 estimates together with their associated standard errors build the main data input for our function `pubias_meta()`.
+As stated before, the data for the two documented applications can be loaded directly from the package as shown below. Of course, alternatively, one can load own estimates and studynames via `read.csv()` or similar functions.
 
 ```{r, eval = FALSE}
 
-#Import data
-data <- read.csv(file.path("data", "deworming", "cleaned_deworming_data.csv"),
-           header = FALSE)
+# Import data
+data <- data_dew
 
-# Convert to a matrix
-data <- as.matrix(data)
+# Has to be matrix
+class(data)
+dim(data) # 22x3 matrix
 
 # Import Studynames
-studynames <-
-  read.csv(file.path("data", "deworming", "sorted_names.csv"))
+studynames <- studynames_dew
 
-# Convert to character
-studynames <- as.character(studynames[, 1])
+# Has to be character
+class(studynames)
 
-# Aply the main function
+# Apply the main function
 pubias_meta(
   data,
   studynames,
