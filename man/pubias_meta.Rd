@@ -22,7 +22,7 @@ standard errors of the estimates and in the third column an ID going from 1 to \
 
 \item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
 
-\item{sign_lvl}{A value indicating the significance level at which the estimation should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
+\item{sign_lvl}{A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
 By default, the significance level is set at 5\%, hence \code{0.05}.}
 
 \item{GMM}{If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE

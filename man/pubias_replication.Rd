@@ -18,10 +18,12 @@ pubias_replication(
 \item{data}{A \verb{n x 4} matrix where the first (third) column contains the standardized original estimates (replication estimates), the second (fourth) column the associated
 standard errors of the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
 
-\item{studynames}{Optional. A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.#' @param sign_lvl A value indicating the significance level at which the estimation should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
-By default, the significance level is set at 5\%, hence \code{0.05}.}
+\item{studynames}{Optional. A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 
 \item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+
+\item{sign_lvl}{A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
+By default, the significance level is set at 5\%, hence \code{0.05}.}
 
 \item{GMM}{If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
 method for estimation.}

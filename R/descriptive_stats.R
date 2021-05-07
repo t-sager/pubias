@@ -29,14 +29,12 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             geom_hline(yintercept =critval,color="grey")+
             geom_abline(intercept = 0,slope=1,color="grey")+
             xlab("Z")+
-            ylab("ZRep" )+
+            ylab("ZRep")+
             xlim(c(max(ll,0),uu))+
             ylim(c(ll,uu))+
             geom_point(shape=21,size = 2,aes(fill = significant)) +
             scale_fill_manual(values=c("#FF0000", blue2))+
-            theme_minimal()+ theme(axis.title.x = element_blank(),
-                                   axis.title.y = element_blank(),
-                                   panel.grid.minor = element_blank(),
+            theme_minimal()+ theme(panel.grid.minor = element_blank(),
                                    panel.grid.major.x = element_blank())
 
         ggsave(paste0(getwd(),"/Scatter.pdf"), width = 10, height = 6.5)
@@ -52,14 +50,12 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             xlim(c(-rangeX,rangeX))+
             ylim(c(min(sigma)-0.03,rangeX/critval))+
             xlab("X")+
-            ylab(expression("sigma" ))+
+            ylab("sigma" )+
             geom_abline(intercept = 0,slope=1/critval,color="grey")+
             geom_abline(intercept = 0,slope=-1/critval,color="grey")+
             geom_point(shape=21,size = 2,aes(fill = significant))+
             scale_fill_manual(values=c("#FF0000", blue2))+
-            theme_minimal()+ theme(axis.title.x = element_blank(),
-                                   axis.title.y = element_blank(),
-                                   panel.grid.minor = element_blank(),
+            theme_minimal()+ theme(panel.grid.minor = element_blank(),
                                    panel.grid.major.x = element_blank())
 
         ggsave(paste0(getwd(),"/Scatter.pdf"), width = 10, height = 6.5)
@@ -98,24 +94,11 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
                                           to=uu2,
                                           by=0.64));
         }
-    } else if (symmetric==1){
-        if (n>=30) {
-            uu2=ceiling((uu-.36)/.32)*.32+.36;
-            edges = c(0,seq(from=.36,
-                            to=1.64,
-                            by=0.32),
-                      seq(from=1.96,
-                          to=uu2,
-                          by=0.32)
-            )
-        }  else {
-            uu2=ceiling((uu-.68)/.64)*.64+.68;
-            edges= c(0, seq(from=.68,
-                            to=uu2,
-                            by=0.64))
-        }
-
     }
+
+    edges= seq(from=ll,
+                    to=uu,
+                    by=0.64)
 
 
 
@@ -125,14 +108,13 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             geom_histogram(aes(y = ..density..),
                            fill = blue1,
                            breaks=edges)+
-            geom_vline(xintercept =-1.96,color='grey')+
-            geom_vline(xintercept =1.96, color='grey')+
+            geom_vline(xintercept =-cutoffs,color='grey')+
+            geom_vline(xintercept =cutoffs, color='grey')+
+            geom_vline(xintercept =0, color='grey', linetype="dotted")+
             xlab('X/sigma')+
             ylab('Density')+
             xlim(c(min(edges),max(edges)))+
-            theme_minimal()+ theme(axis.title.x = element_blank(),
-                                   axis.title.y = element_blank(),
-                                   panel.grid.minor = element_blank(),
+            theme_minimal()+ theme(panel.grid.minor = element_blank(),
                                    panel.grid.major.x = element_blank())
 
 
@@ -141,13 +123,13 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             geom_histogram(aes(y = ..density..),
                            fill = blue1,
                            breaks=edges)+
-            geom_vline(xintercept =1.96, color='grey')+
+            geom_vline(xintercept =-cutoffs, color='grey')+
+            geom_vline(xintercept =cutoffs, color='grey')+
+            geom_vline(xintercept =0, color='grey', linetype="dotted")+
             xlab('|X|/sigma')+
             ylab('Density')+
             xlim(c(min(edges),max(edges)))+
-            theme_minimal()+ theme(axis.title.x = element_blank(),
-                                   axis.title.y = element_blank(),
-                                   panel.grid.minor = element_blank(),
+            theme_minimal()+ theme(panel.grid.minor = element_blank(),
                                    panel.grid.major.x = element_blank())
     }
 

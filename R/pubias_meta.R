@@ -6,7 +6,7 @@
 #' @param data A `n x 3` matrix where the first column contains the treatment effects, the second column the associated
 #' standard errors of the estimates and in the third column an ID going from 1 to `n`, where `n` is the number of estimates.
 #' @param studynames Optional. A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
-#' @param sign_lvl A value indicating the significance level at which the estimation should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
+#' @param sign_lvl A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
 #' By default, the significance level is set at 5%, hence `0.05`.
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
 #' method for estimation.
