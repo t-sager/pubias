@@ -127,25 +127,22 @@ library(pubias)
 
 There are two main functions in the package. The first `pubias_meta()` leads to the identification of and correction for the publication bias in meta studies while `pubias_replication` does the same for replication studies. The most simple syntax to get a result is the following:
 
-**Meta Studies**
 ```{r, eval = FALSE}
+# Meta Studies
 pubias_meta(data)
 
-```
-
-**Replication Studies**
-```{r, eval = FALSE}
+# Replication Studies
 pubias_replication(data)
 
 ```
 
 
-Additionally, there are four functions which are, depending on their specification, called by the two functions above.  The four functions are as follows: `mle_meta()`, `mle_replication()`, `gmm_meta()` and `gmm_replication()`. For example: If the base specification for the meta studies `pubias_meta(data, studynames)` is used, then the function `mle_meta()` is called to calculate the publication probability by MLE. On the other hand, if one executes `pubias_meta(data, studynames GMM = TRUE)` the function `gmm_meta` will be called.
-Because the input for these functions heavily depend on he input from the two main function I will not go into further detail about the arguments for these functions. One can also take a closer look at the built in helpfile with `?mle_meta()`.
+Additionally, there are four functions which are, depending on their specification, called by the two functions above.  The four functions are as follows: `mle_meta()`, `mle_replication()`, `gmm_meta()` and `gmm_replication()`. For example: If the base specification for the meta studies `pubias_meta(data, studynames)` is used, then the function `mle_meta()` is called to calculate the publication probability by MLE. On the other hand, if one executes `pubias_meta(data, studynames GMM = TRUE)` the function `gmm_meta()` will be called.
+Because the input for these functions heavily depend on he input from the two main function, I will not go into further detail about the arguments of these functions. One can also take a closer look at the built in helpfile with `?mle_meta()` etc.
 
 ## Arguments
 
-We have seen that the function works even without specifying more than the data conaining the estimates and the standard errors. Now we will take a closer look at the different arguments which could enter the function. Keep in mind: the arguments for both functions are the same. The only difference is, that in the case of replication studies, the data used has additional columns because we also have to account for the replication estimates.
+We have seen that the function works even without specifying more than the data containing the estimates and the standard errors. Now we will take a closer look at the different arguments which one could enter into the function. Keep in mind: the arguments for both functions are the same. The only difference is, that in the case of replication studies, the data used has additional columns because we also have to account for the replication estimates.
 To check the different arguments, one could also take a closer look at the helpfiles for the two functions with `?pubias_meta()` or `?pubias_replication()`.
 
 The following specifications are currently possible:
@@ -156,7 +153,7 @@ pubias_meta(
   data,
   studynames,
   symmetric = 1,
-  sign_lvl = 1.96,
+  sign_lvl = 0.05,
   GMM = FALSE,
   print_plots = FALSE,
   print_dashboard = FALSE
@@ -164,67 +161,54 @@ pubias_meta(
 
 ```
 
-- `data`: In the case of meta studies the data needs to contain a `n x 3` matrix where the first column contains the original estimates, the second column the associated standard errors and in the third column an ID going from 1 to `n`, where `n` is the number of estimates. If the function for the replication studies is used, the data needs to contain a `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates) and the second (fourth) column the associated standard errors , where `n` is the number of estimates.
+- `data`: In the case of meta studies, the data needs to contain a `n x 3` matrix where the first column contains the original estimates, the second column the associated standard errors and in the third column an ID going from 1 to `n`, where `n` is the number of estimates. If the function for the replication studies is used, the data needs to contain a `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates) and the second (fourth) column the associated standard errors, where `n` is the number of estimates.
 
 - `studynames`: This argument is optional. A vector of type character containing all the Studynames of size n in the same order as the argument data.
 
-- `symmetric`: If set to 1, the publication probability is assumed to be symmetric around zero. If set to 0, asymmetry is allowed.
+- `symmetric`: If set to 1, the publication probability is assumed to be symmetric around zero. If set to 0, asymmetry is allowed. !IN THE CURRENT BUILD, THIS IS NOT WORKING!
 
 - `sign_lvl`: A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability. By default, the significance level is set at `5%`, hence `0.05`.
 
-- `GMM`: If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE method for estimation.
+- `GMM`: If set to `TRUE`, the publication probability will be estimated via GMM. By default, it is set to `FALSE` which uses the MLE method for estimation.
 
+- `print_plots`: If set to `TRUE`, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
 
-- `print_plots`: If set to TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
-
-- `print_dashboard`: If set to TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced. The dashboard is saved in the working directory. Only possbile if print_plots is set to TRUE.
+- `print_dashboard`: If set to `TRUE`, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced. The dashboard is saved in the working directory. Only possible if `print_plots` is set to `TRUE`.
 
 
 ## Results
 
 The output of the functions is pretty simple. They return a list object called `pubias_results`. If only the base specification is run, the list contains two elements:
 
-- `Results`: This element contains the three results `Psihat` which is the estimated publication probability, `Varhat` its variance and`se_robust` containing the robust standard errors for the publication probability. For interpretation: If the function yields `Psihat = 0.25`, the publication of insignificant results is only 25% as likely as the publication of significant results. Or put differently, the publication of a significant result is 4 times more likely than an insignificant result.
+- `Results`: This element contains the three results `Psihat` which is the estimated publication probability, `Varhat` its variance and`se_robust` containing the robust standard errors for the publication probability. For interpretation: If the function yields `Psihat = 0.25`, the publication of insignificant results is only 25% as likely as the publication of significant results. Or put differently, the publication of a significant result is 4 times more likely than an insignificant result (at the given significance level).
 
 - `Corrected Estimates`:  As the name suggests, this element contains the original estimates with their 95% confidence bonds (Z1, Z1_L, Z1_U) as well as the corrected estimates (Z1_M) and in addition the Bonferroni corrected 95% confidence bonds (Z1_LB, Z1_UB). There are additional elements which are mainly used for plotting the results.
 
-If the functions are run with the option to print the plots and dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed as .pdf into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling for example: 
+If the functions are run with the option to print the plots and dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed as .pdf into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling: 
 
 ```{r, eval = FALSE}
 
+# Display the scatterplot
 pubias_result$`Descriptive Plots`$scatter
+
+# Display the correction plot
+pubias_result$`Correction Plots`$CorrectionPlot
 
 ```
 
 
 ## Applications
 
-To further illustrate the functionality of the package, we apply it to a replication study as well as one meta analysis. These are the same examples used by Andrews and Kasy (2019).
+To further illustrate the functionality of the package, we apply it to a replication study as well as a meta analysis. These are the same examples used by Andrews and Kasy (2019).
 
 ### Replication Study: Economics Laboratory Experiments
 
-Our first application uses data from a recent large-scale replication of experimental
-economics papers by Camerer et al. (2016). The authors replicated all 18
-between-subject laboratory experiment papers published in the American Economic
-Review and Quarterly Journal of Economics between 2011 and 2014.9 Further details
-on the selection and replication of results can be found in Camerer et al. (2016),
-while details on our handling of the data are discussed in the online Appendix.
-A strength of this dataset for our purposes, beyond the availability of replication
-estimates, is the fact that it replicates results from all papers in a particular subfield
-published in two leading economics journals over a fixed period of time. This mitigates
-concerns about the selection of which studies to replicate. Moreover, since the
-authors replicate 18 such studies, it seems likely that they would have published their
-results regardless of what they found, consistent with our assumption that selection
-operates only on the initial studies and not on the replications.
-A caveat to the interpretation of our results is that Camerer et al. (2016) select
-the most important statistically significant finding from each paper, as emphasized
-by the original authors, for replication. This selection changes the interpretation
-of p ( · ) , which has to be interpreted as the probability that a result was published
-and selected for replication. In this setting, our corrected estimates and confidence
-intervals provide guidance for interpreting the headline results of published studies.
-For consistency with the rest of the paper, however, we continue to shorthand p ( · )
-as the publication probability.
+This application uses data from a recent study by Camerer et al. (2016). They replicated 18
+economic laboratory experiment papers which were published between 2011 and 2014. The data is well suited for this application because it replicates estimates from papers which come from the same area of research and are all published in
+well known journals. Additionally, it seems likely that Camerer et al. would have published their results regardless of their significance. This is consistent with the assumption stated at the beginning: publication selection only arises based on the original estimates and not on the replication estimates.
+Ultimately, the dataset includes the original and replication estimates with their associated standard errors. This leads to a matrix with the dimensions 18 by 4.
 
+Because the datasets for the applications are part of the package itself, it is really easy to replicate the results. The code below shows how it is done. Of course, one can load own estimates and studynames via `read.csv()` or similar functions. 
 ```{r, eval = FALSE}
 
 # Import data
@@ -253,21 +237,28 @@ pubias_replication(
 
 ```
 
-```{r plot4, echo=FALSE, fig.cap="Economics Laboratory Experiments: Descriptives", fig.align="center", out.width = '80%'}
+After running the function, we can take a closer look at the results. The following figures correspond to the figures which are printed if `print_plots = TRUE`. Before turning to the estimation result, let us take a closer look at the descriptives.
+The histogram on the left side of Figure 4 shows the distribution of the original published estimates. There is a considerable jump in the density right around the z-score of 1.96 which corresponds to the significance level of 5%. As Andrews and Kasy (2019) show in their proofs, this directly correspond to a jump in the publication probability at the same cutoff. On the right hand side of Figure 4, we see the same type of plot as described in part 3.1.1. Following this interpretation, we can clearly see some evidence for publication selectivity.
+
+```{r plot4, echo=FALSE, fig.cap="Economics Laboratory Experiments: Descriptives", fig.align="center", out.width = '70%'}
 
 knitr::include_graphics("scatter_hist_econ.pdf")
 
 ```
 
+The MLE estimation leads to a publication probability of about 2.8%. This means the likelihood of publication is much lower if the the results are insignificant. In other word: significant result ar more than 30 times more likely to be published than insignificant results at the 5% significance level. This shows that the publication bias could lead to substantial differences in published result.
 
-```{r plot5, echo=FALSE, fig.cap="Economics Laboratory Experiments: Original vs. Adjusted Estimates", fig.align="center", out.width = '80%'}
+That is why the next step is to correct for the said bias based on the publication probability of 2.8%. The reults are summarized in the following two plots. Figure 5 plots the original, adjusted as well as the replication estimates. One can see that the adjusted estimates follow the replication estimates pretty well and are much smaller than the original estimates most of the time. Looking at the confidence sets of the adjusted and original estimates, we can see clear difference. While only 2 of the original estimates confidence bounds included 0, with adjusting for the publication this number goes up to 12. Therefore, the adjustment leads to substantially less significant results. 
+Figure 6 corresponds to the figure in chapter 3.2 but we additionally plot the Bonferroni corrected confidence bounds. The interpretation stays the same. The corrected estimates lie clearly below the original estimate with the furthest distance exactly at our chosen cutoff. Again, the difference shrinks as the original estimates get larger or smaller.
+
+```{r plot5, echo=FALSE, fig.cap="Economics Laboratory Experiments: Original vs. Adjusted Estimates", fig.align="center", out.width = '70%'}
 
 knitr::include_graphics("org_adj_rep_econ.pdf")
 
 ```
 
 
-```{r plot6, echo=FALSE, fig.cap="Economics Laboratory Experiments: Correction Plot", fig.align="center", out.width = '80%'}
+```{r plot6, echo=FALSE, fig.cap="Economics Laboratory Experiments: Correction Plot", fig.align="center", out.width = '70%'}
 
 knitr::include_graphics("correction_plot_econ.pdf")
 
@@ -276,7 +267,7 @@ knitr::include_graphics("correction_plot_econ.pdf")
 
 ### Meta Analysis: Deworming
 
-This application uses a meta-study by Croke et al. (2016). They look at the effect of drug for deworming on the body weight of children. The authors collect a total of 22 estimates frm 20 different studies. These 22 estimates together with their associated standard errors build the main data input for our function `pubias_meta()`.
+The second application uses a meta-study by Croke et al. (2016). They look at the effect of a drug for deworming on the body weight of children. The authors collect a total of 22 estimates from 20 different studies. These 22 estimates together with their associated standard errors build the main data input for our function `pubias_meta()`. Because there is a possibility of multiple estimates for some of the studies, one has to cluster for the study ID. This is why the study-ID has to enter the input data as well.
 As stated before, the data for the two documented applications can be loaded directly from the package as shown below. Of course, alternatively, one can load own estimates and studynames via `read.csv()` or similar functions.
 
 ```{r, eval = FALSE}
@@ -307,21 +298,21 @@ pubias_meta(
 
 ```
 
-```{r plot7, echo=FALSE, fig.cap="Deworming: Descriptives", fig.align="center", out.width = '80%'}
+```{r plot7, echo=FALSE, fig.cap="Deworming: Descriptives", fig.align="center", out.width = '70%'}
 
 knitr::include_graphics("scatter_hist_dew.pdf")
 
 ```
 
 
-```{r plot8, echo=FALSE, fig.cap="Deworming: Original vs. Adjusted Estimates", fig.align="center", out.width = '80%'}
+```{r plot8, echo=FALSE, fig.cap="Deworming: Original vs. Adjusted Estimates", fig.align="center", out.width = '70%'}
 
 knitr::include_graphics("org_adj_dew.pdf")
 
 ```
 
 
-```{r plot9, echo=FALSE, fig.cap="Deworming: Correction Plot", fig.align="center", out.width = '80%'}
+```{r plot9, echo=FALSE, fig.cap="Deworming: Correction Plot", fig.align="center", out.width = '70%'}
 
 knitr::include_graphics("correction_plot_dew.pdf")
 
