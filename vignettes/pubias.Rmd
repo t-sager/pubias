@@ -2,7 +2,7 @@
 title: "pubias: Identification of and Correction for Publication Bias^[This package was created as part of the seminar Workshop in Econometrics (Spring Semester 2021) and follows the implementation by *Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.*]"
 abstract:
   "Following Andrews and Kasy (2019), this package implements the identification of and correction for publiaction bias. Also 
-  known as the file drawer problem, the publication bias occures when researchers submit their papers based on the likelihood of their      publication. Therefore, some results have a higher publication probability than others.This package identifies the said bias and          corrects   for it by differentiating between replication and meta-studies as well as between a likelihood and GMM estimation procedure."
+  known as the file drawer problem, the publication bias occures when researchers submit their papers based on the likelihood of their publication. Therefore, some results have a higher publication probability than others.This package identifies the said bias and corrects for it by differentiating between replication and meta-studies as well as between a likelihood and GMM estimation procedure."
 author: "Till Sager^[University of Bern, till.sager@students.unibe.ch]"
 date: "May, 2021"
 output:   
@@ -39,6 +39,8 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 # Introduction
 
+TODO
+
 \newpage
 
 
@@ -46,32 +48,34 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 Instead of going into detail about the theory and mathematics Andrews and Kasy (2019) used in their paper, I use an illustrative example they provided to show how a publication bias arises, how it can be identified and ultimately, how one can correct for it. 
 
-Journals usually receive a lot of studies with different estimates and the journals need to decide which papers will be published and which are not. Let us assume that the reported estimates are normally distributed i.e. $X ~ N(Θ, Σ^2)$ where $Θ$ are the the treatment effects, and $Σ$ are the corresponding standard errors. Additionally, each study examines different treatments.
-In this example, the journal publishes significant results at the 5% with probability 1 ($p(z) = 1$) and insignificant results with probability 0.2 ($p(Z) = 0.2$, with $Z ∈ [-1.96, 1.96]$). This indicate a clear preference for publishing significant results. Namely, significant result are 5 times more likely to be published than insignificant results.
-Because of this behavior, it is clear that the published results over-estimate the magnitude of the treatment effect.The same holds for the confidence set. Small values are underestimates, while large values are overestimated. Although the introduction focused on the publication probability by researches, the behavior of the journals applies to the researchers as well or we can even say it applies to both at the same time. 
+To get a feeling for how a publication bias can arise, we look at the behavior of journals which are responsible for publishing the papers they are provided with. Journals usually receive a lot of studies with different outcomes and they need to decide which papers will be published and which are not. Let us assume that the reported estimates $X$ are normally distributed i.e. $X ~ N(Θ, Σ^2)$ where $Θ$ are the true treatment effects, and $Σ$ are the corresponding standard errors. $Z$ denotes the standardized estimates given by $X/\Sigma$. Additionally, each study examines different treatments.
+
+In this example, the journal publishes significant results at the 5% significance level with probability 1 ($p(z) = 1$) and insignificant results with probability 0.2 ($p(Z) = 0.2$, with $Z ∈ [-1.96, 1.96]$). This indicates a clear preference for publishing significant results. Namely, significant result are 5 times more likely to be published than insignificant results.
+Because of this behavior, it is clear that the published results $X$ over-estimate the magnitude of the treatment effect $Θ$.The same holds for the confidence bounds. Small values are underestimated, while large values are overestimated. 
+Keep in mind that publication decisions are based on both the researchers as well as the journals decision. Andrews and Kasy do not try to separate those two decision dimensions but rather look at them as one decision only. Therefore, the above example also holds for the researchers or even for the journals an the researchers at the same time.
 
 \newpage
 
 
 # Methods and assumptions
 
-This chapter summarizes the methods used to identify and correct for the publication bias following Andrews and Kasy (2019). In their paper, they differ between two approaches of identification. The first approach uses replication studies while the second one uses meta studies to determine the publication probability. Given a certain publication probability, they propose a method to construct the median unbiased estimators and confidence bounds.
+This chapter summarizes the methods used to identify and correct for the publication bias following the approach by Andrews and Kasy (2019). In their paper, they differ between two approaches of identification. The first approach uses replication studies while the second one uses meta studies to determine the publication probability. Given a certain publication probability, they propose a method to construct the median unbiased estimators (i.e. the corrected estimates) and confidence bounds.
 
 ## Identification
 
 The procedure of identifying the publication probability differs between the two approaches. A replication study uses the *same* methods as the original study and applies them to a new sample from the *same* population. From the package perspective, we therefore need the original estimates as well as the replication estimates to determine the given publication probability. Additionally, it is assumed that the publication probability only depends on the original estimates.
+
 On the other hand, a meta study is a study which collects multiple estimates from studies which cover more or less the same topic. One crucial assumption regarding meta studies is the independence between the different estimates. In contrast to the replication studies, meta studies only have one set of estimates as input for the estimation of the publication probability.
 
 
 ### Replication Studies
 
-Again, to illustrate the identification approach using
-replication studies, the illustrative example from the beginning is used.Remember, we assumed that $p(Z) = 1$ when $|Z| > 1.96$ , and that
-$p(Z) = 0.2$ otherwise. A further assumption is that the original as well as the replication estimates both have a variance of 1 ($Σ^r = Σ = 1$).
-Figure **3** shows how the identification using replication studies is done. The left panel shows 100 random draws $(Z, Z^r)$. Draws which are insigificant on the 5% level are marked as grey $(|Z| ≤ 1.96)$ whereas draws which are significant are drawn blue $(|Z| > 1.96)$.
-The right panel shows the draws $(Z, Z^r)$ which are published. These are exactly the same draws as before but now 80% of the statistically insigfnicant results are deleted because the journal only publishes 20% of the statistically insigifcant results.
-To proof that some selective publication exists, we can take a closer look at the regions $A$ and $B$. In $A$, we deal with the situation that $Z$ is statistically significant while $Z^R$ is not. Clearly, in region $B$ it is just the other way around.
-Here, the assumption of the symmetry in the data generating process comes into play. Because of this assumption, $Z$ or $Z^r$ should fall in either region with the same probility. Due to the fact that we clearly observe more data points in region A than in region B, we have evidence for selective publication. That is why it is possible to estimate $p(.)$.*TODO: p() up to scale?*
+To illustrate the identification approach using replication studies, the illustrative example from the beginning is used. Remember, we assumed that $p(Z) = 1$ when $|Z| > 1.96$ , and that $p(Z) = 0.2$ otherwise. A further simplification we have to take into account is that the original as well as the replication estimates both have the same variance of 1 ($Σ^r = Σ = 1$).
+Figure 1 shows how the identification using replication studies is done. The left panel shows 100 random draws $(Z, Z^r)$, where $Z^2$ denotes the standradized replication estimates (i.e. $X^r/\Sigma^r$). Draws which are insignificant on the 5% level are marked as light blue $(|Z| ≤ 1.96)$ whereas draws which are significant are drawn in a darker blue $(|Z| > 1.96)$.
+
+The right panel shows the draws $(Z, Z^r)$ which are published. These are exactly the same draws as before but now 80% of the statistically insignificant results are deleted because the journal only publishes 20% of the statistically insignificant results. That is why a lot of the light blue points vanish.
+To proof that some selective publication exists, we can take a closer look at the regions $A$ and $B$. In $A$, we deal with the situation that $Z$ is statistically significant while $Z^R$ is not. Obviously, we deal with the exact opposite in region $B$.
+At this point we have to mention that we assumed symmetry in the data generating process at the beginning. Because of this assumption, $Z$ or $Z^r$ should fall in either region with the same probability. Due to the fact that we clearly observe more data points in region A than in region B, we have evidence for selective publication. Additionally, the deviation from symmetry ($Z = Z^r$) exactly identifies $p(.)$.
 
 
 ```{r plot1, echo=FALSE, fig.cap="Identifcation using Replication Studies",fig.align="center", out.width = '70%'}
@@ -84,18 +88,9 @@ knitr::include_graphics("scatter_illu_rep.pdf")
 ### Meta Studies
 
 Using the same set up as in the identification approach using replication studies and adding the crucial assumption that $Σ$ is independent of $Θ$ across the studies, we can take a closer look at Figure 2 which shows the identification approach using meta studies.
-Instead of dealing with original and replication estimates and having them on the X and Y axis, we now have the original estimates $X$ on the X axis and the corresponding standard errors $Σ$ on the Y axis.
-As before, the left panel shows 100 random draws $(X, Σ)$. Draws which are insignificant on the 5% level are marked as grey $(|X/Σ| ≤ 1.96)$ whereas draws which are significant are drawn blue $(|X/Σ| > 1.96)$.
-The right panel shows the draws $(X,Σ)$ which are published. These are exactly the same draws as before but now 80% of the statistically insigfnicant results are deleted because the journal only publishes 20% of the statistically insigifcant results.
-Intead of looking at two reagions as in the case of replication studies, we now tae a closer look at two different values of $Σ$, shown in the figure by $A$ and $B$.
-Since we have assumed independence between $Σ$ and $Θ$, the distribution of $X$ given greater values of $Σ$ is an inflated version of the same distribution for smaller values of $Σ$. Thus, to the degree that the same is not true for the distribution of the published estimates $X$ given $Σ$, this has to be due to selectivity in the publication process. In this example, statistically insignificant observations are absent for greater values of $Σ$. Since the likelihood of publication is hiher if the result is significant, the estimated values $X$ tend to be larger on average for greater values of $Σ$. This allows for an estimate of $p(.)$.
-*TODO: p() up to scale? + Text noch überarbeiten, letzter Teil nicht klar*
-
-
-### MLE vs. GMM
-
-Besides the maximum likelihood estimation
-
+Instead of dealing with original and replication estimates and having them on the X and Y axis, we now have the original estimates $X$ on the X -xis and the corresponding standard errors $Σ$ on the Y-axis. As before, the left panel shows 100 random draws $(X, Σ)$. Draws which are insignificant on the 5% level are marked as light blue $(|X/Σ| ≤ 1.96)$ whereas draws which are significant are drawn in a darker blue $(|X/Σ| > 1.96)$. The right panel shows the draws $(X,Σ)$ which are published. Again, these are exactly the same draws as in the left panel but now 80% of the statistically insignificant results are deleted because the journal only publishes 20% of the statistically insignificant results.
+Instead of looking at two regions as in the case of replication studies, we now take a closer look at two different values of $Σ$. These two values are at $Σ = 0.5$ and $Σ = 1.0$, highlighted by $A$ and $B$.
+Since we have assumed independence between $Σ$ and $Θ$, the distribution of $X$ given greater values of $Σ$ is an inflated version of the same distribution for smaller values of $Σ$. Thus, to the degree that the same is not true for the distribution of the published estimates $X$ given $Σ$, this has to be due to selectivity in the publication process. In this example, statistically insignificant observations are absent for greater values of $Σ$. In other words, some of the darker blue points on the top right should shift in reality to the left, below the threshold of 1.96. Since the likelihood of publication is higher if the result is significant, the estimated values $X$ tend to be larger on average for greater values of $Σ$. Therefore, we expect some positive correlation between the two. Given the conditional distribution of $X$ given $Σ$ changes with $Σ$, we are again able to identify the publication probability.
 
 ```{r plot2, echo=FALSE, fig.cap="Identifcation using Meta-Studies",fig.align="center", out.width = '70%'}
 
@@ -103,12 +98,16 @@ knitr::include_graphics("scatter_illu_meta.pdf")
 
 ```
 
+### MLE vs. GMM
+
+The maximum likelihood estimation is the basic estimation procedure reported by Andrews and Kasy (2019). Because this approach heavily relies on the parametric assumptions on the distribution of the true treatment effects $Θ$, they provide a generalized method of moments estimator in their appendix. The advantage of GMM is, that the parametric assumptions can be dropped and one only has to assume some functional form for the publication probability. They do this to show some robustness of their results. Meaning, that even without assuming parametric specifications, similar results can be obtained. Their result confirm this. Although moment-based methods lead to less precise results, their main findings still hold. Because it seems that the GMM estimation is a good alternative to the likelihood estimation, both approaches wre implemented in the package. For further information on their method of moments approach, please check the appendix in Andrews and Kasy (2019)
+
 ## Correction
 
-After computing the publication probability, Andrews and Kasy show, that one can derive corrected estimators and confidence sets. Putting it as simple as possible, the selective publication weights the distribution of $Z$, where $Z$ is equal the original estimates divided by their standard errors, by the publication probability. To obtain the corrected estimates and confidence set, one only need to correct for this weighting. 
-In their approach, they define the distribution function for published results $Z$ given their *true* effect. By using procedures applied in Andrews (1993) and Stock and Watson (1998), and inverting the distribution function leads to the median unbiased estimator as well as the equal-tailed confidence sets which fully correct for the and bias produced by the selective publication. 
-To get an intuition for their result, the illustrative example is continued.
-Comparing the median unbiased estimator with the uncorrected estimator, we can clearly see that the median unbiased estimator lies below the original estimator, given $Z$ is small. With an increasing $Z$, we observe that the median unbiased estimator converges to the original estimator. The same observation holds for the confidence intervals. In the example from figure two, the corrected estimates are nearly equal the original estimates is $Z > 5$.
+After computing the publication probability, Andrews and Kasy show that one can derive corrected estimators and confidence sets. Putting it as simple as possible, the selective publication weights the distribution of $Z$ by the publication probability. To obtain the corrected estimates and confidence sets, one only needs to correct for this weighting.
+
+In their approach, they define the distribution function for published standardized results $Z$ given their *true* effect. By using procedures applied in Andrews (1993) and Stock and Watson (1998), and inverting the distribution function, they are able to calculate the median unbiased estimator (i.e. corrected estimates) as well as the equal-tailed confidence sets which fully correct for the bias produced by the selective publication. 
+To get an intuition for their result, the illustrative example is continued. Comparing the median unbiased estimator with the original and uncorrected estimates (grey line), we can clearly see that the median unbiased estimator lies below the original estimator, given $Z$ is close to the cutoff 1.96. With an increasing (decreasing) $Z$, we observe that the median unbiased estimator converges to the original estimator. The same observation holds for the confidence intervals. In the example from Figure, the corrected estimates are nearly equal the original estimates if $Z > 5$.
 
 ```{r plot3, echo=FALSE, fig.cap="Bias correction", fig.align="center", out.width = '80%'}
 
@@ -320,7 +319,7 @@ knitr::include_graphics("scatter_hist_dew.pdf")
 
 ```
 
-Looking at the estimation results indicates a publication probability of about 25%, This is suggesting that statistically significant results are 4 times more likely to be included in the meta-study by Croke et al. (2016). Allthough this result seems decisive, Andrews and Kasy (2019) calculate different specifications for this application and show, that the results can differ a lot. They even get a result, suggesting that insignificant results are more likely to be published than significant ones. Due to their different specifications, we can not draw any final conclusions about the selective publication.
+Looking at the estimation results indicates a publication probability of about 25%, This is suggesting that statistically significant results are 4 times more likely to be included in the meta-study by Croke et al. (2016). Although this result seems decisive, Andrews and Kasy (2019) calculate different specifications for this application and show, that the results can differ a lot. They even get a result, suggesting that insignificant results are more likely to be published than significant ones. Due to their different specifications, we can not draw any final conclusions about the selective publication.
 Let us still take a quick look at the correction plots. In Figure 8 we compare the adjusted with the original estimates. It is obvious that estimates closer to the cutoff of 1.96 are adjusted quite a bit more than the other estimates. Generally, the adjusted estimates are drawn closer to zero, which would also mean that with the adjustment, we get less significant results.
 Again, in Figure 9, we can see the biggest difference between the unbiased estimates and the original estimates around the cutoff 1.96. Above an estimation of 4, the adjusted equal the original estimates. The same holds for the estimates close to 0.
 
@@ -339,9 +338,12 @@ knitr::include_graphics("correction_plot_dew.pdf")
 
 # Final remarks
 
+TODO
 
 # Literature
 
 - Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.
 - Croke et al. (2016)
 - Camerer et al. (2016)
+- Andrews (1993)
+- Stock and Watson (1998)
