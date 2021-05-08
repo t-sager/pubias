@@ -39,13 +39,18 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 # Introduction
 
-# Publication Bias: Illustrative Example
+\newpage
+
+
+# Publication Bias
 
 Instead of going into detail about the theory and mathematics Andrews and Kasy (2019) used in their paper, I use an illustrative example they provided to show how a publication bias arises, how it can be identified and ultimately, how one can correct for it. 
 
 Journals usually receive a lot of studies with different estimates and the journals need to decide which papers will be published and which are not. Let us assume that the reported estimates are normally distributed i.e. $X ~ N(Θ, Σ^2)$ where $Θ$ are the the treatment effects, and $Σ$ are the corresponding standard errors. Additionally, each study examines different treatments.
 In this example, the journal publishes significant results at the 5% with probability 1 ($p(z) = 1$) and insignificant results with probability 0.2 ($p(Z) = 0.2$, with $Z ∈ [-1.96, 1.96]$). This indicate a clear preference for publishing significant results. Namely, significant result are 5 times more likely to be published than insignificant results.
 Because of this behavior, it is clear that the published results over-estimate the magnitude of the treatment effect.The same holds for the confidence set. Small values are underestimates, while large values are overestimated. Although the introduction focused on the publication probability by researches, the behavior of the journals applies to the researchers as well or we can even say it applies to both at the same time. 
+
+\newpage
 
 
 # Methods and assumptions
@@ -69,9 +74,9 @@ To proof that some selective publication exists, we can take a closer look at th
 Here, the assumption of the symmetry in the data generating process comes into play. Because of this assumption, $Z$ or $Z^r$ should fall in either region with the same probility. Due to the fact that we clearly observe more data points in region A than in region B, we have evidence for selective publication. That is why it is possible to estimate $p(.)$.*TODO: p() up to scale?*
 
 
-```{r plot1, echo=FALSE, fig.cap="Identifcation Using Replication Studies",fig.align="center", out.width = '100%'}
+```{r plot1, echo=FALSE, fig.cap="Identifcation using Replication Studies",fig.align="center", out.width = '70%'}
 
-knitr::include_graphics("replication.png")
+knitr::include_graphics("scatter_illu_rep.pdf")
 
 ```
 
@@ -87,9 +92,14 @@ Since we have assumed independence between $Σ$ and $Θ$, the distribution of $X
 *TODO: p() up to scale? + Text noch überarbeiten, letzter Teil nicht klar*
 
 
-```{r plot2, echo=FALSE, fig.cap="Identifcation Using Meta-Studies",fig.align="center", out.width = '100%'}
+### MLE vs. GMM
 
-knitr::include_graphics("meta.png")
+Besides the maximum likelihood estimation
+
+
+```{r plot2, echo=FALSE, fig.cap="Identifcation using Meta-Studies",fig.align="center", out.width = '70%'}
+
+knitr::include_graphics("scatter_illu_meta.pdf")
 
 ```
 
@@ -100,11 +110,13 @@ In their approach, they define the distribution function for published results $
 To get an intuition for their result, the illustrative example is continued.
 Comparing the median unbiased estimator with the uncorrected estimator, we can clearly see that the median unbiased estimator lies below the original estimator, given $Z$ is small. With an increasing $Z$, we observe that the median unbiased estimator converges to the original estimator. The same observation holds for the confidence intervals. In the example from figure two, the corrected estimates are nearly equal the original estimates is $Z > 5$.
 
-```{r plot3, echo=FALSE, fig.cap="Bias correction", fig.align="center", out.width = '100%'}
+```{r plot3, echo=FALSE, fig.cap="Bias correction", fig.align="center", out.width = '80%'}
 
-knitr::include_graphics("correction.png")
+knitr::include_graphics("correction_illu.pdf")
 
 ```
+
+\newpage
 
 # Package Features
 
@@ -125,7 +137,7 @@ library(pubias)
 
 ## Syntax
 
-There are two main functions in the package. The first `pubias_meta()` leads to the identification of and correction for the publication bias in meta studies while `pubias_replication` does the same for replication studies. The most simple syntax to get a result is the following:
+There are two main functions in the package. The first `pubias_meta()` leads to the identification of and correction for the publication bias in meta studies while `pubias_replication()` does the same for replication studies. The most simple syntax to get a result is the following:
 
 ```{r, eval = FALSE}
 # Meta Studies
@@ -161,7 +173,8 @@ pubias_meta(
 
 ```
 
-- `data`: In the case of meta studies, the data needs to contain a `n x 3` matrix where the first column contains the original estimates, the second column the associated standard errors and in the third column an ID going from 1 to `n`, where `n` is the number of estimates. If the function for the replication studies is used, the data needs to contain a `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates) and the second (fourth) column the associated standard errors, where `n` is the number of estimates.
+- `data`: In the case of meta studies, the data needs to contain a `n x 3` matrix where the first column contains the original estimates, the second column the associated standard errors and in the third column a cluster ID going from 1 to `n`, where `n` is the number of studies used in the meta-study. Keep in mind, this does not necessarily mean the same number of estimates because there could be several estimates coming from one single study.
+If the function for the replication studies is used, the data needs to contain a `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates) and the second (fourth) column the associated standard errors, where `n` is the number of estimates.
 
 - `studynames`: This argument is optional. A vector of type character containing all the Studynames of size n in the same order as the argument data.
 
@@ -182,9 +195,9 @@ The output of the functions is pretty simple. They return a list object called `
 
 - `Results`: This element contains the three results `Psihat` which is the estimated publication probability, `Varhat` its variance and`se_robust` containing the robust standard errors for the publication probability. For interpretation: If the function yields `Psihat = 0.25`, the publication of insignificant results is only 25% as likely as the publication of significant results. Or put differently, the publication of a significant result is 4 times more likely than an insignificant result (at the given significance level).
 
-- `Corrected Estimates`:  As the name suggests, this element contains the original estimates with their 95% confidence bonds (Z1, Z1_L, Z1_U) as well as the corrected estimates (Z1_M) and in addition the Bonferroni corrected 95% confidence bonds (Z1_LB, Z1_UB). There are additional elements which are mainly used for plotting the results.
+- `Corrected Estimates`:  This element reports the result from the publication bias correction. First, it contains the original estimates with their 95% confidence bounds (`Z1`, `Z1_L`, `Z1_U`) as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bounds (`Z1_LB`, `Z1_UB`). There are additional elements which are mainly used for plotting the results.
 
-If the functions are run with the option to print the plots and dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed as .pdf into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling: 
+If the functions are run with the option to print the plots and the dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed as .pdf into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling: 
 
 ```{r, eval = FALSE}
 
@@ -196,12 +209,13 @@ pubias_result$`Correction Plots`$CorrectionPlot
 
 ```
 
+\newpage
 
-## Applications
+# Applications
 
 To further illustrate the functionality of the package, we apply it to a replication study as well as a meta analysis. These are the same examples used by Andrews and Kasy (2019).
 
-### Replication Study: Economics Laboratory Experiments
+## Replication Study: Economics Laboratory Experiments
 
 This application uses data from a recent study by Camerer et al. (2016). They replicated 18
 economic laboratory experiment papers which were published between 2011 and 2014. The data is well suited for this application because it replicates estimates from papers which come from the same area of research and are all published in
@@ -265,7 +279,7 @@ knitr::include_graphics("correction_plot_econ.pdf")
 ```
 
 
-### Meta Analysis: Deworming
+## Meta Analysis: Deworming
 
 The second application uses a meta-study by Croke et al. (2016). They look at the effect of a drug for deworming on the body weight of children. The authors collect a total of 22 estimates from 20 different studies. These 22 estimates together with their associated standard errors build the main data input for our function `pubias_meta()`. Because there is a possibility of multiple estimates for some of the studies, one has to cluster for the study ID. This is why the study-ID has to enter the input data as well. Contrary to the first application, we use the GMM approach in the second 
 As stated before, the data for the two documented applications can be loaded directly from the package as shown below. Of course, alternatively, one can load own estimates and studynames via `read.csv()` or similar functions.
@@ -327,3 +341,7 @@ knitr::include_graphics("correction_plot_dew.pdf")
 
 
 # Literature
+
+- Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.
+- Croke et al. (2016)
+- Camerer et al. (2016)

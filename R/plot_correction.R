@@ -68,7 +68,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
                                legend.title = element_blank())
   g
 
-  ggsave(paste0(getwd(),"/OriginalAndAdjusted.pdf"), width = 10, height = 6.5)
+  ggsave(paste0(getwd(),"/OriginalAndAdjusted.pdf"), width = 10, height = 5)
 
   OriginalAndAdjusted <- ggplotly(g)
 
@@ -118,7 +118,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
                            legend.title = element_blank())
   g
 
-  ggsave(paste0(getwd(),"/OriginalAndAdjustedBonferroni.pdf"), width = 10, height = 6.5)
+  ggsave(paste0(getwd(),"/OriginalAndAdjustedBonferroni.pdf"), width = 10, height = 5)
 
   OriginalAndAdjustedBonferroni <- ggplotly(g)
 
@@ -172,7 +172,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
                            legend.title = element_blank())
   g
 
-  ggsave(paste0(getwd(),"/OriginalReplicationAndAdjusted.pdf"), width = 10, height = 6.5)
+  ggsave(paste0(getwd(),"/OriginalReplicationAndAdjusted.pdf"), width = 10, height = 5)
 
   OriginalReplicationAndAdjusted <- ggplotly(g)
 
@@ -211,7 +211,7 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     )
   g
 
-  ggsave(paste0(getwd(),"/CorrectionPlot.pdf"), width = 10, height = 6.5)
+  ggsave(paste0(getwd(),"/CorrectionPlot.pdf"), width = 10, height = 5)
 
   CorrectionPlot <- ggplotly(g)
 

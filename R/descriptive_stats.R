@@ -37,7 +37,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             theme_minimal()+ theme(panel.grid.minor = element_blank(),
                                    panel.grid.major.x = element_blank())
 
-        ggsave(paste0(getwd(),"/Scatter.pdf"), width = 10, height = 6.5)
+        ggsave(paste0(getwd(),"/Scatter.pdf"), width = 10, height = 5)
 
     } else  if (identificationapproach==2)  {
         significant<-(abs(X/sigma)>critval);
@@ -58,7 +58,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             theme_minimal()+ theme(panel.grid.minor = element_blank(),
                                    panel.grid.major.x = element_blank())
 
-        ggsave(paste0(getwd(),"/Scatter.pdf"), width = 10, height = 6.5)
+        ggsave(paste0(getwd(),"/Scatter.pdf"), width = 10, height = 5)
 
     }
 
@@ -134,7 +134,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
     }
 
     handp<-grid.arrange(h, p, ncol = 2)
-    ggsave(plot = handp, paste0(getwd(),"/Scatter_Hist.pdf"), width = 10, height = 6.5)
+    ggsave(plot = handp, paste0(getwd(),"/Scatter_Hist.pdf"), width = 10, height = 5)
 
     h <- ggplotly(h)
     p <- ggplotly(p)
