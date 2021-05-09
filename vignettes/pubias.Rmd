@@ -29,8 +29,6 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 ```
 
-\centering
-\raggedright
 \newpage
 \tableofcontents
 
@@ -39,7 +37,10 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 # Introduction
 
-TODO
+Research can be a highly competitive environment regarding funding or reaching the next step in ones career. It is plausible that researches are under pressure and have an incentive to only submit results which favor them and are more likely to be published in famous journals. The journal editors themselves may also deal with an incentive to publish more positive findings because they have to compete with other journals for more citations and have to be financed as well.
+In combination, this may lead to the so called file drawer problem (Rosenthal 1979), selective publication or publication bias. This bias does not only occur in the field of economics, it is a wide spread problem which also concern life sciences, medicine and health care research and other social sciences. Depending on the field of interest, holding back negative results can lead to the distortion of the literature, may have consequences for the health of the citizens, using scarce resources for wrong investments or just have a negative impact on research an teaching practices. 
+Fanelli (2011) shows in a study looking at 4600 papers published between 1990 and 2007 that negative results are disappearing from being published and his research suggests an increase in publication bias over these years. According to him, papers finding significant support for their initial hypotheses increased by 22% in this timespan. By the ethic code of researchers and journal editors, they are bound to publish both negative as well as positive results in a non selective manner. Therefore, one might argue that this decrease in negative results is just the result of getting better at formulating hypotheses. Concerning the competition researchers and editors find themselves in, this may lead to the exclusion of poorly formulated hypothesis and experiments which ultimately leads to an increase in positive results (Joober et al, 2012). On the other hand, replicating existing results often lead to completely different estimates with smaller magnitude or even opposite signs which would no support this hypothesis.
+The publication bias is most certainly a topic which needs to be addressed. There are several methods to tackle the problem. The documented R package implements the method documented by Andrews and Kasy (2019).
 
 \newpage
 
@@ -127,6 +128,11 @@ The package is currently available on GitHub. Running the code below will direct
 
 # Installing the package directly from github
 devtools::install_github("t-sager/pubias")
+
+# If the package vignette should be downloaded as well
+devtools::install_github("t-sager/pubias", build_vignettes = TRUE)
+# Check vignette
+vignette("pubias")
 
 # Load package into library
 library(pubias)
@@ -336,14 +342,35 @@ knitr::include_graphics("correction_plot_dew.pdf")
 
 ```
 
+\newpage
+
 # Final remarks
 
-TODO
+Currently, the package covers the base specification of the procedure proposed by Andrews and Kasy. In their paper, they propose further specifications like allowing for more than one cutoff, differ between numerical and analytic integration or even control for certain journals the papers were published in. These extensions could be added to the package in the future. In its first version, the aim was to build the package as simple as possible. The user should be able to just input a simple data matrix and get a reasonable result which can be easily interpreted. After conducting meta analyses or replicating a lot of different studies, there is not much time left to check for something like the publication bias. This package provides an easy to use and quick way to do some robustness checks.
+Besides the contents of package, there are obviously alternative approaches to dealing with the publication bias. Andrews and Kasy discuss some of them in their paper. One of the most popular techniques are the so called meta-regression introduced by Card and Krueger (1995) and Egger et al. (1997) which regress the effect size of a study on characteristics of the study to explain the heterogenity of treatment effects between different studies and therefore try to identify a publication bias. 
+Andres and Kasy also touch on the topics of manipulation or p-Hacking and discuss the question if results should even replicate or if it is completely normal if they deviate from the original estimates. In conclusion, the procedure implemented in the package is by far not the only method of dealing with a publication bias. The problem was identified a long time ago and there is still a lot of ongoing research regarding this topic.
 
-# Literature
+\newpage
 
-- Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.
-- Croke et al. (2016)
-- Camerer et al. (2016)
-- Andrews (1993)
-- Stock and Watson (1998)
+# Refrences
+
+* **Andrews, Donald W. K.** 1993. “Exactly Median-Unbiased Estimation of First Order Autoregressive/
+Unit Root Models.” Econometrica 61 (1): 139–65.
+
+* **Andrews, Isaiah, and Maximilian Kasy.** 2019. "Identification of and Correction for Publication Bias." American Economic Review, 109 (8): 2766-94.
+
+* **Card, David, and Alan B. Krueger.** 1995. “Time-Series Minimum-Wage Studies: A Meta-Analysis.” American Economic Review 85 (2): 238–43.
+
+* **Croke, Kevin, Joan Hamory Hicks, Eric Hsu, Michael Kremer, and Edward Miguel.** 2016. “Does Mass Deworming Affect Child Nutrition? Meta-Analysis, Cost-Effectiveness, and Statistical Power.” NBER Working Paper 22382.
+
+* **Camerer, Colin F., Anna Dreber, Eskil Forsell, Teck-Hua Ho, Jürgen Huber, Magnus Johannesson, Michael Kirchler, et al.** 2016. “Evaluating Replicability of Laboratory Experiments in Economics.” Science 351 (6280): 1433–36.
+
+* **Egger, Matthias, George Davey Smith, Martin Schneider, and Christoph Minder.** 1997. “Bias in Meta-Analysis Detected by a Simple, Graphical Test.” BMJ 315: 629–34.
+
+* **Fanelli D.** 2012 "Negative results are disappearing from most disciplines and countries." Scientometrics. 90:891–904.
+
+* **Joober R, Schmitz N, Annable L, Boksa P.** 2012. Publication bias: what are the challenges and can they be overcome?. J Psychiatry Neurosci. 37(3):149-152. 
+
+* **Rosenthal, Robert.** 1979. “The File Drawer Problem and Tolerance for Null Results.” Psychological Bulletin 86 (3): 638–41.
+
+* **Stock, James H., and Mark W. Watson.** 1998. “Median Unbiased Estimation of Coefficient Variance in a Time-Varying Parameter Model.” Journal of the American Statistical Association 93 (441): 349–58.
