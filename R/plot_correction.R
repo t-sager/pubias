@@ -1,4 +1,4 @@
-plot_correction <- function(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach) {
+plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach) {
 
   Z1 <- corrected_estimates$Z1
   Z1_U <- corrected_estimates$Z1_U

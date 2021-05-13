@@ -100,7 +100,7 @@ pubias_replication <-
                             symmetric,
                             cluster_ID)
         plots <-
-          plot_correction(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
+          plot_correction(Z, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
           rmarkdown::render(
             system.file("dashboard.Rmd", package = "pubias"),
@@ -164,7 +164,7 @@ pubias_replication <-
                             symmetric,
                             cluster_ID)
         plots <-
-          plot_correction(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
+          plot_correction(Z, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
           rmarkdown::render(
             system.file("dashboard.Rmd", package = "pubias"),

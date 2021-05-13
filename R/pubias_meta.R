@@ -39,7 +39,7 @@ pubias_meta <-
 
     ## No Studynames available
     if (is.null(studynames)) {
-      studynames <<- as.character(data[, 3])
+      studynames <- as.character(data[, 3])
     }
 
     cutoffs <<- qnorm(sign_lvl/2, lower.tail = FALSE)
@@ -50,6 +50,7 @@ pubias_meta <-
     C <- matrix(1, n, 1)
     identificationapproach <- 2
     wd <- getwd()
+
 
     if (GMM == TRUE) {
       name <- 'GMM_Meta'
@@ -93,8 +94,9 @@ pubias_meta <-
                             name,
                             symmetric,
                             cluster_ID)
+
         plots <-
-          plot_correction(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
+          plot_correction(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
           rmarkdown::render(
             system.file("dashboard.Rmd", package = "pubias"),
@@ -171,7 +173,7 @@ pubias_meta <-
                             symmetric,
                             cluster_ID)
         plots <-
-          plot_correction(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
+          plot_correction(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
           rmarkdown::render(
             system.file("dashboard.Rmd", package = "pubias"),
