@@ -94,17 +94,7 @@ pubias_meta <-
                             symmetric,
                             cluster_ID)
         plots <-
-          plot_correction(
-            X,
-            sigma,
-            Psihat,
-            Varhat,
-            cutoffs,
-            symmetric,
-            studynames,
-            identificationapproach,
-            corrected_estimates
-          )
+          plot_correction(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
           rmarkdown::render(
             system.file("dashboard.Rmd", package = "pubias"),
@@ -181,17 +171,7 @@ pubias_meta <-
                             symmetric,
                             cluster_ID)
         plots <-
-          plot_correction(
-            X,
-            sigma,
-            Psihat,
-            Varhat,
-            cutoffs,
-            symmetric,
-            studynames,
-            identificationapproach,
-            corrected_estimates
-          )
+          plot_correction(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
           rmarkdown::render(
             system.file("dashboard.Rmd", package = "pubias"),
