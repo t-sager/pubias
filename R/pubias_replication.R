@@ -34,13 +34,14 @@ pubias_replication <-
            print_plots = FALSE,
            print_dashboard = FALSE) {
 
-    # Preliminaries
+  #- Preliminaries
 
     ## No Studynames available
     if (is.null(studynames)) {
       studynames <- as.character(1:nrow(data))
     }
 
+    ## Setting up the data as needed
     cutoffs <<- qnorm(sign_lvl/2, lower.tail = FALSE)
     Z <<- cbind(data[, 1] / data[, 2], data[, 3] / data[, 2])
     sigmaZ2 <- as.matrix(data[, 4] / data[, 2])
@@ -57,6 +58,7 @@ pubias_replication <-
       stop("Asymmetric option for GMM estimation for replication studies is currently not implemented!")
     }
 
+  #- Running Identification and Correction by calling other functions
     if (GMM == TRUE) {
       name <- 'GMM_Replication'
 

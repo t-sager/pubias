@@ -1,43 +1,52 @@
-
 replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,sigmaZ2,C) {
-  # nuhat <- Psihat0[1]
-  # tauhat <- Psihat0[2]
-  # betap <- c(reshape(t(Psihat0[-c(1,2)]), c(length(Psihat0[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1)
 
+  # Preliminaries
   n <- nrow(Z)
   k <- length(betap)
   betap <- t(t(betap))
-  Z1_dummies <- zeros(n,length(cutoffs)+1)
 
-  if (all(sort(cutoffs)!=cutoffs)) {
+  # Create step function for publication probability
+  Z1_dummies <- zeros(n, length(cutoffs) + 1)
+
+  # Throw error if cutoffs unsorted (not need in current package version --> only one cutoff allowed!)
+  if (all(sort(cutoffs) != cutoffs)) {
     stop ("Unsorted cutoffs!")
   }
 
   if (symmetric == TRUE) {
-    # check that cutoffs are positive
-    if (!all(cutoffs>=0)) {
-      stop("Needs positive cutoffs!")
+    # Throw error if cutoff negative
+    if (!all(cutoffs >= 0)) {
+      stop("Needs positive cutoff!")
     }
-    Z1_dummies[,1]<-abs(Z[,1])<cutoffs[1];
-    if (length(cutoffs)>1) {
-      for (m in (2:length(cutoffs))) {
-        Z1_dummies[,m]<-(abs(Z[,1])<cutoffs[m])*(abs(Z[,1])>=cutoffs[m-1]);
-      }
-    }
-    Z1_dummies[,length(cutoffs)+1]<-abs(Z[,1])>=cutoffs[length(cutoffs)];
-  } else {
-    Z1_dummies[,1]<-Z[,1]<cutoffs[1];
-    if (length(cutoffs)>1) {
-      for (m in 2:length(cutoffs)) {
-        Z1_dummies[,m]=(Z[,1]<cutoffs[m])*(Z[,1]>=cutoffs[m-1]);
-      }
-    }
-    Z1_dummies[,length(cutoffs)+1]<-Z[,1]>=cutoffs[length(cutoffs)];
-  }
+    Z1_dummies[, 1] <- abs(Z[, 1]) < cutoffs[1]
 
+    if (length(cutoffs) > 1) {
+      for (m in (2:length(cutoffs))) {
+        Z1_dummies[, m] <- (abs(Z[, 1]) < cutoffs[m]) * (abs(Z[, 1]) >= cutoffs[m -
+                                                                                  1])
+
+      }
+    }
+    Z1_dummies[, length(cutoffs) + 1] <-
+      abs(Z[, 1]) >= cutoffs[length(cutoffs)]
+
+  } else {
+    Z1_dummies[, 1] <- Z[, 1] < cutoffs[1]
+
+    if (length(cutoffs) > 1) {
+      for (m in 2:length(cutoffs)) {
+        Z1_dummies[, m] = (Z[, 1] < cutoffs[m]) * (Z[, 1] >= cutoffs[m - 1])
+
+      }
+    }
+    Z1_dummies[, length(cutoffs) + 1] <-
+      Z[, 1] >= cutoffs[length(cutoffs)]
+
+  }
 
 ########################
 # Calculate objective function LLH
+
 phat <- zeros(nrow(Z1_dummies), 1)
 
 for (m in (1:ncol(Z1_dummies))) {
@@ -45,8 +54,7 @@ for (m in (1:ncol(Z1_dummies))) {
     phat <- phat + Cmat * betap[m]
   }
 
-
-#vector of un-truncated likelihoods
+# Inegration
 if (symmetric == TRUE){
 
     #Monte-carlo integration
@@ -72,16 +80,13 @@ if (symmetric == TRUE){
   }
 
 
-
-
-
- # normalizing constant
+# normalizing constant
 prob_vec<-rep(0,length(cutoffs)+2);
 
   if (symmetric == TRUE){
     for (m in (1:length(cutoffs))){
 
-        #Monte Carlo Integration
+        # Monte Carlo Integration
         g <- (pnorm(cutoffs[m]-theta_vec)-pnorm(-cutoffs[m]-theta_vec))
         prob_vec[m+1] <- mean(g)
 
@@ -99,6 +104,7 @@ prob_vec<-rep(0,length(cutoffs)+2);
     mean_Z1<-prob_vec[2:length(prob_vec)]-prob_vec[1:(length(prob_vec)-1)]
   }
 
+# normalizing constant
   normalizingconst <- zeros(nrow(Z1_dummies),1)
 
   for (m in (1:ncol(Z1_dummies))){
@@ -106,12 +112,16 @@ prob_vec<-rep(0,length(cutoffs)+2);
       normalizingconst=normalizingconst+Cmat*betap[m];
   }
 
+  # Likelihood
   L <- as.vector(phat)*as.vector(piZ1Z2)/normalizingconst;
 
+  # Loglikelihood
   logL=log(L)
 
+  # Sum of Loglikelihood
   LLH=-sum(log(L))
 
+  # Return results
   return(list("LLH"= LLH, "logL" = logL))
 
 }

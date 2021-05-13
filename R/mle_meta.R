@@ -18,51 +18,73 @@
 mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C) {
 
   # Stepsize
-  stepsize <- 10^(-6)
+  stepsize <- 10 ^ (-6)
+  # n
   n <- length(X)
 
-        #Run model with normal distribution for latent effects
-        LLH <-
-          function (Psi) {
-            f <- variation_variance_llh(
-              Psi[1],
-              Psi[2],
-              c(reshape(t(Psi[-c(1,2)]), c(length(Psi[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1),
-              cutoffs,
-              symmetric,
-              X,
-              sigma,
-              C
-            )
-            return(f)
-          }
+  # Run model
+  LLH <-
+    function (Psi) {
+      f <- variation_variance_llh(Psi[1],
+                                  Psi[2],
+                                  c(reshape(t(Psi[-c(1, 2)]), c(
+                                    length(Psi[-c(1, 2)]) / length(cutoffs), length(cutoffs)
+                                  )), 1),
+                                  cutoffs,
+                                  symmetric,
+                                  X,
+                                  sigma,
+                                  C)
+      return(f)
+    }
 
 
   nn <- n
 
-    LLH_only<-function (Psi){
-      f<-LLH(Psi);
-      return(f$LLH)
+  # Necessary for optimization procedure
+  LLH_only <- function (Psi) {
+    f <- LLH(Psi)
+
+    return(f$LLH)
   }
 
-    #########################
-    # find maximum likelihood estimator using just LLH
-    Psihat0<-c(1,1,rep(1,length(cutoffs)))
-    mini <- optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+  #########################
+  # Get maximum likelihood estimator using only LLH
 
-    # More accurate Optimization:
-    Psihat1 <- mini$par
+  # Starting Values
+  Psihat0 <- c(1, 1, rep(1, length(cutoffs)))
 
-    mini<-optim(par=Psihat1,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+  # Optimize based on starting values
+  mini <-
+    optim(
+      par = Psihat0,
+      fn = LLH_only,
+      method = "BFGS",
+      control = list(abstol = 10 ^ -8, maxit = 10 ^ 5)
+    )
 
-    Psihat <<- mini$par
-    Objval <- mini$value
+  # More accurate Optimization, aka. optimizing again
+  Psihat1 <- mini$par
+  mini <-
+    optim(
+      par = Psihat1,
+      fn = LLH_only,
+      method = "BFGS",
+      control = list(abstol = 10 ^ -8, maxit = 10 ^ 5)
+    )
 
-    Varhat <- robust_variance(stepsize, nn, Psihat, LLH,cluster_ID)
-    se_robust <- sqrt(diag(Varhat))
+  # Optimal values, Objval = max. likelihood
+  Psihat <<- mini$par
+  Objval <- mini$value
 
-    return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
+  # Variance and robust SEs
+  Varhat <- robust_variance(stepsize, nn, Psihat, LLH, cluster_ID)
+  se_robust <- sqrt(diag(Varhat))
+
+  # Return estimation results
+  return(list(
+    "Psihat" = Psihat,
+    "Varhat" = Varhat,
+    "se_robust" = se_robust
+  ))
 }
-
-
-

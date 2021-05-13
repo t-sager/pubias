@@ -1,47 +1,61 @@
 replication_moments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
 
-n <- nrow(Z)
-k <- length(betap)
+    # Preliminaries
+    n <- nrow(Z)
+    k <- length(betap)
 
-###create step function publication probability
-Z1_dummies<-matrix(0,n,length(cutoffs)+1);
+    # Create step function for publication probability
+    Z1_dummies <- matrix(0, n, length(cutoffs) + 1)
 
-if (all(sort(cutoffs)!=cutoffs)) {
-    stop ("Unsorted cutoffs!")
-}
 
-if (symmetric == TRUE) {
-    # check that cutoffs are positive
-    if (!all(cutoffs>=0)) {
-        stop("Needs positive cutoffs!")
+    # Throw error if cutoffs unsorted (not need in current package version --> only one cutoff allowed!)
+    if (all(sort(cutoffs) != cutoffs)) {
+        stop ("Unsorted cutoffs!")
     }
-    Z1_dummies[,1]<-abs(Z[,1])<cutoffs[1];
-    if (length(cutoffs)>1) {
-        for (m in (2:length(cutoffs))) {
-            Z1_dummies[,m]<-(abs(Z[,1])<cutoffs[m])*(abs(Z[,1])>=cutoffs[m-1]);
+
+    if (symmetric == TRUE) {
+        # Throw error if cutoffs negative
+        if (!all(cutoffs >= 0)) {
+            stop("Needs positive cutoff!")
         }
-    }
-    Z1_dummies[,length(cutoffs)+1]<-abs(Z[,1])>=cutoffs[length(cutoffs)];
-} else {
-    Z1_dummies[,1]<-Z[,1]<cutoffs[1];
-    if (length(cutoffs)>1) {
-        for (m in 2:length(cutoffs)) {
-            Z1_dummies[,m]=(Z[,1]<cutoffs[m])*(Z[,1]>=cutoffs[m-1]);
+        Z1_dummies[, 1] <- abs(Z[, 1]) < cutoffs[1]
+
+        if (length(cutoffs) > 1) {
+            for (m in (2:length(cutoffs))) {
+                Z1_dummies[, m] <- (abs(Z[, 1]) < cutoffs[m]) * (abs(Z[, 1]) >= cutoffs[m -
+                                                                                            1])
+
+            }
         }
+        Z1_dummies[, length(cutoffs) + 1] <-
+            abs(Z[, 1]) >= cutoffs[length(cutoffs)]
+
+    } else {
+        Z1_dummies[, 1] <- Z[, 1] < cutoffs[1]
+
+        if (length(cutoffs) > 1) {
+            for (m in 2:length(cutoffs)) {
+                Z1_dummies[, m] = (Z[, 1] < cutoffs[m]) * (Z[, 1] >= cutoffs[m - 1])
+
+            }
+        }
+        Z1_dummies[, length(cutoffs) + 1] <-
+            Z[, 1] >= cutoffs[length(cutoffs)]
+
+
     }
-    Z1_dummies[,length(cutoffs)+1]<-Z[,1]>=cutoffs[length(cutoffs)];
 
-}
+    phat <- Z1_dummies %*% t(t(betap))
 
+########################
+# Create moments
 
-phat <- Z1_dummies %*% t(t(betap))
-
-###create moments for latent variables
 sigma_max <- max(max(sigmaZ2),1)
 sigma_adj1 <- sqrt((sigma_max^2-1))
 sigma_adj2 <- sqrt((sigma_max^2-sigmaZ2^2))
 
-if (symmetric == TRUE){ # only works for symmetric!
+# Currently only implemented for symmetric specification!
+if (symmetric == TRUE){
     if (length(cutoffs)==1){
         c <- cutoffs
         lmoment1 <- (pnorm((c-Z[,1])/sigma_adj1)-pnorm((-c-Z[,1])/sigma_adj1))
@@ -63,7 +77,7 @@ if (symmetric == TRUE){ # only works for symmetric!
     }
 }
 
-
+# Moments
 moments <- lmoments/repmat(phat,1,ncol(as.matrix(lmoments)))
 
 return(moments)

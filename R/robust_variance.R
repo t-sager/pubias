@@ -1,4 +1,5 @@
 robust_variance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
+
   thetahat <- Psihat
   Info <- zeros(length(thetahat),length(thetahat))
   for (n1 in 1:length(thetahat)) {
@@ -28,13 +29,13 @@ robust_variance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
       LLH_minusminus<-LLH(thetaminusminus)
       LLH_minusminus<-LLH_minusminus$LLH
 
-
       Info[n1,n2] <- ((LLH_plusplus-LLH_plusminus)/(2*stepsize)-(LLH_minusplus-LLH_minusminus)/(2*stepsize))/(2*stepsize)
     }
   }
 
   Var <- solve(Info)
-  # Calculate misspecification-robust standard errors
+
+# Calculate misspecification-robust standard errors
   score_mat <- zeros(n,length(thetahat))
   for (n1 in 1:length(thetahat)) {
     theta_plus<-thetahat
@@ -51,11 +52,12 @@ robust_variance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
     LLH_minus<-funvalue$LLH
     logL_minus<-funvalue$logL
 
-    score_mat[,n1]=(logL_plus-logL_minus)/(2*stepsize);
+    score_mat[,n1] <- (logL_plus-logL_minus)/(2*stepsize);
   }
   Cov <- clustered_covariance_estimate(score_mat,cluster_ID);
 
-  Var_robust=n*solve(Info)%*%Cov%*%solve(Info);
+  Var_robust <- n*solve(Info) %*% Cov %*% solve(Info);
 
+# Return robust Variance
 return(Var_robust)
 }

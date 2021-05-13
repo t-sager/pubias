@@ -1,5 +1,6 @@
 plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach) {
 
+  # Get results from correction
   original <- corrected_estimates$original
   adj_U <- corrected_estimates$adj_U
   adj_L <- corrected_estimates$adj_L
@@ -13,6 +14,7 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   Theta_LB_store <- corrected_estimates$Theta_LB_store
   xgrid <- corrected_estimates$xgrid
 
+  # n
   n <- nrow(original)
 
   # Define blue colors

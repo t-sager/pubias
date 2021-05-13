@@ -16,51 +16,74 @@
 #'
 mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C) {
 
-    # Stepsize
-    stepsize <- 10^(-6)
-    n <- nrow(Z)
-    # Starting Values
-    LLH <- function(Psi) {
-        f <- replication_analytic_llh(
-          Psi[1],
-          Psi[2],
-          c(reshape(t(Psi[-c(1,2)]), c(length(Psi[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1),
-          cutoffs,
-          symmetric,
-          Z,
-          sigmaZ2,
-          C
-        )
-        return(f)
-      }
+  # Stepsize
+  stepsize <- 10 ^ (-6)
+  # n
+  n <- nrow(Z)
 
-
-    nn = n
-
-    LLH_only<-function (Psi){
-      f<-LLH(Psi);
-      return(f$LLH)
-    }
-
-    #########################
-    # find maximum likelihood estimator using just LLH
-    Psihat0 <- c(1,1, rep(1,length(cutoffs)))
-
-    upper.b=rep(Inf,length(Psihat0))
-    lower.b = c(-Inf,-Inf, -Inf)
-
-    mini <- nlminb(objective=LLH_only, start=Psihat0,lower=lower.b,upper=upper.b)
-
-    # More accurate Optimization:
-    Psihat1 <- mini$par
-
-    mini <- nlminb(objective=LLH_only, start=Psihat1,lower=lower.b,upper=upper.b)
-
-    Psihat <<- mini$par
-    Objval <- mini$value
-
-    Varhat <- robust_variance(stepsize, nn, Psihat, LLH,cluster_ID)
-    se_robust <- sqrt(diag(Varhat))
-
-    return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
+  # Run model
+  LLH <- function(Psi) {
+    f <- replication_analytic_llh(Psi[1],
+                                  Psi[2],
+                                  c(reshape(t(Psi[-c(1, 2)]), c(
+                                    length(Psi[-c(1, 2)]) / length(cutoffs), length(cutoffs)
+                                  )), 1),
+                                  cutoffs,
+                                  symmetric,
+                                  Z,
+                                  sigmaZ2,
+                                  C)
+    return(f)
   }
+
+
+  nn = n
+  # Necessary for optimization procedure
+  LLH_only <- function (Psi) {
+    f <- LLH(Psi)
+
+    return(f$LLH)
+  }
+
+  #########################
+  # Get maximum likelihood estimator using only LLH
+
+  # Starting values
+  Psihat0 <- c(1, 1, rep(1, length(cutoffs)))
+
+  upper.b = rep(Inf, length(Psihat0))
+  lower.b = c(-Inf, -Inf,-Inf)
+
+  # Optimize based on starting values
+  mini <-
+    nlminb(
+      objective = LLH_only,
+      start = Psihat0,
+      lower = lower.b,
+      upper = upper.b
+    )
+
+  # More accurate Optimization, aka. optimizing again
+  Psihat1 <- mini$par
+  mini <-
+    nlminb(
+      objective = LLH_only,
+      start = Psihat1,
+      lower = lower.b,
+      upper = upper.b
+    )
+
+  # Optimal values, Objval = max. likelihood
+  Psihat <<- mini$par
+  Objval <- mini$value
+
+  # Variance and robust SEs
+  Varhat <- robust_variance(stepsize, nn, Psihat, LLH, cluster_ID)
+  se_robust <- sqrt(diag(Varhat))
+
+  return(list(
+    "Psihat" = Psihat,
+    "Varhat" = Varhat,
+    "se_robust" = se_robust
+  ))
+}

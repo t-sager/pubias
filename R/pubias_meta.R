@@ -34,13 +34,14 @@ pubias_meta <-
            print_plots = FALSE,
            print_dashboard = FALSE) {
 
-    # Preliminaries
+  #- Preliminaries
 
     ## No Studynames available
     if (is.null(studynames)) {
       studynames <- as.character(data[, 3])
     }
 
+    ## Setting up the data as needed
     cutoffs <<- qnorm(sign_lvl/2, lower.tail = FALSE)
     X <<- as.matrix(data[, 1])
     sigma <- as.matrix(data[, 2])
@@ -50,7 +51,7 @@ pubias_meta <-
     identificationapproach <- 2
     wd <- getwd()
 
-
+  #- Running Identification and Correction by calling other functions
     if (GMM == TRUE) {
       name <- 'GMM_Meta'
 
