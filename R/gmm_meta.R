@@ -21,20 +21,21 @@ gmm_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames) {
 
   # GMM Objective Function
   GMM_obj <- function(Psi) {
-    meta_gmm_objective(c(Psi, 1), cutoffs, symmetric, X, sigma, cluster_ID) +
-      max(-min(Psi), 0) * 10 ^ 5
+    meta_gmm_objective(c(Psi, 1), cutoffs, symmetric, X, sigma, cluster_ID) + max(-min(Psi), 0) * 10 ^ 5
   }
 
+  # Optimizing the objective function w.r.t starting values
   mini<-optim(par=Psihat0,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
-  # More accurate Optimization:
+  # More accurate Optimization (optimizing again, based on first optimization)
   Psihat1 <- mini$par
-
   mini<-optim(par=Psihat1,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
+  # Optimal Values
   Psihat <- mini$par
   Objval <- mini$value
 
+  # Calculate moments with optimal publication probability
   mom <- meta_moments(c(Psihat, 1), cutoffs, symmetric, X, sigma)
   moments <- mom$moment_mean
   Sigma_temp <- mom$moment_var
@@ -57,10 +58,11 @@ gmm_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames) {
     G[, n1] = t(moments_plus - moments_minus) / (2 * stepsize)
   }
 
-
+  # Variance and robust SEs
   Varhat <- solve(t(G) %*% solve(Sigma_hat) %*% G) / length(X)
   se_robust <- sqrt(diag(Varhat))
   dof <- ncol(moments)
 
+  # Returning the results
   return(list("Psihat"= Psihat, "Varhat" = Varhat, "se_robust" = se_robust))
 }

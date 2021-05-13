@@ -45,7 +45,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
     Varhat <- Varhat[-c(1,2), -c(1,2)]
   }
 
-  # Calculate corrected estimates and confidence bounds
+##--- Calculate corrected estimates and confidence bounds
   adj_U <- zeros(length(original),1)
   adj_L <- zeros(length(original),1)
   adj_estimates <- zeros(length(original),1)
@@ -74,7 +74,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
     adj_estimates[n,1]=min_M$par
   }
 
-  # Calculate bonferroni corrected estimates and confidence bounds
+##--- Calculate Bonferroni corrected estimates and confidence bounds
   adj_UB <- zeros(length(original),1)
   adj_LB <- zeros(length(original),1)
   sigma_U <- zeros(length(original),1)
@@ -96,7 +96,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
     adj_UB[n,1]=min_UB$par
     adj_LB[n,1]=min_LB$par
 
-    #Calculate derivatives of corrections with respect to parameters via implicit function theorem
+    #-  Calculate derivatives of corrections with respect to parameters via implicit function theorem
 
     thetaU_plus=adj_UB[n,1]+stepsize
     thetaU_minus=adj_UB[n,1]-stepsize
@@ -158,14 +158,15 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
   }
 
 
-  #######################
-
+#######################
+# Following results will be used to plot corrections
 
 if (symmetric == TRUE) {
 
     xgrid=seq(-5,5,0.01)
     alpha=0.05
 
+##--- Calculate corrected estimates and confidence bounds
     Theta_U_store=matrix(0,length(xgrid),1)
     Theta_L_store=matrix(0,length(xgrid),1)
     Theta_M_store=matrix(0,length(xgrid),1)
@@ -204,7 +205,7 @@ if (symmetric == TRUE) {
       Theta_L_store[n,1]=theta_L
       Theta_M_store[n,1]=theta_M
 
-      #Calculate Bonferroni corrected estimates and confidence bounds
+##--- Calculate Bonferroni corrected estimates and confidence bounds
       g_UB <- function(lambda) {
         (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
       }
@@ -220,7 +221,7 @@ if (symmetric == TRUE) {
       theta_UB[n,1]=min_UB$par
       theta_LB[n,1]=min_LB$par
 
-      #Calculate derivatives of corrections with respect to parameters via implicit function theorem
+      #- Calculate derivatives of corrections with respect to parameters via implicit function theorem
       thetaU_plus=theta_UB[n,1]+stepsize
       thetaU_minus=theta_UB[n,1]-stepsize
       F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,cbind(Psihat_use,1),cutoffs,symmetric)
@@ -264,6 +265,9 @@ if (symmetric == TRUE) {
     Theta_UB_store=theta_UB+qnorm(1-bonf_beta)*sigma_thetaU
     Theta_LB_store=theta_LB-qnorm(1-bonf_beta)*sigma_thetaL
   } else {
+
+
+##--- Calculate corrected estimates and confidence bounds
     xgrid=seq(-5,5,0.01)
     alpha=0.05
 
@@ -305,7 +309,7 @@ if (symmetric == TRUE) {
       Theta_L_store[n,1]=theta_L
       Theta_M_store[n,1]=theta_M
 
-      #Calculate Bonferroni corrected estimates and confidence bounds
+##--- Calculate Bonferroni corrected estimates and confidence bounds
       g_UB <- function(lambda) {
         (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
       }
@@ -321,7 +325,7 @@ if (symmetric == TRUE) {
       theta_UB[n,1]=min_UB$par
       theta_LB[n,1]=min_LB$par
 
-      #Calculate derivatives of corrections with respect to parameters via implicit function theorem
+      #- Calculate derivatives of corrections with respect to parameters via implicit function theorem
       thetaU_plus=theta_UB[n,1]+stepsize
       thetaU_minus=theta_UB[n,1]-stepsize
       F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,cbind(Psihat_use,1),cutoffs,symmetric)
@@ -367,6 +371,7 @@ if (symmetric == TRUE) {
 
   }
 
+#-- Returning list for the final results and to plot all of the corrections
   return(list("original" = original,
               "adj_estimates"= adj_estimates,
               "adj_U" = adj_U,
