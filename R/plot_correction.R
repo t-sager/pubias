@@ -196,6 +196,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
     geom_line(aes(x = xgrid, y = xgrid - cutoffs), color = "grey") +
     geom_line(aes(x = xgrid, y = xgrid), color = "grey") +
     geom_line(aes(x = xgrid, y = xgrid + cutoffs), color = "grey") +
+    geom_vline(xintercept = -cutoffs, color='grey', linetype="dotted") +
+    geom_vline(xintercept = cutoffs, color='grey', linetype="dotted") +
     xlab('X') +
     ylab('Estimation') +
     scale_colour_manual(values=cols) +
