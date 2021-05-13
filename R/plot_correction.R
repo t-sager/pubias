@@ -1,4 +1,3 @@
-
 plot_correction <- function(corrected_estimates,cutoffs,symmetric,studynames,identificationapproach) {
 
   Z1 <- corrected_estimates$Z1
@@ -13,19 +12,6 @@ plot_correction <- function(corrected_estimates,cutoffs,symmetric,studynames,ide
   Theta_UB_store <- corrected_estimates$Theta_UB_store
   Theta_LB_store <- corrected_estimates$Theta_LB_store
   xgrid <- corrected_estimates$xgrid
-
-  Z1 <- pubias_result$`Corrected Estimates`$Z1
-  Z1_U <- pubias_result$`Corrected Estimates`$Z1_U
-  Z1_L <- pubias_result$`Corrected Estimates`$Z1_L
-  Z1_M <- pubias_result$`Corrected Estimates`$Z1_M
-  Z1_UB <- pubias_result$`Corrected Estimates`$Z1_UB
-  Z1_LB <- pubias_result$`Corrected Estimates`$Z1_LB
-  Theta_U_store <- pubias_result$`Corrected Estimates`$Theta_U_store
-  Theta_L_store <- pubias_result$`Corrected Estimates`$Theta_L_store
-  Theta_M_store <- pubias_result$`Corrected Estimates`$Theta_M_store
-  Theta_UB_store <- pubias_result$`Corrected Estimates`$Theta_UB_store
-  Theta_LB_store <- pubias_result$`Corrected Estimates`$Theta_LB_store
-  xgrid <- pubias_result$`Corrected Estimates`$xgrid
 
   n <- nrow(Z1)
 
