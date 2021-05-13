@@ -5,7 +5,7 @@
 #'
 #' @param Z A `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.
 #' @param sigmaZ2 A `n x 1` matrix containing the standard errors (se_replication divided by se_original) of the estimates, where `n` is the number of estimates.
-#' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
+#' @param symmetric If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.
 #' @param cluster_ID A `n x 1` matrix containing IDs going from 1 to `n`, where `n` is the number of estimates.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs.

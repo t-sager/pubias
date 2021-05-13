@@ -169,7 +169,7 @@ The following specifications are currently possible:
 pubias_meta(
   data,
   studynames,
-  symmetric = 1,
+  symmetric = TRUE,
   sign_lvl = 0.05,
   GMM = FALSE,
   print_plots = FALSE,
@@ -183,7 +183,7 @@ If the function for the replication studies is used, the data needs to contain a
 
 - `studynames`: This argument is optional. A vector of type character containing all the Studynames of size n in the same order as the argument data.
 
-- `symmetric`: If set to 1, the publication probability is assumed to be symmetric around zero. If set to 0, asymmetry is allowed. !IN THE CURRENT BUILD, THIS IS NOT WORKING!
+- `symmetric`: If set to `TRUE`, the publication probability is assumed to be symmetric around zero (default). If set to `FALSE`, asymmetry is allowed. 
 
 - `sign_lvl`: A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability. By default, the significance level is set at `5%`, hence `0.05`.
 
@@ -248,7 +248,7 @@ pubias_replication(
   data,
   studynames,
   GMM = FALSE,
-  symmetric = 1,
+  symmetric = TRUE,
   sign_lvl = 0.05,
   print_plots = TRUE,
   print_dashboard = TRUE
@@ -309,7 +309,7 @@ pubias_meta(
   data,
   studynames,
   GMM = TRUE,
-  symmetric = 1,
+  symmetric = TRUE,
   sign_lvl = 0.05,
   print_plots = TRUE,
   print_dashboard = TRUE
@@ -317,7 +317,7 @@ pubias_meta(
 
 ```
 
-As in the application for replication studies, we first take a look at the descriptives. The histogram shows the density of the standardized estimtates (i.e. $X/\Sigma$). We see a clear jump in the density around 0 which suggest evidence for selection for *positive* estimates. On the right side of Figure 8 we see a similar plot to as in chapter 3.1.2. Applying the same logic, we do not clearly see evidence for selective probability, i.e. there is no clear positive correlation between $X$ and $\Sigma$. 
+As in the application for replication studies, we first take a look at the descriptives. The histogram shows the density of the standardized estimates (i.e. $X/\Sigma$). We see a clear jump in the density around 0 which suggest evidence for selection for *positive* estimates. On the right side of Figure 8 we see a similar plot to as in chapter 3.1.2. Applying the same logic, we do not clearly see evidence for selective probability, i.e. there is no clear positive correlation between $X$ and $\Sigma$. 
 
 ```{r plot7, echo=FALSE, fig.cap="Deworming: Descriptives", fig.align="center", out.width = '70%'}
 

@@ -13,7 +13,7 @@ replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,si
     stop ("Unsorted cutoffs!")
   }
 
-  if (symmetric ==1) {
+  if (symmetric == TRUE) {
     # check that cutoffs are positive
     if (!all(cutoffs>=0)) {
       stop("Needs positive cutoffs!")
@@ -47,7 +47,7 @@ for (m in (1:ncol(Z1_dummies))) {
 
 
 #vector of un-truncated likelihoods
-if (symmetric==1){
+if (symmetric == TRUE){
 
     #Monte-carlo integration
     set.seed(1)
@@ -78,7 +78,7 @@ if (symmetric==1){
  # normalizing constant
 prob_vec<-rep(0,length(cutoffs)+2);
 
-  if (symmetric==1){
+  if (symmetric == TRUE){
     for (m in (1:length(cutoffs))){
 
         #Monte Carlo Integration

@@ -10,7 +10,7 @@
 #' By default, the significance level is set at 5%, hence `0.05`.
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
 #' method for estimation.
-#' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
+#' @param symmetric If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.
 #' @param print_plots If set to TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
 #' @param print_dashboard If set to TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
 #' The dashboard is saved in the working directory. Only possbile if `print_plots` is set to TRUE.
@@ -29,7 +29,7 @@
 pubias_replication <-
   function(data,
            studynames = NULL,
-           symmetric = 1,
+           symmetric = TRUE,
            sign_lvl = 0.05,
            GMM = FALSE,
            print_plots = FALSE,
@@ -39,7 +39,7 @@ pubias_replication <-
 
     ## No Studynames available
     if (is.null(studynames)) {
-      studynames <<- as.character(1:nrow(data))
+      studynames <- as.character(1:nrow(data))
     }
 
     cutoffs <<- qnorm(sign_lvl/2, lower.tail = FALSE)
@@ -54,7 +54,7 @@ pubias_replication <-
     wd <- getwd()
 
     # Throw error if GMM & Asymmetric --> not implemented
-    if (GMM == TRUE && symmetric == 0) {
+    if (GMM == TRUE && symmetric == FALSE) {
       stop("Asymmetric option for GMM estimation for replication studies is currently not implemented!")
     }
 

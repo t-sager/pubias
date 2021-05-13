@@ -76,7 +76,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
     lleven=floor(ll/2)*2;
     uu=ceiling(max(Zuse));
 
-    if (symmetric == 0) {
+    if (symmetric == FALSE) {
         if (n>=30) {
             uu2<-ceiling((uu-.36)/.32)*.32+.36;
             ll2<-floor((ll+.36)/.32)*.32-.36;
@@ -102,7 +102,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
 
 
 
-    if (symmetric == 0) {
+    if (symmetric == FALSE) {
 
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
             geom_histogram(aes(y = ..density..),

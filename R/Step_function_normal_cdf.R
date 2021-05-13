@@ -6,7 +6,7 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
     }
 
     #For symmetric case, create symmetrized version of cutoffs and coefficients
-    if (symmetric==1) {
+    if (symmetric == TRUE) {
         cutoffs_u <- zeros(length(cutoffs),1)
         betap_u <- zeros(1,length(cutoffs))
         for (n in (1:length(cutoffs))) {
@@ -34,7 +34,7 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
     prob_vec <- rbind(prob_vec,1)
     mean_Z1 <- prob_vec[2:length(prob_vec),1]-prob_vec[1:(length(prob_vec)-1),1]
 
-    if (symmetric==1) {
+    if (symmetric == TRUE) {
     denominator <- t(mean_Z1)%*%t(t(betap_u))
 
     } else{

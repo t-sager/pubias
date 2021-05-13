@@ -1,4 +1,3 @@
-
 meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
 
     n <- length(X)
@@ -7,7 +6,7 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
 
     Tpowers <- zeros(n, length(cutoffs) + 1)
 
-    if (symmetric == 1) {
+    if (symmetric == TRUE) {
         Tpowers[, 1] <- ifelse(abs(T) < cutoffs[1], 1, 0)
         if (length(cutoffs) > 1) {
             for (m in (2:length(cutoffs))) {
@@ -46,7 +45,7 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
     moment_mean = zeros(1, length(cutoffs))
     rhat = zeros(n, length(cutoffs))
 
-    if (symmetric == 1) {
+    if (symmetric == TRUE) {
         for (k in (1:length(cutoffs))) {
             c = cutoffs[k]
             base_moments = (pmat2 ^ -1) * (pmat1 ^ -1) * indicator *

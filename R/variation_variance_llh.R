@@ -1,9 +1,4 @@
-
 variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric, X, sigma, C) {
-  # lambdabar <- Psihat0[1]
-  # tauhat <- Psihat0[2]
-  # betap <- c(reshape(t(Psihat0[-c(1,2)]), c(length(Psihat0[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1)
-
   n <- nrow(X)
   betap <- t(betap)
   TT <- X/sigma
@@ -11,7 +6,7 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
   # Tpowers
   Tpowers <-  zeros(n,length(cutoffs)+1)
 
-  if (symmetric==1 ) {
+  if (symmetric == TRUE) {
 
     Tpowers[,1] <- abs(TT)<cutoffs[1]
 
@@ -56,7 +51,7 @@ for (m in (1:ncol(Tpowers))) {
 }
 
 #vector of un-truncated likelihoods
-if (symmetric==1){
+if (symmetric == TRUE){
     #Monte-carlo integration
     set.seed(1)
     draw <- matrix(runif(10^5),1)
@@ -75,7 +70,7 @@ if (symmetric==1){
 mu_vec <- lambdabar*ones(n,1)
 sigma_tilde_vec <- sqrt(((tauhat)^2 +sigma^2))
 prob_vec <- zeros(n,length(cutoffs)+1)
-if (symmetric==1){
+if (symmetric == TRUE){
   for (m in (1:length(cutoffs))){
 
       #Monte Carlo Integration

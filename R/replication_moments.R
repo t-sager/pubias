@@ -10,7 +10,7 @@ if (all(sort(cutoffs)!=cutoffs)) {
     stop ("Unsorted cutoffs!")
 }
 
-if (symmetric ==1) {
+if (symmetric == TRUE) {
     # check that cutoffs are positive
     if (!all(cutoffs>=0)) {
         stop("Needs positive cutoffs!")
@@ -41,7 +41,7 @@ sigma_max <- max(max(sigmaZ2),1)
 sigma_adj1 <- sqrt((sigma_max^2-1))
 sigma_adj2 <- sqrt((sigma_max^2-sigmaZ2^2))
 
-if (symmetric==1){ # only works for symmetric!
+if (symmetric == TRUE){ # only works for symmetric!
     if (length(cutoffs)==1){
         c <- cutoffs
         lmoment1 <- (pnorm((c-Z[,1])/sigma_adj1)-pnorm((-c-Z[,1])/sigma_adj1))

@@ -8,7 +8,7 @@
 #' @param result List obJect which contains the results (`Psihat`, `Varhat`, `se_robust`) of the publication probability estimation.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs.
-#' @param symmetric If set to `1`, the publication probability is assumed to be symmetric around zero. If set to `0`, asymmetry is allowed.
+#' @param symmetric If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.
 #' @param identificationapproach Indication if we are dealing with replication studies (== 1) or a met analysis (== 2).
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. Setting it to FALSE uses the MLE
 #' method for estimation.
@@ -134,7 +134,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
     dthetaUdbeta <- -dFUdbeta/dFUdtheta
     dthetaLdbeta <- -dFLdbeta/dFLdtheta
 
-    if (symmetric==1) {
+    if (symmetric==TRUE) {
       sigma_thetaU=(t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
       sigma_thetaL=(t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
     } else {
@@ -162,7 +162,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
   #######################
 
 
-if (symmetric == 1) {
+if (symmetric == TRUE) {
 
     xgrid=seq(-5,5,0.01)
     alpha=0.05

@@ -1,4 +1,3 @@
-
 robust_variance<-function(stepsize,n, thetahat, LLH,cluster_ID) {
   thetahat <- Psihat
   Info <- zeros(length(thetahat),length(thetahat))
