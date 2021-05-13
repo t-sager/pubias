@@ -11,7 +11,7 @@
 #' vector of size `k x 1` where `k` is the number of cutoffs.
 #' @param studynames A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
 #'
-#' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard errors (`se_robust`).
+#' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #' @export
 #'
 gmm_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames) {

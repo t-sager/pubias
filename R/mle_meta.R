@@ -12,7 +12,7 @@
 #' @param studynames A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
 #' @param C A `n x 1` matrix with all values being 1. Controls.
 #'
-#' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard errors (`se_robust`).
+#' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #' @export
 #'
 mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C) {

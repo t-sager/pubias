@@ -11,7 +11,7 @@
 #' vector of size `k x 1` where `k` is the number of cutoffs.
 #' @param C A `n x 1` matrix with all values being 1. Controls.
 #'
-#' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard errors (`se_robust`).
+#' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #' @export
 #'
 mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C) {

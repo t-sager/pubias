@@ -11,7 +11,7 @@ mle_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C)
 
 \item{sigma}{A \verb{n x 1} matrix containing the standard errors of the estimates, where \code{n} is the number of estimates.}
 
-\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+\item{symmetric}{If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.}
 
 \item{cluster_ID}{A \verb{n x 1} matrix containing IDs going from 1 to \code{n}, where \code{n} is the number of estimates.}
 
@@ -23,7 +23,7 @@ vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
 \item{C}{A \verb{n x 1} matrix with all values being 1. Controls.}
 }
 \value{
-Returns a list object with the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard errors (\code{se_robust}).
+Returns a list object with the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard error (\code{se_robust}).
 }
 \description{
 \code{mle_meta()}  calculates the publication probability, its variance and robust standard errors

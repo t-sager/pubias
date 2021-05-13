@@ -27,7 +27,7 @@ bias_correction(
 \item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
 
-\item{symmetric}{If set to \code{1}, the publication probability is assumed to be symmetric around zero. If set to \code{0}, asymmetry is allowed.}
+\item{symmetric}{If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.}
 
 \item{identificationapproach}{Indication if we are dealing with replication studies (== 1) or a met analysis (== 2).}
 
@@ -35,8 +35,8 @@ vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
 method for estimation.}
 }
 \value{
-Returns a list containing the original estimates with their 95\% confidence bonds (\code{Z1}, \code{Z1_L}, \code{Z1_U})
-as well as the corrected estimates (\code{Z1_M}) and in addition the Bonferroni corrected 95\% confidence bonds (\code{Z1_LB}, \code{Z1_UB}).
+Returns a list containing the original estimates with the adjusted 95\% confidence bonds (\code{original}, \code{adj_L}, \code{adj_U})
+as well as the corrected estimates (\code{adj_estimates}) and in addition the Bonferroni corrected 95\% confidence bonds (\code{adj_LB}, \code{adj_UB}).
 There are additional elements which are mainly used for plotting the results.
 }
 \description{
