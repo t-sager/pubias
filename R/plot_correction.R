@@ -1,11 +1,11 @@
 plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach) {
 
-  Z1 <- corrected_estimates$Z1
-  Z1_U <- corrected_estimates$Z1_U
-  Z1_L <- corrected_estimates$Z1_L
-  Z1_M <- corrected_estimates$Z1_M
-  Z1_UB <- corrected_estimates$Z1_UB
-  Z1_LB <- corrected_estimates$Z1_LB
+  original <- corrected_estimates$original
+  adj_U <- corrected_estimates$adj_U
+  adj_L <- corrected_estimates$adj_L
+  adj_estimates <- corrected_estimates$adj_estimates
+  adj_UB <- corrected_estimates$adj_UB
+  adj_LB <- corrected_estimates$adj_LB
   Theta_U_store <- corrected_estimates$Theta_U_store
   Theta_L_store <- corrected_estimates$Theta_L_store
   Theta_M_store <- corrected_estimates$Theta_M_store
@@ -13,7 +13,7 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   Theta_LB_store <- corrected_estimates$Theta_LB_store
   xgrid <- corrected_estimates$xgrid
 
-  n <- nrow(Z1)
+  n <- nrow(original)
 
   # Define blue colors
   color <- brewer.pal(8,"Blues")
@@ -22,8 +22,8 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   blue3 <- color[3]
 
   # GGPLOT: Plot original and adjusted confidence sets ------------------------------
-  Rl=min(min(Z1_L),min(Z1)-2)-0.5
-  Ru=max(max(Z1_U),max(Z1)+2)+0.5
+  Rl=min(min(adj_L),min(original)-2)-0.5
+  Ru=max(max(adj_U),max(original)+2)+0.5
   R=Ru-Rl
   W <- 7
   H <- 6.5
@@ -31,24 +31,24 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   xlabel <- seq(ceiling(Rl/2)*2,floor(Ru/2)*2+10^-8,2)
 
   segment_data_og <- data.frame(
-    x = (Z1-1.96)/R*W,
-    xend = (Z1+1.96)/R*W,
+    x = (original-1.96)/R*W,
+    xend = (original+1.96)/R*W,
     y = c(1:n)/n*H+0.1,
     yend = c(1:n)/n*H+0.1
   )
 
   segment_data_adj <- data.frame(
-    x = Z1_L/R*W,
-    xend = Z1_U/R*W,
+    x = adj_L/R*W,
+    xend = adj_U/R*W,
     y = c(1:n)/n*H,
     yend = c(1:n)/n*H
   )
 
-cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
+  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
   g <- ggplot()+
-    geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
-    geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
+    geom_point(aes(x = original/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
+    geom_point(aes(x = adj_estimates/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # adjusted
     geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
@@ -72,8 +72,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   OriginalAndAdjusted <- ggplotly(g)
 
   # GGPLOT: Original and adjusted confidence sets, including bonferroni ------------------------------
-  Rl=min(min(Z1_LB),min(Z1)-2)-0.5
-  Ru=max(max(Z1_UB),max(Z1)+2)+0.5
+  Rl=min(min(adj_LB),min(original)-2)-0.5
+  Ru=max(max(adj_UB),max(original)+2)+0.5
   R=Ru-Rl
   W <- 7
   H <- 6.5
@@ -81,15 +81,15 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   xlabel <- seq(ceiling(Rl/2)*2,floor(Ru/2)*2+10^-8,2)
 
   segment_data_og <- data.frame(
-    x = (Z1-1.96)/R*W,
-    xend = (Z1+1.96)/R*W,
+    x = (original-1.96)/R*W,
+    xend = (original+1.96)/R*W,
     y = c(1:n)/n*H+0.1,
     yend = c(1:n)/n*H+0.1
   )
 
   segment_data_adj <- data.frame(
-    x = Z1_LB/R*W,
-    xend = Z1_UB/R*W,
+    x = adj_LB/R*W,
+    xend = adj_UB/R*W,
     y = c(1:n)/n*H,
     yend = c(1:n)/n*H
   )
@@ -97,8 +97,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
   g <- ggplot()+
-    geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
-    geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
+    geom_point(aes(x = original/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
+    geom_point(aes(x = adj_estimates/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # adjusted
     geom_line(aes(x = c(cutoffs/R*W,cutoffs/R*W),y = c(0,max(segment_data_og$yend)+0.1)), color = "grey") +
@@ -134,15 +134,15 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   xlabel <- seq(ceiling(Rl/2)*2,floor(Ru/2)*2+10^-8,2)
 
   segment_data_og <- data.frame(
-    x = (Z1-1.96)/R*W,
-    xend = (Z1+1.96)/R*W,
+    x = (original-1.96)/R*W,
+    xend = (original+1.96)/R*W,
     y = c(1:n)/n*H+0.1,
     yend = c(1:n)/n*H+0.1
   )
 
   segment_data_adj <- data.frame(
-    x = Z1_LB/R*W,
-    xend = Z1_UB/R*W,
+    x = adj_LB/R*W,
+    xend = adj_UB/R*W,
     y = c(1:n)/n*H,
     yend = c(1:n)/n*H
   )
@@ -150,8 +150,8 @@ cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
   cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8], "Replication Estimates"=color[3])
 
   g <- ggplot()+
-    geom_point(aes(x = Z1/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
-    geom_point(aes(x = Z1_M/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
+    geom_point(aes(x = original/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
+    geom_point(aes(x = adj_estimates/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
     geom_point(aes(x = Z2_rescaled/R*W, y = c(1:n)/n*H+0.2, colour = "Replication Estimates")) + # replication
     geom_segment(data = segment_data_og, aes(x = x, y = y, xend = xend, yend = yend), color = blue1) + # original
     geom_segment(data = segment_data_adj, aes(x = x, y = y, xend = xend, yend = yend), color = blue2) + # adjusted

@@ -1,6 +1,6 @@
 #' Corrects given estimates for publication bias
 #'
-#'Check package vignette for further information.
+#' Check package vignette for further information.
 #'
 #' @param X A `n x 1` matrix containing the estimates, where `n` is the number of estimates.
 #' @param Z A `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.
@@ -13,31 +13,30 @@
 #' @param GMM If set to TRUE, the publication probability will be estimated via GMM. Setting it to FALSE uses the MLE
 #' method for estimation.
 #'
-#' @return Returns a list containing the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
-#' as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bonds (`Z1_LB`, `Z1_UB`).
+#' @return Returns a list containing the original estimates with the adjusted 95% confidence bonds (`original`, `adj_L`, `adj_U`)
+#' as well as the corrected estimates (`adj_estimates`) and in addition the Bonferroni corrected 95% confidence bonds (`adj_LB`, `adj_UB`).
 #' There are additional elements which are mainly used for plotting the results.
 #' @export
 #'
 bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
 
-  Psihat <- result$Psihat
+  # Getting estimation results
+  Psihat_use <- result$Psihat
   Varhat <- result$Varhat
 
-  #normalize estimates from initial study
+  # Normalize estimates
   if (identificationapproach==1){
-    Z1 <- as.matrix(Z[,1])
+    original <- as.matrix(Z[,1])
   } else if (identificationapproach==2){
-    Z1 <- as.matrix(sort(X/sigma))
+    original <- as.matrix(sort(X/sigma))
   }
 
-  n <- length(Z1)
+  n <- length(original)
   alpha <- 0.05
   bonf_alpha <- 0.04
   bonf_beta <- 0.01
-  Psihat_use <- Psihat
 
-
-  # Diff between MLE and GMM
+  # In MLE we additionally deal with position and scale parameters
   if (GMM == TRUE) {
     Psihat_use <- Psihat_use
     Varhat <- Varhat
@@ -47,68 +46,68 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
   }
 
   # Calculate corrected estimates and confidence bounds
-  Z1_U <- zeros(length(Z1),1)
-  Z1_L <- zeros(length(Z1),1)
-  Z1_M <- zeros(length(Z1),1)
+  adj_U <- zeros(length(original),1)
+  adj_L <- zeros(length(original),1)
+  adj_estimates <- zeros(length(original),1)
 
   stepsize <- 10^-3
-  for (n in (1:length(Z1))) {
+  for (n in (1:length(original))) {
     g_U <- function(lambda) {
-      (alpha/2-step_function_normal_cdf(Z1[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
+      (alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
     g_L <- function(lambda) {
-      (1-alpha/2-step_function_normal_cdf(Z1[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
+      (1-alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
     g_M <- function(lambda) {
-      (1/2-step_function_normal_cdf(Z1[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
+      (1/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
 
-    min_U<-optim(par=Z1[n],fn=g_U)
+    min_U<-optim(par=original[n],fn=g_U)
     min_U<-optim(par=min_U$par,fn=g_U,method="BFGS")
-    min_L<-optim(par=Z1[n],fn=g_L)
+    min_L<-optim(par=original[n],fn=g_L)
     min_L<-optim(par=min_L$par,fn=g_L,method="BFGS")
-    min_M<-optim(par=Z1[n],fn=g_M)
+    min_M<-optim(par=original[n],fn=g_M)
     min_M<-optim(par=min_M$par,fn=g_M,method="BFGS")
 
-    Z1_U[n,1]=min_U$par
-    Z1_L[n,1]=min_L$par
-    Z1_M[n,1]=min_M$par
+    adj_U[n,1]=min_U$par
+    adj_L[n,1]=min_L$par
+    adj_estimates[n,1]=min_M$par
   }
 
   # Calculate bonferroni corrected estimates and confidence bounds
-  Z1_UB <- zeros(length(Z1),1)
-  Z1_LB <- zeros(length(Z1),1)
-  sigma_U <- zeros(length(Z1),1)
-  sigma_L <- zeros(length(Z1),1)
+  adj_UB <- zeros(length(original),1)
+  adj_LB <- zeros(length(original),1)
+  sigma_U <- zeros(length(original),1)
+  sigma_L <- zeros(length(original),1)
 
-  for (n in (1:length(Z1))) {
+  for (n in (1:length(original))) {
     g_UB <- function(lambda) {
-      (bonf_alpha/2-step_function_normal_cdf(Z1[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
+      (bonf_alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
     g_LB <- function(lambda) {
-      (1-bonf_alpha/2-step_function_normal_cdf(Z1[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
+      (1-bonf_alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
 
-    min_UB<-optim(par=Z1_U[n,1],fn=g_UB)
+    min_UB<-optim(par=adj_U[n,1],fn=g_UB)
     min_UB<-optim(par=min_UB$par,fn=g_UB,method="BFGS")
-    min_LB<-optim(par=Z1_L[n,1],fn=g_LB)
+    min_LB<-optim(par=adj_L[n,1],fn=g_LB)
     min_LB<-optim(par=min_LB$par,fn=g_LB,method="BFGS")
 
-    Z1_UB[n,1]=min_UB$par
-    Z1_LB[n,1]=min_LB$par
+    adj_UB[n,1]=min_UB$par
+    adj_LB[n,1]=min_LB$par
 
     #Calculate derivatives of corrections with respect to parameters via implicit function theorem
 
-    thetaU_plus=Z1_UB[n,1]+stepsize
-    thetaU_minus=Z1_UB[n,1]-stepsize
-    F_Uplus=step_function_normal_cdf(Z1[n],thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-    F_Uminus=step_function_normal_cdf(Z1[n],thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+    thetaU_plus=adj_UB[n,1]+stepsize
+    thetaU_minus=adj_UB[n,1]-stepsize
+    F_Uplus=step_function_normal_cdf(original[n],thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+    F_Uminus=step_function_normal_cdf(original[n],thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
     dFUdtheta=(F_Uplus-F_Uminus)/(2*stepsize)
 
-    thetaL_plus=Z1_LB[n,1]+stepsize
-    thetaL_minus=Z1_LB[n,1]-stepsize
-    F_Lplus=step_function_normal_cdf(Z1[n],thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-    F_Lminus=step_function_normal_cdf(Z1[n],thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+    thetaL_plus=adj_LB[n,1]+stepsize
+    thetaL_minus=adj_LB[n,1]-stepsize
+    F_Lplus=step_function_normal_cdf(original[n],thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+    F_Lminus=step_function_normal_cdf(original[n],thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
     dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
 
     dFUdbeta <- zeros(length(Psihat_use),1)
@@ -119,12 +118,12 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
       Psi_minus=Psihat_use
       Psi_minus[n1]=Psi_minus[n1]-stepsize
 
-      F_Uplus=step_function_normal_cdf(Z1[n],Z1_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-      F_Uminus=step_function_normal_cdf(Z1[n],Z1_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+      F_Uplus=step_function_normal_cdf(original[n],adj_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+      F_Uminus=step_function_normal_cdf(original[n],adj_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
       dFUdbeta[n1,1]=(F_Uplus-F_Uminus)/(2*stepsize)
 
-      F_Lplus=step_function_normal_cdf(Z1[n],Z1_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-      F_Lminus=step_function_normal_cdf(Z1[n],Z1_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+      F_Lplus=step_function_normal_cdf(original[n],adj_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+      F_Lminus=step_function_normal_cdf(original[n],adj_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
       dFLdbeta[n1,1]=(F_Lplus-F_Lminus)/(2*stepsize)
     }
 
@@ -146,10 +145,10 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
   sigma_U[n,1]=sigma_thetaU
   sigma_L[n,1]=sigma_thetaL
 
-  Z1_UB_store <- Z1_UB
-  Z1_LB_store <- Z1_LB
-  Z1_UB <- Z1_UB+qnorm(1-bonf_beta)*sigma_U
-  Z1_LB <- Z1_LB-qnorm(1-bonf_beta)*sigma_L
+  adj_UB_store <- adj_UB
+  adj_LB_store <- adj_LB
+  adj_UB <- adj_UB+qnorm(1-bonf_beta)*sigma_U
+  adj_LB <- adj_LB-qnorm(1-bonf_beta)*sigma_L
 
   count=1
   store=matrix(0,length(seq(-10,10,0.1)),1)
@@ -368,12 +367,12 @@ if (symmetric == TRUE) {
 
   }
 
-  return(list("Z1" = Z1,
-              "Z1_U" = Z1_U,
-              "Z1_L" = Z1_L,
-              "Z1_M "= Z1_M,
-              "Z1_UB" = Z1_UB,
-              "Z1_LB" = Z1_LB,
+  return(list("original" = original,
+              "adj_U" = adj_U,
+              "adj_L" = adj_L,
+              "adj_estimates "= adj_estimates,
+              "adj_UB" = adj_UB,
+              "adj_LB" = adj_LB,
               "Theta_U_store" = Theta_U_store,
               "Theta_L_store" = Theta_L_store,
               "Theta_M_store" = Theta_M_store,

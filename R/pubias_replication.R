@@ -20,8 +20,8 @@
 #'
 #' `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
 #'
-#' `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`Z1`, `Z1_L`, `Z1_U`)
-#' as well as the corrected estimates (`Z1_M`) and in addition the Bonferroni corrected 95% confidence bonds (`Z1_LB`, `Z1_UB`).
+#' `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`original`, `adj_L`, `adj_U`)
+#' as well as the corrected estimates (`adj_estimates`) and in addition the Bonferroni corrected 95% confidence bonds (`adj_LB`, `adj_UB`).
 #' There are additional elements which are mainly used for plotting the results.
 #'
 #' @export
@@ -77,7 +77,7 @@ pubias_replication <-
           )
         pubias_result <<-
           list("GMM Replication Results" = result,
-               "Corrected Estimates" = corrected_estimates)
+               "Corrected Estimates" = corrected_estimates[c("original", "adj_estimates","adj_L", "adj_U", "adj_LB", "adj_UB")])
       } else {
         result <-
           gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
@@ -115,7 +115,7 @@ pubias_replication <-
         pubias_result <<-
           list(
             "GMM Replication Results" = result,
-            "Corrected Estimates" = corrected_estimates,
+            "Corrected Estimates" = corrected_estimates[c("original", "adj_estimates","adj_L", "adj_U", "adj_LB", "adj_UB")],
             "Descriptive Plots" = descriptives,
             "Correction Plots" = plots
           )
@@ -141,7 +141,7 @@ pubias_replication <-
         result <- list("Psihat" = result$Psihat[-c(1,2)], "Varhat" = result$Varhat[-c(1,2), -c(1,2)], "se_robust" = result$se_robust[-c(1,2)])
         pubias_result <<-
           list("MLE Replication Results" = result,
-               "Corrected Estimates" = corrected_estimates)
+               "Corrected Estimates" = corrected_estimates[c("original", "adj_estimates","adj_L", "adj_U", "adj_LB", "adj_UB")])
       } else {
         result <-
           mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
@@ -180,7 +180,7 @@ pubias_replication <-
         pubias_result <<-
           list(
             "MLE Replication Results" = result,
-            "Corrected Estimates" = corrected_estimates,
+            "Corrected Estimates" = corrected_estimates[c("original", "adj_estimates","adj_L", "adj_U", "adj_LB", "adj_UB")],
             "Descriptive Plots" = descriptives,
             "Correction Plots" = plots
           )
