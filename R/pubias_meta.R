@@ -71,7 +71,7 @@ pubias_meta <-
           )
         pubias_result <<-
           list("GMM Meta Results" = result,
-               "Corrected Estimates" = corrected_estimates[c("original", "adj_estimates","adj_L", "adj_U", "adj_LB", "adj_UB")])
+               "Corrected Estimates" = corrected_estimates[c("original","adj_estimates","adj_L", "adj_U", "adj_LB", "adj_UB")])
         rm(corrected_estimates, result)
       } else {
         result <-

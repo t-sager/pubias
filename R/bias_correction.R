@@ -368,7 +368,7 @@ if (symmetric == TRUE) {
   }
 
   return(list("original" = original,
-              "adj_estimates "= adj_estimates,
+              "adj_estimates"= adj_estimates,
               "adj_U" = adj_U,
               "adj_L" = adj_L,
               "adj_UB" = adj_UB,
