@@ -45,7 +45,16 @@ mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynam
     #########################
     # find maximum likelihood estimator using just LLH
     Psihat0 <- c(1,1, rep(1,length(cutoffs)))
-    mini <- optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+
+    upper.b=rep(Inf,length(Psihat0))
+    lower.b = c(-Inf,-Inf, -Inf)
+
+    mini <- nlminb(objective=LLH_only, start=Psihat0,lower=lower.b,upper=upper.b)
+
+    # More accurate Optimization:
+    Psihat1 <- mini$par
+
+    mini <- nlminb(objective=LLH_only, start=Psihat1,lower=lower.b,upper=upper.b)
 
     Psihat <<- mini$par
     Objval <- mini$value

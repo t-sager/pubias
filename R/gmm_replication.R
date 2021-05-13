@@ -25,12 +25,15 @@ gmm_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynam
       max(-min(Psi), 0) * 10 ^ 5
   }
 
-  mini <- optim(par = Psihat0, fn = GMM_obj, method = "BFGS", control = list(abstol = 10 ^ -8, maxit = 10 ^ 5))
+  upper.b=rep(Inf,length(Psihat0))
+  lower.b = c(-Inf,-Inf, -Inf)
+
+  mini <- nlminb(objective=GMM_obj, start=Psihat0,lower=lower.b,upper=upper.b)
 
   # More accurate Optimization:
   Psihat1 <- mini$par
 
-  mini<-optim(par=Psihat1,fn=GMM_obj)
+  mini <- nlminb(objective=GMM_obj, start=Psihat1,lower=lower.b,upper=upper.b)
 
   Psihat <- mini$par
   Objval <- mini$value

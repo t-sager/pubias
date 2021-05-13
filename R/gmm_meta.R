@@ -30,7 +30,7 @@ gmm_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames) {
   # More accurate Optimization:
   Psihat1 <- mini$par
 
-  mini<-optim(par=Psihat1,fn=GMM_obj)
+  mini<-optim(par=Psihat1,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
   Psihat <- mini$par
   Objval <- mini$value

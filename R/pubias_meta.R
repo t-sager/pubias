@@ -215,6 +215,7 @@ pubias_meta <-
       }
     }
 
+    # Throw error if dashboard wants to be printed but plots is FALSE
     if (print_plots == FALSE && print_dashboard == TRUE) {
       stop("print_plots has to be set to TRUE if the dashboard wants to be printed!")
     }

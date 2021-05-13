@@ -50,6 +50,11 @@ mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C) {
     Psihat0<-c(1,1,rep(1,length(cutoffs)))
     mini <- optim(par=Psihat0,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
 
+    # More accurate Optimization:
+    Psihat1 <- mini$par
+
+    mini<-optim(par=Psihat1,fn=LLH_only,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+
     Psihat <<- mini$par
     Objval <- mini$value
 
