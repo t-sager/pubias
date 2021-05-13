@@ -1,6 +1,7 @@
-
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
 
+    betap <- c(Psihat_use,1)
+    lambda <- 1
     if (length(betap)!=(length(cutoffs)+1)) {
         stop("length of betap must be one greater than length of cutoffs ")
     }
@@ -33,8 +34,13 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
 
     prob_vec <- rbind(prob_vec,1)
     mean_Z1 <- prob_vec[2:length(prob_vec),1]-prob_vec[1:(length(prob_vec)-1),1]
+
+    if (symmetric==1) {
     denominator <- t(mean_Z1)%*%t(t(betap_u))
 
+    } else{
+    denominator <- t(mean_Z1)%*%t(betap_u)
+    }
     #Calculate numerator in cdf
     cutoffs_u[length(cutoffs_u)+1] <- Inf
 

@@ -82,7 +82,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             ll2<-floor((ll+.36)/.32)*.32-.36;
             edges<-c(seq(from=ll2,
                          to=-0.36,
-                         by=0.32), 0, seq(from=0.36,
+                         by=ifelse(ll2>0,-0.32-0.32)), 0, seq(from=0.36,
                                           to=uu2,
                                           by=0.32));
         } else {
@@ -90,7 +90,7 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
             ll2<-floor((ll+.68)/.64)*.64-.68;
             edges<-c(seq(from=ll2,
                          to=-0.68,
-                         by=0.64), 0, seq(from=0.68,
+                         by=ifelse(ll2>0,-0.64, 0.64)), 0, seq(from=0.68,
                                           to=uu2,
                                           by=0.64));
         }

@@ -164,7 +164,7 @@ bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapp
 
 if (symmetric == 1) {
 
-    xgrid=seq(0,5,0.01)
+    xgrid=seq(-5,5,0.01)
     alpha=0.05
 
     Theta_U_store=matrix(0,length(xgrid),1)
@@ -265,7 +265,7 @@ if (symmetric == 1) {
     Theta_UB_store=theta_UB+qnorm(1-bonf_beta)*sigma_thetaU
     Theta_LB_store=theta_LB-qnorm(1-bonf_beta)*sigma_thetaL
   } else {
-    xgrid=seq(-5,5,0.1)
+    xgrid=seq(-5,5,0.01)
     alpha=0.05
 
     Theta_U_store=matrix(0,length(xgrid),1)

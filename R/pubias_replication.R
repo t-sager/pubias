@@ -53,6 +53,11 @@ pubias_replication <-
     identificationapproach <- 1
     wd <- getwd()
 
+    # Throw error if GMM & Asymmetric --> not implemented
+    if (GMM == TRUE && symmetric == 0) {
+      stop("Asymmetric option for GMM estimation for replication studies is currently not implemented!")
+    }
+
     if (GMM == TRUE) {
       name <- 'GMM_Replication'
 

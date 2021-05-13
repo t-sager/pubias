@@ -1,7 +1,7 @@
 
 replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,sigmaZ2,C) {
   # nuhat <- Psihat0[1]
-  # taushat <- Psihat0[2]
+  # tauhat <- Psihat0[2]
   # betap <- c(reshape(t(Psihat0[-c(1,2)]), c(length(Psihat0[-c(1,2)]) / length(cutoffs), length(cutoffs))), 1)
 
   n <- nrow(Z)

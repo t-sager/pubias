@@ -1,4 +1,3 @@
-
 replication_moments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
 
 n <- nrow(Z)
@@ -45,17 +44,17 @@ sigma_adj2 <- sqrt((sigma_max^2-sigmaZ2^2))
 if (symmetric==1){ # only works for symmetric!
     if (length(cutoffs)==1){
         c <- cutoffs
-        lmoment1 <- (dnorm((c-Z[,1])/sigma_adj1)-dnorm((-c-Z[,1])/sigma_adj1))
-        lmoment2 <- (dnorm((c-Z[,2])/sigma_adj2)-dnorm((-c-Z[,2])/sigma_adj2))
+        lmoment1 <- (pnorm((c-Z[,1])/sigma_adj1)-pnorm((-c-Z[,1])/sigma_adj1))
+        lmoment2 <- (pnorm((c-Z[,2])/sigma_adj2)-pnorm((-c-Z[,2])/sigma_adj2))
         lmoments <- lmoment1*(1-lmoment2)-lmoment2*(1-lmoment1)
     } else if (length(cutoffs)==2){
         c1 <- cutoffs(1)
-        lmoment1 <- (dnorm((c1-Z[,1])/sigma_adj1)-dnorm((-c1-Z[,1])/sigma_adj1))
-        lmoment2 <- (dnorm((c1-Z[,2])/sigma_adj2)-dnorm((-c1-Z[,2])/sigma_adj2))
+        lmoment1 <- (pnorm((c1-Z[,1])/sigma_adj1)-pnorm((-c1-Z[,1])/sigma_adj1))
+        lmoment2 <- (pnorm((c1-Z[,2])/sigma_adj2)-pnorm((-c1-Z[,2])/sigma_adj2))
 
         c2 <- cutoffs(2)
-        lmoment3 <- (dnorm((c2-Z[,1])/sigma_adj1)-dnorm((-c2-Z[,1])/sigma_adj1))
-        lmoment4 <- (dnorm((c2-Z[,2])/sigma_adj2)-dnorm((-c2-Z[,2])/sigma_adj2))
+        lmoment3 <- (pnorm((c2-Z[,1])/sigma_adj1)-pnorm((-c2-Z[,1])/sigma_adj1))
+        lmoment4 <- (pnorm((c2-Z[,2])/sigma_adj2)-pnorm((-c2-Z[,2])/sigma_adj2))
 
         lmoments[,1] <- lmoment1*(1-lmoment2)-lmoment2*(1-lmoment1)
         lmoments[,2] <- lmoment3*(1-lmoment4)-lmoment4*(1-lmoment3)
