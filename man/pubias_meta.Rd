@@ -16,7 +16,7 @@ pubias_meta(
 }
 \arguments{
 \item{data}{A \verb{n x 3} matrix where the first column contains the treatment effects, the second column the associated
-standard errors of the estimates and in the third column an ID going from 1 to \code{n}, where \code{n} is the number of estimates.}
+standard errors of the estimates and in the third column an ID going from 1 to \code{k}, where \code{k} is the number of unique studies.}
 
 \item{studynames}{Optional. A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 
