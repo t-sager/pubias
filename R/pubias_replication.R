@@ -128,7 +128,6 @@ pubias_replication <-
           mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
         corrected_estimates <-
           bias_correction(
-            X,
             Z,
             sigmaZ2,
             result,
@@ -146,7 +145,6 @@ pubias_replication <-
           mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
         corrected_estimates <-
           bias_correction(
-            X,
             Z,
             sigmaZ2,
             result,

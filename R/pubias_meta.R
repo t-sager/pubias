@@ -78,7 +78,6 @@ pubias_meta <-
         corrected_estimates <-
           bias_correction(
             X,
-            Z,
             sigma,
             result,
             cutoffs,
@@ -131,7 +130,6 @@ pubias_meta <-
         corrected_estimates <-
           bias_correction(
             X,
-            Z,
             sigma,
             result,
             cutoffs,
