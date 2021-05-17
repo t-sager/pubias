@@ -20,17 +20,18 @@ standard errors of the estimates and in the third column an ID going from 1 to \
 
 \item{studynames}{Optional. A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 
-\item{symmetric}{If set to \verb{TRUE, the publication probability is assumed to be symmetric around zero. If set to }FALSE`, asymmetry is allowed.}
+\item{symmetric}{If set to \code{TRUE}, the publication probability is assumed to be symmetric around zero. If set to \code{FALSE}, asymmetry is allowed.}
 
 \item{sign_lvl}{A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
 By default, the significance level is set at 5\%, hence \code{0.05}.}
 
-\item{GMM}{If set to \verb{TRUE, the publication probability will be estimated via GMM. By default, it is set to }FALSE` which uses the MLE
+\item{GMM}{If set to \code{TRUE}, the publication probability will be estimated via GMM. By default, it is set to \code{FALSE} which uses the MLE
 method for estimation.}
 
-\item{print_plots}{If set to `TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.}
+\item{print_plots}{If set to \code{TRUE}, descriptive plots as well as correction plots are printed into the working directory in .pdf format.}
 
-\item{print_dashboard}{If set to \verb{TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced. The dashboard is saved in the working directory. Only possbile if }print_plots\verb{is set to}TRUE.}
+\item{print_dashboard}{If set to \code{TRUE}, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
+The dashboard is saved in the working directory. Only possible if \code{print_plots} is set to \code{TRUE}.}
 }
 \value{
 Returns a list object called \code{pubias_result} with the elements \code{Results} and \verb{Corrected Estimates}.

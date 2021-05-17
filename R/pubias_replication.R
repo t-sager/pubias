@@ -12,8 +12,7 @@
 #' method for estimation.
 #' @param symmetric If set to `TRUE`, the publication probability is assumed to be symmetric around zero. If set to `FALSE`, asymmetry is allowed.
 #' @param print_plots If set to `TRUE`, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
-#' @param print_dashboard If set to `TRUE`, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
-#' The dashboard is saved in the working directory. Only possbile if `print_plots` is set to `TRUE`.
+#' @param print_dashboard If set to `TRUE`, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced. The dashboard is saved in the working directory. Only possible if `print_plots` is set to `TRUE`.
 #'
 #' @return Returns a list object called `pubias_result` with the elements `Results` and `Corrected Estimates`.
 #' If specified, the list also includes the descriptive, as well as the correction plots as `ggplot` objects.

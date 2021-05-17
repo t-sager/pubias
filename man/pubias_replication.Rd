@@ -30,8 +30,7 @@ method for estimation.}
 
 \item{print_plots}{If set to \code{TRUE}, descriptive plots as well as correction plots are printed into the working directory in .pdf format.}
 
-\item{print_dashboard}{If set to \code{TRUE}, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
-The dashboard is saved in the working directory. Only possbile if \code{print_plots} is set to \code{TRUE}.}
+\item{print_dashboard}{If set to \code{TRUE}, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced. The dashboard is saved in the working directory. Only possible if \code{print_plots} is set to \code{TRUE}.}
 }
 \value{
 Returns a list object called \code{pubias_result} with the elements \code{Results} and \verb{Corrected Estimates}.
