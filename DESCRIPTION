@@ -34,4 +34,4 @@ Depends:
     cowplot,
     plotly,
     flexdashboard,
-    R
+    R (>= 3.6.3)
