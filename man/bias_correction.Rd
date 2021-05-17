@@ -6,7 +6,6 @@
 \usage{
 bias_correction(
   X,
-  Z,
   sigma,
   result,
   cutoffs,
@@ -16,9 +15,7 @@ bias_correction(
 )
 }
 \arguments{
-\item{X}{A \verb{n x 1} matrix containing the estimates, where \code{n} is the number of estimates.}
-
-\item{Z}{A \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
+\item{X}{In the case of a meta study, a \verb{n x 1} matrix containing the estimates, where \code{n} is the number of estimates. In the case of a replication study, a \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
 
 \item{sigma}{A \verb{n x 1} matrix containing the standard errors of the estimates, where \code{n} is the number of estimates.}
 
