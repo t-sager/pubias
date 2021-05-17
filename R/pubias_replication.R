@@ -67,7 +67,6 @@ pubias_replication <-
           gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
         corrected_estimates <-
           bias_correction(
-            X,
             Z,
             sigmaZ2,
             result,
@@ -84,7 +83,6 @@ pubias_replication <-
           gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
         corrected_estimates <-
           bias_correction(
-            X,
             Z,
             sigmaZ2,
             result,

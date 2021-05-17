@@ -1,5 +1,5 @@
 # pubias
-Code for a R Package which implements identification &amp; correction for Publication Bias using the approach by Andrews &amp; Kasy (2019).
+Code for an R Package which implements the identification of &amp; correction for Publication Bias using the approach by [Andrews &amp; Kasy (2019)](https://www.aeaweb.org/articles?id=10.1257/aer.20180310).
 
 
 # Installing the package

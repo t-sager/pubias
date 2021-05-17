@@ -2,8 +2,7 @@
 #'
 #' Check package vignette for further information.
 #'
-#' @param X A `n x 1` matrix containing the estimates, where `n` is the number of estimates.
-#' @param Z A `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.
+#' @param X In the case of a meta study, a `n x 1` matrix containing the estimates, where `n` is the number of estimates. In the case of a replication study, a `n x 2` matrix where the first (second) column contains the standardized original estimates (replication estimates), where `n` is the number of estimates.
 #' @param sigma A `n x 1` matrix containing the standard errors of the estimates, where `n` is the number of estimates.
 #' @param result List obJect which contains the results (`Psihat`, `Varhat`, `se_robust`) of the publication probability estimation.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
@@ -18,7 +17,7 @@
 #' There are additional elements which are mainly used for plotting the results.
 #' @export
 #'
-bias_correction <- function(X,Z,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
+bias_correction <- function(X,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
 
   # Getting estimation results
   Psihat_use <- result$Psihat
