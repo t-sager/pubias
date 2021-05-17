@@ -127,12 +127,12 @@ The package is currently available on GitHub. Running the code below will direct
 ```{r, eval = FALSE}
 
 # Installing the package directly from github
-devtools::install_github("t-sager/pubias")
+remotes::install_github("t-sager/pubias")
 
 # If the package vignette should be downloaded as well
-devtools::install_github("t-sager/pubias", build_vignettes = TRUE)
+remotes::install_github("t-sager/pubias", build_vignettes = TRUE)
 # Check vignette
-vignette("pubias")
+utils::vignette("pubias")
 
 # Load package into library
 library(pubias)
