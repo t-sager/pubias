@@ -25,7 +25,7 @@ bias_correction <- function(X,sigma,result,cutoffs,symmetric,identificationappro
 
   # Normalize estimates
   if (identificationapproach==1){
-    original <- as.matrix(Z[,1])
+    original <- as.matrix(X[,1])
   } else if (identificationapproach==2){
     original <- as.matrix(sort(X/sigma))
   }
