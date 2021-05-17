@@ -101,7 +101,7 @@ knitr::include_graphics("scatter_illu_meta.pdf")
 
 ### MLE vs. GMM
 
-The maximum likelihood estimation is the basic estimation procedure reported by Andrews and Kasy (2019). Because this approach heavily relies on the parametric assumptions on the distribution of the true treatment effects $Θ$, they provide a generalized method of moments estimator in their appendix. The developed package always assumes a gamma distribution with a shape and scale parameter as the distribution for the true effects. The advantage of GMM is, that these parametric assumptions can be dropped and one only has to assume some functional form for the publication probability. They do this to show some robustness of their results. Meaning, that even without assuming parametric specifications, similar results can be obtained. Their result confirm this. Although moment-based methods lead to less precise results, their main findings still hold. Because it seems that the GMM estimation is a good alternative to the likelihood estimation, both approaches were implemented in the package. For further information on their method of moments approach, please check the appendix in Andrews and Kasy (2019).
+The maximum likelihood estimation is the basic estimation procedure reported by Andrews and Kasy (2019). Because this approach heavily relies on the parametric assumptions on the distribution of the true treatment effects $Θ$, they provide a generalized method of moments estimator in their online appendix. The developed package always assumes a gamma distribution with a shape and scale parameter as the distribution for the true effects. The advantage of GMM is, that these parametric assumptions can be dropped and one only has to assume some functional form for the publication probability. They do this to show some robustness of their results. Meaning, that even without assuming parametric specifications, similar results can be obtained. Their result confirm this. Although moment-based methods lead to less precise results, their main findings still hold. Because it seems that the GMM estimation is a good alternative to the likelihood estimation, both approaches were implemented in the package. For further information on their method of moments approach, please check the online appendix in Andrews and Kasy (2019).
 
 ## Correction
 
@@ -200,7 +200,7 @@ The output of the functions is pretty simple. They return a list object called `
 
 - `Results`: This element contains the three results `Psihat` which is the estimated publication probability, `Varhat` its variance and`se_robust` containing the robust standard errors for the publication probability. For interpretation: If the function yields `Psihat = 0.25`, the publication of insignificant results is only 25% as likely as the publication of significant results. Or put differently, the publication of a significant result is 4 times more likely than an insignificant result (at the given significance level). But if `Psihat = 1`, we deal with a situation where we see no evidence for a publication bias. Significant results are just as likely to be published as insignificant results.
 
-- `Corrected Estimates`:  This element reports the result from the publication bias correction. First, it contains the original estimates and the median unbiased estimates (`original`, `adj_estimates`) as well as the corrected 95% confidence bounds (`adj_L`, `adj_U`). In addition, the Bonferroni corrected 95% confidence bounds are reported (`adj_LB`, `adj_UB`).
+- `Corrected Estimates`:  This element reports the result from the publication bias correction. First, it contains the original estimates and the median unbiased estimates (`original`, `adj_estimates`) as well as the corrected 95% confidence bounds (`adj_L`, `adj_U`). In addition, the Bonferroni corrected (Cabin and Randall, 2000) 95% confidence bounds are reported (`adj_LB`, `adj_UB`).
 
 If the functions are run with the option to print the plots and the dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed in .pdf format into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling the following lines of code.
 
@@ -359,6 +359,8 @@ Andrews and Kasy also touch on the topics of manipulation or p-Hacking and discu
 Unit Root Models.” Econometrica 61 (1): 139–65.
 
 * **Andrews, Isaiah, and Maximilian Kasy.** 2019. "Identification of and Correction for Publication Bias." American Economic Review, 109 (8): 2766-94.
+
+* **Cabin, Robert J., and Randall J. Mitchell.** 2000. “To Bonferroni or Not to Bonferroni: When and How Are the Questions.” Bulletin of the Ecological Society of America. vol. 81, no. 3. pp. 246–248.
 
 * **Card, David, and Alan B. Krueger.** 1995. “Time-Series Minimum-Wage Studies: A Meta-Analysis.” American Economic Review 85 (2): 238–43.
 
