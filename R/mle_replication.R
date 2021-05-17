@@ -14,7 +14,7 @@
 #' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #' @export
 #'
-mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C) {
+mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, C) {
 
   # Stepsize
   stepsize <- 10 ^ (-6)

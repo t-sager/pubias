@@ -9,12 +9,11 @@
 #' @param cluster_ID A `n x 1` matrix containing IDs going from 1 to `n`, where `n` is the number of estimates.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs.
-#' @param studynames A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
 #'
 #' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #' @export
 #'
-gmm_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames) {
+gmm_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs) {
 
   # Starting Values
   Psihat0<-c(rep(0.1,length(cutoffs)))

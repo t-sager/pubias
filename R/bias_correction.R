@@ -14,7 +14,7 @@
 #'
 #' @return Returns a list containing the original estimates with the adjusted 95% confidence bonds (`original`, `adj_L`, `adj_U`)
 #' as well as the corrected estimates (`adj_estimates`) and in addition the Bonferroni corrected 95% confidence bonds (`adj_LB`, `adj_UB`).
-#' There are additional elements which are mainly used for plotting the results.
+#'
 #' @export
 #'
 bias_correction <- function(X,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {

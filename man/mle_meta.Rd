@@ -4,7 +4,7 @@
 \alias{mle_meta}
 \title{Computing the publication probability in meta analyses}
 \usage{
-mle_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C)
+mle_meta(X, sigma, symmetric, cluster_ID, cutoffs, C)
 }
 \arguments{
 \item{X}{A \verb{n x 1} matrix containing the estimates, where \code{n} is the number of estimates.}
@@ -17,8 +17,6 @@ mle_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C)
 
 \item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
-
-\item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 
 \item{C}{A \verb{n x 1} matrix with all values being 1. Controls.}
 }

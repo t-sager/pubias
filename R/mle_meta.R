@@ -9,13 +9,12 @@
 #' @param cluster_ID A `n x 1` matrix containing IDs going from 1 to `n`, where `n` is the number of estimates.
 #' @param cutoffs A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 #' vector of size `k x 1` where `k` is the number of cutoffs.
-#' @param studynames A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
 #' @param C A `n x 1` matrix with all values being 1. Controls.
 #'
 #' @return Returns a list object with the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #' @export
 #'
-mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, studynames, C) {
+mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, C) {
 
   # Stepsize
   stepsize <- 10 ^ (-6)

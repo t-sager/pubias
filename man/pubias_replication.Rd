@@ -20,27 +20,26 @@ standard errors of the standardized original estimates (replication estimates), 
 
 \item{studynames}{Optional. A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 
-\item{symmetric}{If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.}
+\item{symmetric}{If set to \code{TRUE}, the publication probability is assumed to be symmetric around zero. If set to \code{FALSE}, asymmetry is allowed.}
 
 \item{sign_lvl}{A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
 By default, the significance level is set at 5\%, hence \code{0.05}.}
 
-\item{GMM}{If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
+\item{GMM}{If set to \code{TRUE}, the publication probability will be estimated via GMM. By default, it is set to \code{FALSE} which uses the MLE
 method for estimation.}
 
-\item{print_plots}{If set to TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.}
+\item{print_plots}{If set to \code{TRUE}, descriptive plots as well as correction plots are printed into the working directory in .pdf format.}
 
-\item{print_dashboard}{If set to TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
-The dashboard is saved in the working directory. Only possbile if \code{print_plots} is set to TRUE.}
+\item{print_dashboard}{If set to \code{TRUE}, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
+The dashboard is saved in the working directory. Only possbile if \code{print_plots} is set to \code{TRUE}.}
 }
 \value{
 Returns a list object called \code{pubias_result} with the elements \code{Results} and \verb{Corrected Estimates}.
 If specified, the list also includes the descriptive, as well as the correction plots as \code{ggplot} objects.
 
-\code{Results} contains the publication probability \code{Psihat}, the variance as well as the robust standard error.
+\code{Results} contains the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard error (\code{se_robust}).
 
-\verb{Corrected Estimates} contains the original estimates with their 95\% confidence bonds (\code{original}, \code{adj_L}, \code{adj_U})
-as well as the corrected estimates (\code{adj_estimates}) and in addition the Bonferroni corrected 95\% confidence bonds (\code{adj_LB}, \code{adj_UB}).
+\verb{Corrected Estimates} contains the original estimates and the median unbiased estimates (\code{original}, \code{adj_estimates}) as well as the corrected 95\% confidence bounds (\code{adj_L}, \code{adj_U}). In addition, the Bonferroni corrected 95\% confidence bounds are reported (\code{adj_LB}, \code{adj_UB}).
 }
 \description{
 \code{pubias_replication()} calculates the publication probability either by a Maximum Likelihood or a GMM approach and

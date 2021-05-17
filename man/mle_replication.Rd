@@ -4,7 +4,7 @@
 \alias{mle_replication}
 \title{Computing the publication probability in replication studies}
 \usage{
-mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames, C)
+mle_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, C)
 }
 \arguments{
 \item{Z}{A \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}

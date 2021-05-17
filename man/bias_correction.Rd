@@ -34,7 +34,6 @@ method for estimation.}
 \value{
 Returns a list containing the original estimates with the adjusted 95\% confidence bonds (\code{original}, \code{adj_L}, \code{adj_U})
 as well as the corrected estimates (\code{adj_estimates}) and in addition the Bonferroni corrected 95\% confidence bonds (\code{adj_LB}, \code{adj_UB}).
-There are additional elements which are mainly used for plotting the results.
 }
 \description{
 Check package vignette for further information.

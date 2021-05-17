@@ -200,7 +200,7 @@ The output of the functions is pretty simple. They return a list object called `
 
 - `Results`: This element contains the three results `Psihat` which is the estimated publication probability, `Varhat` its variance and`se_robust` containing the robust standard errors for the publication probability. For interpretation: If the function yields `Psihat = 0.25`, the publication of insignificant results is only 25% as likely as the publication of significant results. Or put differently, the publication of a significant result is 4 times more likely than an insignificant result (at the given significance level). But if `Psihat = 1`, we deal with a situation where we see no evidence for a publication bias. Significant results are just as likely to be published as insignificant results.
 
-- `Corrected Estimates`:  This element reports the result from the publication bias correction. First, it contains the original estimates and the median unbiased estimates (`original`, `adj_estimates`) as well as the corrected 95% confidence bounds (`adj_L`, `adj_U`). In addition, the Bonferroni corrected (Cabin and Randall, 2000) 95% confidence bounds are reported (`adj_LB`, `adj_UB`).
+- `Corrected Estimates`:  This element reports the result from the publication bias correction. First, it contains the original estimates and the median unbiased estimates (`original`, `adj_estimates`) as well as the corrected 95% confidence bounds (`adj_L`, `adj_U`). In addition, the Bonferroni corrected 95% confidence bounds are reported (`adj_LB`, `adj_UB`). If you want to lean more about the Bonferroni correction, please check Shinichi (2004).
 
 If the functions are run with the option to print the plots and the dashboard, the result list also contains the `ggplot` objects for the descriptive as well as the correction plots. The plots will additionally be printed in .pdf format into the current working directory. If specified, a HTML-Dashboard with dynamic plots will be exported as well. One can also look at the plots by calling the following lines of code.
 
@@ -362,8 +362,6 @@ Unit Root Models.” Econometrica 61 (1): 139–65.
 
 * **Cabin, Robert J., and Randall J. Mitchell.** 2000. “To Bonferroni or Not to Bonferroni: When and How Are the Questions.” Bulletin of the Ecological Society of America. vol. 81, no. 3. pp. 246–248.
 
-* **Card, David, and Alan B. Krueger.** 1995. “Time-Series Minimum-Wage Studies: A Meta-Analysis.” American Economic Review 85 (2): 238–43.
-
 * **Croke, Kevin, Joan Hamory Hicks, Eric Hsu, Michael Kremer, and Edward Miguel.** 2016. “Does Mass Deworming Affect Child Nutrition? Meta-Analysis, Cost-Effectiveness, and Statistical Power.” NBER Working Paper 22382.
 
 * **Camerer, Colin F., Anna Dreber, Eskil Forsell, Teck-Hua Ho, Jürgen Huber, Magnus Johannesson, Michael Kirchler, et al.** 2016. “Evaluating Replicability of Laboratory Experiments in Economics.” Science 351 (6280): 1433–36.
@@ -375,5 +373,7 @@ Unit Root Models.” Econometrica 61 (1): 139–65.
 * **Joober R, Schmitz N, Annable L, Boksa P.** 2012. Publication bias: what are the challenges and can they be overcome?. J Psychiatry Neurosci. 37(3):149-152. 
 
 * **Rosenthal, Robert.** 1979. “The File Drawer Problem and Tolerance for Null Results.” Psychological Bulletin 86 (3): 638–41.
+
+* **Shinichi Nakagawa.** 2004. "A farewell to Bonferroni: the problems of low statistical power and publication bias." Behavioral Ecology. Volume 15, Issue 6. Pages 1044–1045,
 
 * **Stock, James H., and Mark W. Watson.** 1998. “Median Unbiased Estimation of Coefficient Variance in a Time-Varying Parameter Model.” Journal of the American Statistical Association 93 (441): 349–58.

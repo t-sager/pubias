@@ -8,20 +8,19 @@
 #' @param studynames Optional. A vector of type `character` containing all the Studynames of size `n` in the same order as the argument `data`.
 #' @param sign_lvl A value indicating the significance level at which the analysis should be done. Ultimately leads to the threshold (z-score) for the steps of the publication probability.
 #' By default, the significance level is set at 5%, hence `0.05`.
-#' @param GMM If set to TRUE, the publication probability will be estimated via GMM. By default, it is set to FALSE which uses the MLE
+#' @param GMM If set to `TRUE, the publication probability will be estimated via GMM. By default, it is set to `FALSE` which uses the MLE
 #' method for estimation.
-#' @param symmetric If set to TRUE, the publication probability is assumed to be symmetric around zero. If set to FALSE, asymmetry is allowed.
-#' @param print_plots If set to TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
-#' @param print_dashboard If set to TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
-#' The dashboard is saved in the working directory. Only possbile if `print_plots` is set to TRUE.
+#' @param symmetric If set to `TRUE, the publication probability is assumed to be symmetric around zero. If set to `FALSE`, asymmetry is allowed.
+#' @param print_plots If set to `TRUE, descriptive plots as well as correction plots are printed into the working directory in .pdf format.
+#' @param print_dashboard If set to `TRUE, additionally to the .pdf plots, a dashboard with the same charts in dynamic format is produced.
+#' The dashboard is saved in the working directory. Only possbile if `print_plots` is set to `TRUE.
 #'
 #' @return Returns a list object called `pubias_result` with the elements `Results` and `Corrected Estimates`.
 #' If specified, the list also includes the descriptive, as well as the correction plots as `ggplot` objects.
 #'
-#' `Results` contains the publication probability `Psihat`, the variance as well as the robust standard error.
+#' `Results` contains the publication probability (`Psihat`), its variance (`Varhat`) and robust standard error (`se_robust`).
 #'
-#' `Corrected Estimates` contains the original estimates with their 95% confidence bonds (`original`, `adj_L`, `adj_U`)
-#' as well as the corrected estimates (`adj_estimates`) and in addition the Bonferroni corrected 95% confidence bonds (`adj_LB`, `adj_UB`).
+#' `Corrected Estimates` contains the original estimates and the median unbiased estimates (`original`, `adj_estimates`) as well as the corrected 95% confidence bounds (`adj_L`, `adj_U`). In addition, the Bonferroni corrected 95% confidence bounds are reported (`adj_LB`, `adj_UB`).
 #'
 #' @export
 #'
@@ -57,7 +56,7 @@ pubias_meta <-
 
       if (print_plots == FALSE) {
         result <-
-          gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames)
+          gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs)
         corrected_estimates <-
           bias_correction(
             X,
@@ -74,7 +73,7 @@ pubias_meta <-
         rm(corrected_estimates, result)
       } else {
         result <-
-          gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs, studynames)
+          gmm_meta(X, sigma, symmetric, cluster_ID, cutoffs)
         corrected_estimates <-
           bias_correction(
             X,
@@ -125,7 +124,6 @@ pubias_meta <-
                    symmetric,
                    cluster_ID,
                    cutoffs,
-                   studynames,
                    C)
         corrected_estimates <-
           bias_correction(
@@ -149,7 +147,6 @@ pubias_meta <-
                    symmetric,
                    cluster_ID,
                    cutoffs,
-                   studynames,
                    C)
         corrected_estimates <-
           bias_correction(

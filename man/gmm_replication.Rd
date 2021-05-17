@@ -4,7 +4,7 @@
 \alias{gmm_replication}
 \title{Computing the publication probability in replication studies}
 \usage{
-gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
+gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs)
 }
 \arguments{
 \item{Z}{A \verb{n x 2} matrix where the first (second) column contains the standardized original estimates (replication estimates), where \code{n} is the number of estimates.}
@@ -17,8 +17,6 @@ gmm_replication(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, studynames)
 
 \item{cutoffs}{A matrix containing the thresholds for the steps of the publication probability. Should be strictly increasing column
 vector of size \verb{k x 1} where \code{k} is the number of cutoffs.}
-
-\item{studynames}{A vector of type \code{character} containing all the Studynames of size \code{n} in the same order as the argument \code{data}.}
 }
 \value{
 Returns a list object with the publication probability (\code{Psihat}), its variance (\code{Varhat}) and robust standard error (\code{se_robust}).
