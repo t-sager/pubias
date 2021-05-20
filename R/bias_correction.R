@@ -180,13 +180,13 @@ if (symmetric == TRUE) {
       X=xgrid[n]
 
       g_U <- function(lambda) {
-        (alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
       g_L <- function(lambda) {
-        (1-alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (1-alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
       g_M <- function(lambda) {
-        (1/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (1/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
       min_U<-optim(par=X,fn=g_U)
@@ -206,10 +206,10 @@ if (symmetric == TRUE) {
 
 ##--- Calculate Bonferroni corrected estimates and confidence bounds
       g_UB <- function(lambda) {
-        (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
       g_LB <- function(lambda) {
-        (1-bonf_alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (1-bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
       min_UB<-optim(par=Theta_U_store[n,1],fn=g_UB)
@@ -223,14 +223,14 @@ if (symmetric == TRUE) {
       #- Calculate derivatives of corrections with respect to parameters via implicit function theorem
       thetaU_plus=theta_UB[n,1]+stepsize
       thetaU_minus=theta_UB[n,1]-stepsize
-      F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,cbind(Psihat_use,1),cutoffs,symmetric)
-      F_Uminus=step_function_normal_cdf(X,thetaU_minus,1,cbind(Psihat_use,1),cutoffs,symmetric)
+      F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Uminus=step_function_normal_cdf(X,thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
       dFUdtheta=(F_Uplus-F_Uminus)/(2*stepsize)
 
       thetaL_plus=theta_LB[n,1]+stepsize
       thetaL_minus=theta_LB[n,1]-stepsize
-      F_Lplus=step_function_normal_cdf(X,thetaL_plus,1,cbind(Psihat_use,1),cutoffs,symmetric)
-      F_Lminus=step_function_normal_cdf(X,thetaL_minus,1,cbind(Psihat_use,1),cutoffs,symmetric)
+      F_Lplus=step_function_normal_cdf(X,thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Lminus=step_function_normal_cdf(X,thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
       dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
 
       dFUdbeta=matrix(0,length(Psihat_use),1)
@@ -242,12 +242,12 @@ if (symmetric == TRUE) {
         Psi_minus=Psihat_use
         Psi_minus[n1]=Psi_minus[n1]-stepsize
 
-        F_Uplus=step_function_normal_cdf(X,theta_UB[n,1],1,cbind(Psi_plus,1),cutoffs,symmetric)
-        F_Uminus=step_function_normal_cdf(X,theta_UB[n,1],1,cbind(Psi_minus,1),cutoffs,symmetric)
+        F_Uplus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Uminus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
         dFUdbeta[n1,1]=(F_Uplus-F_Uminus)/(2*stepsize)
 
-        F_Lplus=step_function_normal_cdf(X,theta_LB[n,1],1,cbind(Psi_plus,1),cutoffs,symmetric)
-        F_Lminus=step_function_normal_cdf(X,theta_LB[n,1],1,cbind(Psi_minus,1),cutoffs,symmetric)
+        F_Lplus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Lminus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
         dFLdbeta[n1,1]=(F_Lplus-F_Lminus)/(2*stepsize)
       }
 
@@ -284,13 +284,13 @@ if (symmetric == TRUE) {
       X=xgrid[n]
 
       g_U <- function(lambda) {
-        (alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
       g_L <- function(lambda) {
-        (1-alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (1-alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
       g_M <- function(lambda) {
-        (1/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (1/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
       min_U<-optim(par=X,fn=g_U)
@@ -310,10 +310,10 @@ if (symmetric == TRUE) {
 
 ##--- Calculate Bonferroni corrected estimates and confidence bounds
       g_UB <- function(lambda) {
-        (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
       g_LB <- function(lambda) {
-        (1-bonf_alpha/2-step_function_normal_cdf(X,lambda,1,cbind(Psihat_use,1),cutoffs,symmetric))^2
+        (1-bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
       min_UB<-optim(par=Theta_U_store[n,1],fn=g_UB)
@@ -327,14 +327,14 @@ if (symmetric == TRUE) {
       #- Calculate derivatives of corrections with respect to parameters via implicit function theorem
       thetaU_plus=theta_UB[n,1]+stepsize
       thetaU_minus=theta_UB[n,1]-stepsize
-      F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,cbind(Psihat_use,1),cutoffs,symmetric)
-      F_Uminus=step_function_normal_cdf(X,thetaU_minus,1,cbind(Psihat_use,1),cutoffs,symmetric)
+      F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Uminus=step_function_normal_cdf(X,thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
       dFUdtheta=(F_Uplus-F_Uminus)/(2*stepsize)
 
       thetaL_plus=theta_LB[n,1]+stepsize
       thetaL_minus=theta_LB[n,1]-stepsize
-      F_Lplus=step_function_normal_cdf(X,thetaL_plus,1,cbind(Psihat_use,1),cutoffs,symmetric)
-      F_Lminus=step_function_normal_cdf(X,thetaL_minus,1,cbind(Psihat_use,1),cutoffs,symmetric)
+      F_Lplus=step_function_normal_cdf(X,thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Lminus=step_function_normal_cdf(X,thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
       dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
 
       dFUdbeta=matrix(0,length(Psihat_use),1)
@@ -346,12 +346,12 @@ if (symmetric == TRUE) {
         Psi_minus=Psihat_use
         Psi_minus[n1]=Psi_minus[n1]-stepsize
 
-        F_Uplus=step_function_normal_cdf(X,theta_UB[n,1],1,cbind(Psi_plus,1),cutoffs,symmetric)
-        F_Uminus=step_function_normal_cdf(X,theta_UB[n,1],1,cbind(Psi_minus,1),cutoffs,symmetric)
+        F_Uplus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Uminus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
         dFUdbeta[n1,1]=(F_Uplus-F_Uminus)/(2*stepsize)
 
-        F_Lplus=step_function_normal_cdf(X,theta_LB[n,1],1,cbind(Psi_plus,1),cutoffs,symmetric)
-        F_Lminus=step_function_normal_cdf(X,theta_LB[n,1],1,cbind(Psi_minus,1),cutoffs,symmetric)
+        F_Lplus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Lminus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
         dFLdbeta[n1,1]=(F_Lplus-F_Lminus)/(2*stepsize)
       }
 

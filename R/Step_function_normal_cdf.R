@@ -1,6 +1,4 @@
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
-
-    # betap <- c(Psihat_use,1)
     # Throw error if betap "too short"
     if (length(betap) != (length(cutoffs) + 1)) {
         stop("length of betap must be one greater than length of cutoffs ")
