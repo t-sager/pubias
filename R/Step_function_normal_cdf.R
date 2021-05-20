@@ -1,5 +1,4 @@
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
-
     # Throw error if betap "too short"
     if (length(betap) != (length(cutoffs) + 1)) {
         stop("length of betap must be one greater than length of cutoffs ")
@@ -20,8 +19,8 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
         betap_u[length(betap_u) + 1] <- 1
         betap_u <- as.matrix(betap_u)
     } else {
-        cutoffs_u <- cutoffs
-        betap_u <- t(betap)
+        cutoffs_u <- t(cutoffs)
+        betap_u <- t(t(betap))
     }
 
     # Calculate denominator in CDF
@@ -32,15 +31,9 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
     }
 
     prob_vec <- rbind(prob_vec, 1)
-    mean_Z1 <-
-        prob_vec[2:length(prob_vec), 1] - prob_vec[1:(length(prob_vec) - 1), 1]
+    mean_Z1 <- prob_vec[2:length(prob_vec), 1] - prob_vec[1:(length(prob_vec) - 1), 1]
 
-    if (symmetric == TRUE) {
-        denominator <- t(mean_Z1) %*% t(t(betap_u))
-
-    } else{
-        denominator <- t(mean_Z1) %*% t(betap_u)
-    }
+    denominator <- t(mean_Z1) %*% betap_u
 
     # Calculate numerator in CDF
     cutoffs_u[length(cutoffs_u) + 1] <- Inf

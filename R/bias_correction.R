@@ -162,7 +162,7 @@ bias_correction <- function(X,sigma,result,cutoffs,symmetric,identificationappro
 
 if (symmetric == TRUE) {
 
-    xgrid=seq(-5,5,0.01)
+    xgrid=seq(0,5,0.01)
     alpha=0.05
 
 ##--- Calculate corrected estimates and confidence bounds
