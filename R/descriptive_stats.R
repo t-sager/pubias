@@ -107,11 +107,12 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
             geom_histogram(aes(y = ..density..),
                            fill = blue1,
-                           breaks=edges)+
+                           #breaks=edges,
+                           binwidth = 0.3)+
             geom_vline(xintercept =-cutoffs,color='grey')+
             geom_vline(xintercept =cutoffs, color='grey')+
             geom_vline(xintercept =0, color='grey', linetype="dotted")+
-            xlab('X/sigma')+
+            xlab('Z')+
             ylab('Density')+
             xlim(c(min(edges),max(edges)))+
             theme_minimal()+ theme(panel.grid.minor = element_blank(),
@@ -120,13 +121,14 @@ descriptive_stats <- function(X, sigma, identificationapproach, name, symmetric,
 
     } else {
         h<-ggplot(data = as.data.frame(Zuse), aes(Zuse))+
-            geom_histogram(aes(y = ..density..),
+            geom_histogram(aes(y = ..count..),
                            fill = blue1,
-                           breaks=edges)+
+                           #breaks=edges,
+                           binwidth = 0.3)+
             geom_vline(xintercept =-cutoffs, color='grey')+
             geom_vline(xintercept =cutoffs, color='grey')+
             geom_vline(xintercept =0, color='grey', linetype="dotted")+
-            xlab('|X|/sigma')+
+            xlab('Z')+
             ylab('Density')+
             xlim(c(min(edges),max(edges)))+
             theme_minimal()+ theme(panel.grid.minor = element_blank(),
