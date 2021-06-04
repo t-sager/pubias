@@ -1,8 +1,8 @@
 ---
 title: "pubias: Identification of and Correction for Publication Bias^[This package was created as part of the seminar Workshop in Econometrics (Spring Semester 2021) and follows the implementation by *Andrews, Isaiah, and Maximilian Kasy. 2019. Identification of and Correction for Publication Bias.*]"
 abstract:
-  "Following Andrews and Kasy (2019), this package implements the identification of and correction for publiaction bias. Also 
-  known as the file drawer problem, the publication bias occurs when researchers submit their papers based on the likelihood of their publication. Therefore, some results have a higher publication probability than others.This package identifies the said bias and corrects for it by differentiating between replication and meta-studies as well as between a likelihood and GMM estimation procedure."
+  "Following Andrews and Kasy (2019), this package implements the identification of and correction for publication bias. Also 
+  known as the file drawer problem, the publication bias occurs when researchers submit their papers based on the likelihood of their publication. Therefore, some results have a higher publication probability than others. This package identifies the said bias and corrects for it by differentiating between replication and meta-studies as well as between a likelihood and GMM estimation procedure."
 author: "Till Sager^[University of Bern, till.sager@students.unibe.ch]"
 date: "May, 2021"
 output:   
@@ -37,34 +37,31 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 # Introduction
 
-Research can be a highly competitive environment when it comes to funding or enhancing ones reputation in the academic field. It is plausible that researches are under pressure and have an incentive to only submit results which favor them and are more likely to be published in famous journals. The journal editors themselves may also deal with an incentive to publish more positive findings because they have to compete with other journals over the amount of citations and the journals have to be financed as well.
-In combination, this may lead to the so called file drawer problem (Rosenthal 1979), selective publication or publication bias. This bias does not only occur in the field of economics, it is a wide spread problem which also concerns life sciences, medicine and health care research and other social sciences. Depending on the field of interest, holding back negative results can lead to the distortion of the literature, may have consequences for the health of the citizens, using scarce resources for wrong investments or just have a negative impact on research and teaching practices. 
-Fanelli (2011) shows in a study looking at 4600 papers published between 1990 and 2007 that negative results are disappearing from being published and his research suggests an increase in publication bias over these years. According to him, papers finding significant support for their initial hypotheses increased by 22% over this timespan. By the ethic code of researchers and journal editors, they are bound to publish both negative as well as positive results in a non selective manner. Therefore, one might argue that this decrease in negative results is just the result of getting better at formulating hypotheses. The competition between researches could potentially lead to the exclusion of poorly formulated hypotheses and experiments which ultimately leads to an increase in positive results (Joober et al, 2012). In contrast, replicating existing results often leads to completely different estimates with smaller magnitudes or even opposite signs which would no support this hypothesis.
+Research can be a highly competitive environment when it comes to funding or enhancing ones reputation in the academic field. It is plausible that researchers are under pressure and have an incentive to only submit results which favor them and are more likely to be published in famous journals. The journal editors themselves may also deal with an incentive to publish more positive findings because they have to compete with other journals over the amount of citations and the journals have to be financed as well.
+In combination, this may lead to the so called file drawer problem (Rosenthal 1979), selective publication or publication bias. This bias does not only occur in the field of economics. It is a wide spread problem which also concerns life sciences, medicine and health care research and other social sciences. Depending on the field of interest, holding back negative results can lead to the distortion of the literature, may have consequences for the health of citizens, using scarce resources for wrong investments or have a negative impact on research and teaching practices. 
+Fanelli (2011) shows in a study looking at 4600 papers published between 1990 and 2007 that negative results are disappearing from being published and his research suggests an increase in publication bias over these years. According to him, the share of papers finding significant support for their initial hypotheses increased by 22% over this timespan. By the ethic code of researchers and journal editors, they are bound to publish both negative as well as positive results in a non selective manner. Therefore, one might argue that this decrease in negative results is just the result of getting better at formulating hypotheses. The competition between researchers could potentially lead to the exclusion of poorly formulated hypotheses and experiments which ultimately leads to an increase in positive results (Joober et al, 2012). In contrast, replicating existing results often leads to completely different estimates with smaller magnitudes or even opposite signs which would no support this hypothesis.
 The publication bias is most certainly a topic which needs to be addressed. There are several methods to tackle the problem. The documented R package implements the method documented by Andrews and Kasy (2019).
-
-\newpage
 
 
 # Publication Bias
 
 Instead of going into detail about the theory and statistics Andrews and Kasy (2019) use in their paper, I will use an illustrative example they provided to show how a publication bias arises, how it can be identified and ultimately, how one can correct for it. 
 
-To get a feeling for how a publication bias can arise, we look at the behavior of journals which are responsible for publishing the papers they are provided with. Journals usually receive a lot of studies with different outcomes and they need to decide which papers will be published and which are not. Let us assume that the reported estimates $X$ are normally distributed i.e. $X ~ N(Θ, Σ^2)$ where $Θ$ are the true treatment effects, and $Σ$ are the corresponding standard errors. $Z$ denotes the standardized estimates given by $X/\Sigma$. Additionally, each study examines different treatments.
+To get a feeling for how a publication bias can arise, we look at the behavior of journals which are responsible for publishing the papers they are provided with. Journals usually receive a lot of papers with different outcomes and they need to decide which papers will be published. Let us assume that the reported estimates $X$ are normally distributed i.e. $X ~ N(Θ, Σ^2)$ where $Θ$ are the true treatment effects, and $Σ$ are their corresponding standard errors. $Z$ denotes the standardized estimates given by $X/\Sigma$. Additionally, each study examines different treatments.
 
 In this example, the journal publishes significant results at the 5% significance level with probability 1 ($p(z) = 1$) and insignificant results with probability 0.2 ($p(Z) = 0.2$, with $Z ∈ [-1.96, 1.96]$). This indicates a clear preference for publishing significant results. Namely, significant result are 5 times more likely to be published than insignificant results.
 Because of this behavior, it is clear that the published results $X$ over-estimate the magnitude of the true treatment effect $Θ$.The same holds for the confidence bounds. Small values are underestimated, while large values are overestimated. 
 Keep in mind that publication decisions are based on both the researchers as well as the journals decision. Andrews and Kasy do not try to separate those two decision dimensions but rather look at them as one decision only. Therefore, the above example also holds for the researchers or even for the journals and the researchers at the same time.
 
-\newpage
 
 
-# Methods and assumptions
+# Methods and Assumptions
 
 This chapter summarizes the methods used to identify and correct for the publication bias following the approach by Andrews and Kasy (2019). In their paper, they differ between two approaches of identification. The first approach uses replication studies while the second one uses meta studies to determine the publication probability. Given a certain publication probability, they propose a method to construct the median unbiased estimators (i.e. the corrected estimates) and confidence bounds.
 
 ## Identification
 
-The procedure of identifying the publication probability differs between the two approaches. A replication study uses the *same* methods as the original study and applies them to a new sample from the *same* population. From the package perspective, we therefore need the original estimates as well as the replication estimates to conduct the given analysis. Additionally, it is assumed that the publication probability only depends on the original estimates.
+The procedure of identifying the publication probability differs between the two approaches. A replication study uses the *same* methods as the original study and applies them to a new sample from the *same* population. While using the package, we need the original estimates as well as the replication estimates to conduct the given analysis. Additionally, it is assumed that the publication probability only depends on the original estimates.
 
 On the other hand, a meta study is a study which collects multiple estimates from studies which cover more or less the same topic. One crucial assumption regarding meta studies is the independence between the different estimates. In contrast to the replication studies, meta studies only have one set of estimates as input for the estimation of the publication probability.
 
@@ -72,10 +69,10 @@ On the other hand, a meta study is a study which collects multiple estimates fro
 ### Replication Studies
 
 To illustrate the identification approach using replication studies, the illustrative example from the beginning is continued. Remember, we assumed that $p(Z) = 1$ when $|Z| > 1.96$ , and $p(Z) = 0.2$ otherwise. A further simplification we have to take into account is that the original as well as the replication estimates both have the same variance of 1 ($ΣRep = Σ = 1$).
-Figure 1 shows how the identification using replication studies is done. The left panel shows 100 random draws $(Z, ZRep)$, where $ZRep$ denotes the standardized replication estimates (i.e. $XRep/\Sigma Rep$). Draws which are insignificant on the 5% level are marked as light blue $(|Z| ≤ 1.96)$ whereas draws which are significant are drawn in a darker blue $(|Z| > 1.96)$.
+Figure 1 shows how identification using replication studies is possible. The left panel shows 100 random draws $(Z, ZRep)$, where $ZRep$ denotes the standardized replication estimates (i.e. $XRep/\Sigma Rep$). Draws which are insignificant on the 5% level are marked as light blue $(|Z| ≤ 1.96)$ whereas draws which are significant are drawn in a darker blue $(|Z| > 1.96)$.
 
 The right panel shows the draws $(Z, ZRep)$ which are published. These are exactly the same draws as before but now 80% of the statistically insignificant results are deleted because the journal only publishes 20% of the statistically insignificant results. That is why a lot of the light blue points vanish.
-To proof that some selective publication exists, we can take a closer look at the regions $A$ and $B$. In $A$, we deal with the situation that $Z$ is statistically significant while $ZRep$ is not. Obviously, we deal with the exact opposite in region $B$.
+To proof that some selective publication exists, we can take a closer look at the regions $A$ and $B$ in the right panel of Figure 1. In $A$, we deal with the situation that $Z$ is statistically significant while $ZRep$ is not. Obviously, we deal with the exact opposite in region $B$.
 At this point we have to mention that we assumed symmetry in the data generating process at the beginning. Because of this assumption, $Z$ or $ZRep$ should fall in either region with the same probability. Due to the fact that we clearly observe more data points in region A than in region B, we have evidence for selective publication. Additionally, the deviation from symmetry ($Z = ZRep$) exactly identifies the publication probability $p(.)$.
 
 
@@ -90,8 +87,8 @@ knitr::include_graphics("scatter_illu_rep.pdf")
 
 Using the same set up as in the identification approach using replication studies and adding the crucial assumption that $Σ$ is independent of $Θ$ for true effects, we can take a closer look at Figure 2 which shows the identification approach using meta studies.
 Instead of dealing with original and replication estimates and having them on the X-and Y-axis, we now have the original estimates $X$ on the X-axis and the corresponding standard errors $Σ$ on the Y-axis. As before, the left panel shows 100 random draws $(X, Σ)$. Draws which are insignificant on the 5% level are marked as light blue $(|X/Σ| ≤ 1.96)$ whereas draws which are significant are drawn in a darker blue $(|X/Σ| > 1.96)$. The right panel shows the draws $(X,Σ)$ which are published. Again, these are exactly the same draws as in the left panel but now 80% of the statistically insignificant results are deleted because the journal only publishes 20% of the statistically insignificant results.
-Instead of looking at two regions as in the case of replication studies, we now take a closer look at two different values of $Σ$. These two values are at $Σ = 0.5$ and $Σ = 1.25$, highlighted by $A$ and $B$.
-Since we have assumed independence between $Σ$ and $Θ$, the distribution of $X$ for latent studies given greater values of $Σ$ is an inflated version of the same distribution for smaller values of $Σ$. Thus, to the degree that the same is not true for the distribution of the published estimates $X$ given $Σ$, this has to be due to selectivity in the publication process. In this example, statistically insignificant observations are absent for greater values of $Σ$. In other words, there are missing light blue points on the top right above $B$. Since the likelihood of publication is higher if the result is significant, the estimated values $X$ tend to be larger on average for greater values of $Σ$. Therefore, we expect some positive correlation between the two. Considering the conditional distribution of $X$ given $Σ$ changes with $Σ$, we are again able to identify the publication probability.
+Instead of looking at two regions as in the case of replication studies, we now take a closer look at two different values of $Σ$ in the right panel. These two values are at $Σ = 0.5$ and $Σ = 1.25$, highlighted by $A$ and $B$.
+Since we have assumed independence between $Σ$ and $Θ$, the distribution of $X$ for latent studies given greater values of $Σ$ is an inflated version of the same distribution for smaller values of $Σ$. Thus, to the degree that the same is not true for the distribution of the published estimates $X$ given $Σ$, this has to be due to selectivity in the publication process. In this example, statistically insignificant observations are absent for greater values of $Σ$. Since the likelihood of publication is higher if the result is significant, the estimated values $X$ tend to be larger on average for greater values of $Σ$. Therefore, we expect some positive correlation between the two. Considering the conditional distribution of $X$ given $Σ$ changes with $Σ$, we are again able to identify the publication probability.
 
 ```{r plot2, echo=FALSE, fig.cap="Identifcation using Meta-Studies",fig.align="center", out.width = '70%'}
 
@@ -105,18 +102,17 @@ The maximum likelihood estimation is the basic estimation procedure reported by 
 
 ## Correction
 
-After computing the publication probability, Andrews and Kasy show how one can derive corrected estimators and confidence sets. Putting it as simple as possible, the selective publication weights the distribution of $Z$ by the publication probability. To obtain the corrected estimates and confidence sets, we only need to correct for this weighting.
+After computing the publication probability, Andrews and Kasy (2018) show how one can derive corrected estimators and confidence sets. Putting it as simple as possible, the selective publication weights the distribution of $Z$ by the publication probability. To obtain the corrected estimates and confidence sets, we only need to correct for this weighting.
 
 In their approach, they define the distribution function for published standardized results $Z$ given their *true* effect. By using procedures applied in Andrews (1993) and Stock and Watson (1998), and inverting the distribution function, they are able to calculate the median unbiased estimator (i.e. corrected estimates) as well as the equal-tailed confidence sets which fully correct for the bias produced by the selective publication. 
 To get an intuition for their result, the illustrative example is continued. Comparing the median unbiased estimator with the original and uncorrected estimates (grey line) in Figure 3, we can clearly see that the median unbiased estimator lies below the original estimator, given $Z$ is close to the cutoff 1.96. The cutoffs are shown with the dotted grey lines. With an increasing (decreasing) $Z$, we observe that the median unbiased estimator converges to the original estimator. The same observation holds for the confidence intervals. In the example in Figure 3, the corrected estimates are nearly equal the original estimates if $Z > |5|$.
 
-```{r plot3, echo=FALSE, fig.cap="Bias correction", fig.align="center", out.width = '80%'}
+```{r plot3, echo=FALSE, fig.cap="Bias correction", fig.align="center", out.width = '90%'}
 
 knitr::include_graphics("correction_illu.pdf")
 
 ```
 
-\newpage
 
 # Package Features
 
@@ -127,10 +123,11 @@ The package is currently available on GitHub. Running the code below will direct
 ```{r, eval = FALSE}
 
 # Installing the package directly from github
-remotes::install_github("t-sager/pubias")
+devtools::install_github("t-sager/pubias")
 
 # If the package vignette should be downloaded as well
-remotes::install_github("t-sager/pubias", build_vignettes = TRUE)
+devtools::install_github("t-sager/pubias", build_vignettes = TRUE)
+
 # Check vignette
 utils::vignette("pubias")
 
@@ -145,11 +142,11 @@ library(pubias)
 There are two main functions in the package. The first `pubias_meta()` leads to the identification of and correction for the publication bias in meta studies while `pubias_replication()` does the same for replication studies. The most simple syntax to get a result is the following:
 
 ```{r, eval = FALSE}
-# Meta Studies
-pubias_meta(data)
-
 # Replication Studies
 pubias_replication(data)
+
+# Meta Studies
+pubias_meta(data)
 
 ```
 
@@ -159,8 +156,8 @@ Because the input for these functions heavily depends on the input from the two 
 
 ## Arguments
 
-We have seen that the function works even without specifying more than the data containing the estimates and the standard errors. Now we will take a closer look at the different arguments which one could enter into the function. Keep in mind: the arguments for both functions are the same. The only difference is, that in the case of replication studies, the data used has additional columns because we also have to account for the replication estimates.
-To check the different arguments, one could also take a closer look at the helpfiles for the two functions with `?pubias_meta()` or `?pubias_replication()`.
+We have seen that the function works even without specifying more than the data containing the estimates and the standard errors. Now we will take a closer look at the different arguments which one can enter into the function. Keep in mind: the arguments for both functions are the same. The only difference is, that in the case of replication studies, the data used has additional columns because we also have to account for the replication estimates.
+To check the different arguments, one can also take a closer look at the helpfiles for the two functions with `?pubias_meta()` or `?pubias_replication()`.
 
 The following specifications are currently possible:
 
@@ -178,7 +175,7 @@ pubias_meta(
 
 ```
 
-- `data`: In the case of meta studies, the data consists of a `n x 3` matrix where the first column contains the original estimates, the second column the associated standard errors and in the third column a cluster ID going from 1 to `k`, where `k` is the number of studies used in the meta-study. Keep in mind, this does not necessarily mean the same number of estimates because there could be several estimates coming from one single study.
+- `data`: In the case of meta studies, the data consists of a `n x 3` matrix where the first column contains the original estimates, the second column the associated standard errors and in the third column a cluster ID going from 1 to `k`, where `k` is the number of studies used in the meta-study. Keep in mind, `k` is not necessarily equal to the number of estimates because there could be several estimates coming from one single study.
 If the function for the replication studies is used, the data needs to consist of a `n x 4` matrix where the first (third) column contains the standardized original estimates (replication estimates) and the second (fourth) column the associated standard errors, where `n` is the number of estimates.
 
 - `studynames`: This argument is optional. Ideally a vector of type character containing all the Studynames of size `n` in the same order as the data argument.
@@ -214,7 +211,6 @@ pubias_result$`Correction Plots`$CorrectionPlot
 
 ```
 
-\newpage
 
 # Applications
 
@@ -222,12 +218,12 @@ To further illustrate the functionality of the package, we apply it to a replica
 
 ## Replication Study: Economics Laboratory Experiments
 
-This application uses data from a study by Camerer et al. (2016). They replicated 18
+This application uses data from a study by Camerer et al. (2016). They replicate 18
 economic laboratory experiment papers which were published between 2011 and 2014. The data is well suited for this application because it replicates estimates from papers which come from the same area of research and are all published in
 well known journals. Additionally, it seems likely that Camerer et al. would have published their results regardless of their significance. This is consistent with the assumption stated at the beginning: publication selection only arises based on the original estimates and not on the replication estimates.
 Ultimately, the dataset includes the original and replication estimates with their associated standard errors. This leads to a matrix with the dimensions 18 by 4.
 
-Because the datasets for the applications are part of the package itself, it is really easy to replicate the results. The code below shows how it is done. Of course, one can load own estimates and studynames via `read.csv()` or similar functions. 
+Because the datasets for the applications are part of the package itself, it is really easy to replicate the results. The code below shows describes how the package is used. Of course, one can load other estimates and studynames via `read.csv()` or similar functions. 
 ```{r, eval = FALSE}
 
 # Import data
@@ -257,7 +253,7 @@ pubias_replication(
 ```
 
 After running the function, we can take a closer look at the results. The following figures correspond to the figures which are printed if one sets `print_plots = TRUE`. Before turning to the estimation result, let us take a closer look at the descriptives.
-The histogram on the left side of Figure 4 shows the distribution of the original published standardized estimates. There is a considerable jump in the density right around the z-score of 1.96 which corresponds to the significance level of 5%. As Andrews and Kasy (2019) show in their proofs, this directly corresponds to a jump in the publication probability at the same cutoff. On the right hand side of Figure 4, we see the same type of plot as described in part 3.1.1. Following the same interpretation, we can clearly see some evidence for publication selectivity.
+The histogram on the left side of Figure 4 shows the distribution of the original published standardized estimates. There is a considerable jump in the density right around the z-score of 1.96 which corresponds to the significance level of 5%. As Andrews and Kasy (2019) show in their proofs, this directly corresponds to a jump in the publication probability at the same cutoff. On the right hand side of Figure 4, we see the same type of plot as in Figure 1. Following the same interpretation, we can clearly see some evidence for publication selectivity.
 
 ```{r plot4, echo=FALSE, fig.cap="Economics Laboratory Experiments: Descriptives", fig.align="center", out.width = '70%'}
 
@@ -265,11 +261,11 @@ knitr::include_graphics("scatter_hist_econ.pdf")
 
 ```
 
-The MLE estimation leads to a publication probability of about 2.8%. This means the likelihood of publication is much lower if the results are insignificant. In other words: significant results are more than 30 times more likely to be published than insignificant results at the 5% significance level. If we run the asymmetric specification, we get a similar result with a publication probability of 3.7%. We can also reject the null hypothesis that `Psihat = 1`, meaning, we are actually dealing with a publication bias.
-It is important to note, that if we run this application with the GMM approach, we yield a really small publication probability which reports a negative sign. There are also a big differences if the MLE model is run with different significance levels of 1% or 10%. This may make sense since there is only a big jump in the publication probability at 5%. This is to show, that the result does not seem to be robust if we exclude the parametric assumptions or adjust the significance level.
+The MLE estimation leads to a publication probability of about 2.8%. This means the likelihood of publication is much lower if the results are insignificant. In other words: significant results are more than 30 times more likely to be published than insignificant results at the 5% significance level. If we run the asymmetric specification we get a similar result with a publication probability of 3.7%. We can also reject the null hypothesis that `Psihat = 1`, meaning, we are actually dealing with a publication bias.
+It is important to note, that if we run this application with the GMM approach, we yield a really small publication probability which reports a negative sign. There are also big differences if the MLE model is run with different significance levels of 1% or 10%. This may make sense since there is only a big jump in the publication probability at 5%. This is to show, that the result does not seem to be robust if we exclude the parametric assumptions or adjust the significance level.
 
-In the next step we correct for the said bias based on the publication probability of 2.8%. The results are summarized in the following two plots. Figure 5 plots the original, adjusted as well as the replication estimates. One can see that the adjusted estimates follow the replication estimates pretty well and are much smaller than the original estimates most of the time. Looking at the confidence sets of the adjusted and original estimates, we can see a clear difference. While only 2 of the original estimates confidence bounds included 0, adjusting for the publication leads to 12 confidence bounds containing 0. Therefore, the adjustment leads to substantially less significant results. 
-Figure 6 corresponds to the figure in chapter 3.2 but we additionally plot the Bonferroni corrected confidence bounds. The interpretation stays the same. The corrected estimates lie clearly below the original estimate with the furthest distance exactly at our chosen cutoff. Again, the difference shrinks as the original estimates get larger or smaller.
+In the next step we correct for the said bias based on the publication probability of 2.8%. The results are summarized in the following two figures. Figure 5 plots the original, adjusted as well as the replication estimates. One can see that the adjusted estimates somewhat follow the replication estimates and are much smaller than the original estimates. Looking at the confidence sets of the adjusted and original estimates, we can see a clear difference. While only 2 of the original estimates confidence bounds included 0, adjusting for the publication leads to 12 confidence bounds containing 0. Therefore, the adjustment leads to substantially less significant results. 
+Figure 6 corresponds to Figure 3 but we additionally plot the Bonferroni corrected confidence bounds. The interpretation stays the same. The corrected estimates lie clearly below the original estimate with the furthest distance exactly at our chosen cutoff. Again, the difference shrinks as the original estimates get larger or smaller.
 
 ```{r plot5, echo=FALSE, fig.cap="Economics Laboratory Experiments: Original vs. Adjusted Estimates", fig.align="center", out.width = '70%'}
 
@@ -288,7 +284,7 @@ knitr::include_graphics("correction_plot_econ.pdf")
 ## Meta Analysis: Deworming
 
 The second application uses a meta-study by Croke et al. (2016). They look at the effect of a drug for deworming on the body weight of children. The authors collect a total of 22 estimates from 20 different studies. These 22 estimates together with their associated standard errors build the main data input for our function `pubias_meta()`. Because there are of multiple estimates for some of the studies (in this case two studies report two estimates), one has to cluster the standard errors for the study-ID. This is why the study-ID has to enter the input data as well. Contrary to the first application, we use the GMM approach in the second application. 
-As stated before, the data for the two documented applications can be loaded directly from the package as shown below. Of course, alternatively, one can load own estimates and studynames via `read.csv()` or similar functions.
+As stated before, the data for the two documented applications can be loaded directly from the package as shown below. Of course, one can load other estimates and studynames via `read.csv()` or similar functions.
 
 ```{r, eval = FALSE}
 
@@ -318,7 +314,7 @@ pubias_meta(
 
 ```
 
-As in the application for replication studies, we first take a look at the descriptives. The histogram shows the density of the standardized estimates (i.e. $X/\Sigma$). We see a clear jump in the density around 0 which suggest evidence for selection for *positive* estimates. On the right side of Figure 8 we see a similar plot to as in chapter 3.1.2. Applying the same logic, we do not clearly see evidence for selective probability, i.e. there is no clear positive correlation between $X$ and $\Sigma$. But because the amount of estimates is really small, we can not draw any final conclusions from the descriptives.
+As in the application for replication studies, we first take a look at the descriptives. The histogram in Figure 7 shows the density of the standardized estimates (i.e. $X/\Sigma$). We see a clear jump in the density around 0 which suggest evidence for selection for *positive* estimates. On the right panel of Figure 7 we see a similar plot to as in Figure 2. Applying the same logic, we do not clearly see evidence for selective probability, i.e. there is no clear positive correlation between $X$ and $\Sigma$. But because the amount of estimates is really small, we can not draw any final conclusions from the descriptives.
 
 ```{r plot7, echo=FALSE, fig.cap="Deworming: Descriptives", fig.align="center", out.width = '70%'}
 
@@ -326,8 +322,8 @@ knitr::include_graphics("scatter_hist_dew.pdf")
 
 ```
 
-Looking at the estimation results indicates a publication probability of about 25% (42% for the MLE approach). This is suggesting that statistically significant results are 4 times more likely to be included in the meta-study by Croke et al. (2016). Although this result seems decisive, Andrews and Kasy (2019) calculate different specifications for this application and show, that the results can differ a lot. They even get a result, suggesting that insignificant results are more likely to be published than significant ones. Therefore, we can not reject the null hypothesis that `Psihat = 1`. In consequence, we can not draw any final conclusions about the selective publication either.
-Let us still take a quick look at the correction plots. In Figure 8 we compare the adjusted with the original estimates. It is obvious that estimates closer to the cutoff of 1.96 are adjusted quite a bit more than the other estimates. Generally, the adjusted estimates are drawn closer to zero, which would also mean that with the adjustment, we get less significant results.
+Looking at the estimation results indicates a publication probability of about 25% (42% for the MLE approach). This is suggesting that statistically significant results are 4 times more likely to be included in the meta-study by Croke et al. (2016). Although this result seems decisive, Andrews and Kasy (2019) calculate different specifications for this application and show, that the results can differ a lot. They even get a result, suggesting that insignificant results are more likely to be published than significant ones. Therefore, we can not reject the null hypothesis that `Psihat = 1`. Consequently, we can not draw any final conclusions about the selective publication either.
+Let us still take a look at the correction plots. In Figure 8 we compare the adjusted with the original estimates. It is obvious that estimates closer to the cutoff of 1.96 are adjusted quite a bit more than the other estimates. Generally, the adjusted estimates are drawn closer to zero, which would also mean that with the adjustment, we get less significant results.
 Again, in Figure 9, we can see the biggest difference between the unbiased estimates and the original estimates around the cutoff 1.96. Above an estimation of 4, the adjusted equal the original estimates. The same holds for the estimates close to 0.
 
 ```{r plot8, echo=FALSE, fig.cap="Deworming: Original vs. Adjusted Estimates", fig.align="center", out.width = '70%'}
@@ -345,10 +341,10 @@ knitr::include_graphics("correction_plot_dew.pdf")
 
 \newpage
 
-# Final remarks
+# Final Remarks
 
 Currently, the package covers the base specification of the procedure proposed by Andrews and Kasy. In their paper, they propose further specifications like allowing for more than one cutoff, differ between numerical and analytic integration or even control for certain journals the papers were published in. These extensions could be added to the package in the future. In its first version, the aim was to build the package as simple as possible. The user should be able to just input a simple data matrix and get a reasonable result which can be easily interpreted. After conducting meta analyses or replicating a lot of different studies, there is not much time left to check for something like the publication bias. This package provides an easy to use and quick way to do some robustness checks. Still, keep in mind that the package makes a lot of assumptions. It is therefore important to take a close look at the data and maybe run several specifications. As shown in the applications, results can differ substantially. 
-Besides the contents of package, there are obviously alternative approaches to dealing with the publication bias. Andrews and Kasy discuss some of them in their paper. One of the most popular techniques are the so called meta-regression introduced by Card and Krueger (1995) and Egger et al. (1997) which regress the effect size of a study on characteristics of the study to explain the heterogeneity of treatment effects between different studies and therefore try to identify a publication bias. 
+Besides the contents of package, there are obviously alternative approaches to deal with the publication bias. Andrews and Kasy discuss some of them in their paper. One of the most popular techniques are the so called meta-regression introduced by Card and Krueger (1995) and Egger et al. (1997) which regress the effect size of a study on characteristics of the study to explain the heterogeneity of treatment effects between different studies and therefore try to identify a publication bias. 
 Andrews and Kasy also touch on the topics of manipulation or p-Hacking and discuss the question if results should even replicate or if it is completely normal if they deviate from the original estimates. In conclusion, the procedure implemented in the package is by far not the only method of dealing with a publication bias. The problem was identified a long time ago and there is still a lot of ongoing research regarding this topic.
 
 \newpage
