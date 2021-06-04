@@ -15,7 +15,7 @@ params:
 
 
 ```
-suppressWarnings({
+
 
 Descriptives
 ===================================== 
@@ -27,7 +27,7 @@ Column {data-width=500}
 ### Histogram
 
 ```{r}
-params$descriptives$hist
+suppressWarnings(params$descriptives$hist)
 ```
 
 Column {data-width=500}
@@ -36,7 +36,7 @@ Column {data-width=500}
 ### Identification
 
 ```{r}
-params$descriptives$scatter
+suppressWarnings(params$descriptives$scatter)
 ```
 
 
@@ -55,7 +55,7 @@ valueBox(value = paste0(round(100*params$pub_prob,1),"%"), caption = paste0("Res
 ### Correction Plot
 
 ```{r}
-params$plots$CorrectionPlot
+suppressWarnings(params$plots$CorrectionPlot)
 ```
 
 Column {data-width=500}
@@ -64,13 +64,13 @@ Column {data-width=500}
 ### Original and adjusted estimates
 
 ```{r}
-params$plots$OriginalAndAdjusted
+suppressWarnings(params$plots$OriginalAndAdjusted)
 ```
 
 ### Original and adjusted estimates, including Bonferroni CIs
 
 ```{r}
-params$plots$OriginalAndAdjustedBonferroni
+suppressWarnings(params$plots$OriginalAndAdjustedBonferroni)
 ```
 
-})
+
