@@ -90,7 +90,8 @@ pubias_meta <-
                             identificationapproach,
                             name,
                             symmetric,
-                            cluster_ID)
+                            cluster_ID,
+                            cutoffs)
 
         plots <-
           plot_correction(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
@@ -164,7 +165,8 @@ pubias_meta <-
                             identificationapproach,
                             name,
                             symmetric,
-                            cluster_ID)
+                            cluster_ID,
+                            cutoffs)
         plots <-
           plot_correction(X, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {

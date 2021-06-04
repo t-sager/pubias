@@ -7,7 +7,6 @@ replication_moments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
     # Create step function for publication probability
     Z1_dummies <- matrix(0, n, length(cutoffs) + 1)
 
-
     # Throw error if cutoffs unsorted (not need in current package version --> only one cutoff allowed!)
     if (all(sort(cutoffs) != cutoffs)) {
         stop ("Unsorted cutoffs!")
@@ -35,7 +34,7 @@ replication_moments <- function(betap, cutoffs, symmetric, Z, sigmaZ2){
 
         if (length(cutoffs) > 1) {
             for (m in 2:length(cutoffs)) {
-                Z1_dummies[, m] = (Z[, 1] < cutoffs[m]) * (Z[, 1] >= cutoffs[m - 1])
+                Z1_dummies[, m] <- (Z[, 1] < cutoffs[m]) * (Z[, 1] >= cutoffs[m - 1])
 
             }
         }

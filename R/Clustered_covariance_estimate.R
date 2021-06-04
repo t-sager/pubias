@@ -14,5 +14,6 @@ clustered_covariance_estimate <- function(g,cluster_ID) {
   gsum <- subset(gsum, index_diff == 1)
   gsum <- rbind(gsum[1, ], diff(gsum))
   Sigma <- (1 / (nrow(g) - 1)) * (t(gsum) %*% gsum)
+
   return(Sigma)
 }

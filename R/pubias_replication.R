@@ -95,7 +95,8 @@ pubias_replication <-
                             identificationapproach,
                             name,
                             symmetric,
-                            cluster_ID)
+                            cluster_ID,
+                            cutoffs)
         plots <-
           plot_correction(Z, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {
@@ -157,7 +158,8 @@ pubias_replication <-
                             identificationapproach,
                             name,
                             symmetric,
-                            cluster_ID)
+                            cluster_ID,
+                            cutoffs)
         plots <-
           plot_correction(Z, corrected_estimates,cutoffs,symmetric,studynames,identificationapproach)
         if (print_dashboard == TRUE) {

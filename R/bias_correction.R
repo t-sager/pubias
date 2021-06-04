@@ -17,361 +17,364 @@
 #'
 #' @export
 #'
-bias_correction <- function(X,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
+bias_correction  <-  function(X,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
 
   suppressWarnings({
   # Getting estimation results
-  Psihat_use <- result$Psihat
-  Varhat <- result$Varhat
+  Psihat_use  <-  result$Psihat
+  Varhat  <-  result$Varhat
 
   # Normalize estimates
   if (identificationapproach==1){
-    original <- as.matrix(X[,1])
+    original  <-  as.matrix(X[,1])
   } else if (identificationapproach==2){
-    original <- as.matrix(sort(X/sigma))
+    original  <-  as.matrix(sort(X/sigma))
   }
 
-  n <- length(original)
-  alpha <- 0.05
-  bonf_alpha <- 0.04
-  bonf_beta <- 0.01
+  n  <-  length(original)
+  alpha  <-  0.05
+  bonf_alpha  <-  0.04
+  bonf_beta  <-  0.01
 
   # In MLE we additionally deal with position and scale parameters
   if (GMM == TRUE) {
-    Psihat_use <- Psihat_use
-    Varhat <- Varhat
+    Psihat_use  <-  Psihat_use
+    Varhat  <-  Varhat
   } else {
-    Psihat_use <- Psihat_use[-c(1,2)]
-    Varhat <- Varhat[-c(1,2), -c(1,2)]
+    Psihat_use  <-  Psihat_use[-c(1,2)]
+    Varhat  <-  Varhat[-c(1,2), -c(1,2)]
   }
 
 ##--- Calculate corrected estimates and confidence bounds
-  adj_U <- zeros(length(original),1)
-  adj_L <- zeros(length(original),1)
-  adj_estimates <- zeros(length(original),1)
+  adj_U  <-  zeros(length(original),1)
+  adj_L  <-  zeros(length(original),1)
+  adj_estimates  <-  zeros(length(original),1)
 
-  stepsize <- 10^-3
+  stepsize  <-  10^-3
   for (n in (1:length(original))) {
-    g_U <- function(lambda) {
+    g_U  <-  function(lambda) {
       (alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
-    g_L <- function(lambda) {
+    g_L  <-  function(lambda) {
       (1-alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
-    g_M <- function(lambda) {
+    g_M  <-  function(lambda) {
       (1/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
 
-    min_U<-optim(par=original[n],fn=g_U)
-    min_U<-optim(par=min_U$par,fn=g_U,method="BFGS")
-    min_L<-optim(par=original[n],fn=g_L)
-    min_L<-optim(par=min_L$par,fn=g_L,method="BFGS")
-    min_M<-optim(par=original[n],fn=g_M)
-    min_M<-optim(par=min_M$par,fn=g_M,method="BFGS")
+    min_U <- optim(par=original[n],fn=g_U)
+    min_U <- optim(par=min_U$par,fn=g_U,method="BFGS")
+    min_L <- optim(par=original[n],fn=g_L)
+    min_L <- optim(par=min_L$par,fn=g_L,method="BFGS")
+    min_M <- optim(par=original[n],fn=g_M)
+    min_M <- optim(par=min_M$par,fn=g_M,method="BFGS")
 
-    adj_U[n,1]=min_U$par
-    adj_L[n,1]=min_L$par
-    adj_estimates[n,1]=min_M$par
+    adj_U[n,1] <- min_U$par
+    adj_L[n,1] <- min_L$par
+    adj_estimates[n,1] <- min_M$par
   }
 
 ##--- Calculate Bonferroni corrected estimates and confidence bounds
-  adj_UB <- zeros(length(original),1)
-  adj_LB <- zeros(length(original),1)
-  sigma_U <- zeros(length(original),1)
-  sigma_L <- zeros(length(original),1)
+  adj_UB  <-  zeros(length(original),1)
+  adj_LB  <-  zeros(length(original),1)
+  sigma_U  <-  zeros(length(original),1)
+  sigma_L  <-  zeros(length(original),1)
 
   for (n in (1:length(original))) {
-    g_UB <- function(lambda) {
+    g_UB  <-  function(lambda) {
       (bonf_alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
-    g_LB <- function(lambda) {
+    g_LB  <-  function(lambda) {
       (1-bonf_alpha/2-step_function_normal_cdf(original[n],lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
     }
 
-    min_UB<-optim(par=adj_U[n,1],fn=g_UB)
-    min_UB<-optim(par=min_UB$par,fn=g_UB,method="BFGS")
-    min_LB<-optim(par=adj_L[n,1],fn=g_LB)
-    min_LB<-optim(par=min_LB$par,fn=g_LB,method="BFGS")
+    min_UB <- optim(par=adj_U[n,1],fn=g_UB)
+    min_UB <- optim(par=min_UB$par,fn=g_UB,method="BFGS")
+    min_LB <- optim(par=adj_L[n,1],fn=g_LB)
+    min_LB <- optim(par=min_LB$par,fn=g_LB,method="BFGS")
 
-    adj_UB[n,1]=min_UB$par
-    adj_LB[n,1]=min_LB$par
+    adj_UB[n,1] <- min_UB$par
+    adj_LB[n,1] <- min_LB$par
 
     #-  Calculate derivatives of corrections with respect to parameters via implicit function theorem
 
-    thetaU_plus=adj_UB[n,1]+stepsize
-    thetaU_minus=adj_UB[n,1]-stepsize
-    F_Uplus=step_function_normal_cdf(original[n],thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-    F_Uminus=step_function_normal_cdf(original[n],thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
-    dFUdtheta=(F_Uplus-F_Uminus)/(2*stepsize)
+    thetaU_plus <- adj_UB[n,1]+stepsize
+    thetaU_minus <- adj_UB[n,1]-stepsize
+    F_Uplus <- step_function_normal_cdf(original[n],thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+    F_Uminus <- step_function_normal_cdf(original[n],thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+    dFUdtheta <- (F_Uplus-F_Uminus)/(2*stepsize)
 
-    thetaL_plus=adj_LB[n,1]+stepsize
-    thetaL_minus=adj_LB[n,1]-stepsize
-    F_Lplus=step_function_normal_cdf(original[n],thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-    F_Lminus=step_function_normal_cdf(original[n],thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
-    dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
+    thetaL_plus <- adj_LB[n,1]+stepsize
+    thetaL_minus <- adj_LB[n,1]-stepsize
+    F_Lplus <- step_function_normal_cdf(original[n],thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+    F_Lminus <- step_function_normal_cdf(original[n],thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+    dFLdtheta <- (F_Lplus-F_Lminus)/(2*stepsize)
 
-    dFUdbeta <- zeros(length(Psihat_use),1)
-    dFLdbeta <- zeros(length(Psihat_use),1)
+    dFUdbeta  <-  zeros(length(Psihat_use),1)
+    dFLdbeta  <-  zeros(length(Psihat_use),1)
     for (n1 in (1:length(Psihat_use))) {
-      Psi_plus=Psihat_use
-      Psi_plus[n1]=Psi_plus[n1]+stepsize
-      Psi_minus=Psihat_use
-      Psi_minus[n1]=Psi_minus[n1]-stepsize
+      Psi_plus <- Psihat_use
+      Psi_plus[n1] <- Psi_plus[n1]+stepsize
+      Psi_minus <- Psihat_use
+      Psi_minus[n1] <- Psi_minus[n1]-stepsize
 
-      F_Uplus=step_function_normal_cdf(original[n],adj_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-      F_Uminus=step_function_normal_cdf(original[n],adj_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
-      dFUdbeta[n1,1]=(F_Uplus-F_Uminus)/(2*stepsize)
+      F_Uplus <- step_function_normal_cdf(original[n],adj_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+      F_Uminus <- step_function_normal_cdf(original[n],adj_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+      dFUdbeta[n1,1] <- (F_Uplus-F_Uminus)/(2*stepsize)
 
-      F_Lplus=step_function_normal_cdf(original[n],adj_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-      F_Lminus=step_function_normal_cdf(original[n],adj_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
-      dFLdbeta[n1,1]=(F_Lplus-F_Lminus)/(2*stepsize)
+      F_Lplus <- step_function_normal_cdf(original[n],adj_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+      F_Lminus <- step_function_normal_cdf(original[n],adj_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+      dFLdbeta[n1,1] <- (F_Lplus-F_Lminus)/(2*stepsize)
     }
 
-    dFUdtheta <- as.numeric(dFUdtheta)
-    dFLdtheta <- as.numeric(dFLdtheta)
+    dFUdtheta  <-  as.numeric(dFUdtheta)
+    dFLdtheta  <-  as.numeric(dFLdtheta)
 
-    dthetaUdbeta <- -dFUdbeta/dFUdtheta
-    dthetaLdbeta <- -dFLdbeta/dFLdtheta
+    dthetaUdbeta  <-  -dFUdbeta/dFUdtheta
+    dthetaLdbeta  <-  -dFLdbeta/dFLdtheta
 
     if (symmetric==TRUE) {
-      sigma_thetaU=(t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
-      sigma_thetaL=(t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
+      sigma_thetaU <- (t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
+      sigma_thetaL <- (t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
     } else {
-      sigma_thetaU=(t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
-      sigma_thetaL=(t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
+      sigma_thetaU <- (t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
+      sigma_thetaL <- (t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
     }
   }
 
-  sigma_U[n,1]=sigma_thetaU
-  sigma_L[n,1]=sigma_thetaL
+  sigma_U[n,1] <- sigma_thetaU
+  sigma_L[n,1] <- sigma_thetaL
 
-  adj_UB_store <- adj_UB
-  adj_LB_store <- adj_LB
-  adj_UB <- adj_UB+qnorm(1-bonf_beta)*sigma_U
-  adj_LB <- adj_LB-qnorm(1-bonf_beta)*sigma_L
+  adj_UB_store  <-  adj_UB
+  adj_LB_store  <-  adj_LB
+  adj_UB  <-  adj_UB+qnorm(1-bonf_beta)*sigma_U
+  adj_LB  <-  adj_LB-qnorm(1-bonf_beta)*sigma_L
 
-  count=1
-  store=matrix(0,length(seq(-10,10,0.1)),1)
+  count <- 1
+  store <- matrix(0,length(seq(-10,10,0.1)),1)
   for (lambda in seq(-10,10,0.1)) {
-    store[count]=g_M(lambda)
-    count=count+1
+    store[count] <- g_M(lambda)
+    count <- count+1
   }
 
 
 #######################
 # Following results will be used to plot corrections
+# Based on a grid, results for the publication probability
+# are used to plot the corrections --> CorrectionPlot.pdf
 
 if (symmetric == TRUE) {
 
-    xgrid=seq(0,5,0.01)
-    alpha=0.05
+    xgrid <- seq(0,5,0.01)
+    alpha <- 0.05
 
 ##--- Calculate corrected estimates and confidence bounds
-    Theta_U_store=matrix(0,length(xgrid),1)
-    Theta_L_store=matrix(0,length(xgrid),1)
-    Theta_M_store=matrix(0,length(xgrid),1)
+    Theta_U_store <- matrix(0,length(xgrid),1)
+    Theta_L_store <- matrix(0,length(xgrid),1)
+    Theta_M_store <- matrix(0,length(xgrid),1)
 
-    theta_UB=matrix(0,length(xgrid),1)
-    theta_LB=matrix(0,length(xgrid),1)
+    theta_UB <- matrix(0,length(xgrid),1)
+    theta_LB <- matrix(0,length(xgrid),1)
 
-    sigma_thetaU=matrix(0,length(xgrid),1)
-    sigma_thetaL=matrix(0,length(xgrid),1)
+    sigma_thetaU <- matrix(0,length(xgrid),1)
+    sigma_thetaL <- matrix(0,length(xgrid),1)
 
     for (n in c(1:length(xgrid))) {
-      X=xgrid[n]
+      X <- xgrid[n]
 
-      g_U <- function(lambda) {
+      g_U  <-  function(lambda) {
         (alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
-      g_L <- function(lambda) {
+      g_L  <-  function(lambda) {
         (1-alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
-      g_M <- function(lambda) {
+      g_M  <-  function(lambda) {
         (1/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
-      min_U<-optim(par=X,fn=g_U)
-      min_U<-optim(par=min_U$par,fn=g_U,method="BFGS")
-      min_L<-optim(par=X,fn=g_L)
-      min_L<-optim(par=min_L$par,fn=g_L,method="BFGS")
-      min_M<-optim(par=X,fn=g_M)
-      min_M<-optim(par=min_M$par,fn=g_M,method="BFGS")
+      min_U <- optim(par=X,fn=g_U)
+      min_U <- optim(par=min_U$par,fn=g_U,method="BFGS")
+      min_L <- optim(par=X,fn=g_L)
+      min_L <- optim(par=min_L$par,fn=g_L,method="BFGS")
+      min_M <- optim(par=X,fn=g_M)
+      min_M <- optim(par=min_M$par,fn=g_M,method="BFGS")
 
-      theta_U=min_U$par
-      theta_L=min_L$par
-      theta_M=min_M$par
+      theta_U <- min_U$par
+      theta_L <- min_L$par
+      theta_M <- min_M$par
 
-      Theta_U_store[n,1]=theta_U
-      Theta_L_store[n,1]=theta_L
-      Theta_M_store[n,1]=theta_M
+      Theta_U_store[n,1] <- theta_U
+      Theta_L_store[n,1] <- theta_L
+      Theta_M_store[n,1] <- theta_M
 
 ##--- Calculate Bonferroni corrected estimates and confidence bounds
-      g_UB <- function(lambda) {
+      g_UB  <-  function(lambda) {
         (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
-      g_LB <- function(lambda) {
+      g_LB  <-  function(lambda) {
         (1-bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
-      min_UB<-optim(par=Theta_U_store[n,1],fn=g_UB)
-      min_UB<-optim(par=min_UB$par,fn=g_UB,method="BFGS")
-      min_LB<-optim(par=Theta_L_store[n,1],fn=g_LB)
-      min_LB<-optim(par=min_LB$par,fn=g_LB,method="BFGS")
+      min_UB <- optim(par=Theta_U_store[n,1],fn=g_UB)
+      min_UB <- optim(par=min_UB$par,fn=g_UB,method="BFGS")
+      min_LB <- optim(par=Theta_L_store[n,1],fn=g_LB)
+      min_LB <- optim(par=min_LB$par,fn=g_LB,method="BFGS")
 
-      theta_UB[n,1]=min_UB$par
-      theta_LB[n,1]=min_LB$par
+      theta_UB[n,1] <- min_UB$par
+      theta_LB[n,1] <- min_LB$par
 
       #- Calculate derivatives of corrections with respect to parameters via implicit function theorem
-      thetaU_plus=theta_UB[n,1]+stepsize
-      thetaU_minus=theta_UB[n,1]-stepsize
-      F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-      F_Uminus=step_function_normal_cdf(X,thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
-      dFUdtheta=(F_Uplus-F_Uminus)/(2*stepsize)
+      thetaU_plus <- theta_UB[n,1]+stepsize
+      thetaU_minus <- theta_UB[n,1]-stepsize
+      F_Uplus <- step_function_normal_cdf(X,thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Uminus <- step_function_normal_cdf(X,thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+      dFUdtheta <- (F_Uplus-F_Uminus)/(2*stepsize)
 
-      thetaL_plus=theta_LB[n,1]+stepsize
-      thetaL_minus=theta_LB[n,1]-stepsize
-      F_Lplus=step_function_normal_cdf(X,thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-      F_Lminus=step_function_normal_cdf(X,thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
-      dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
+      thetaL_plus <- theta_LB[n,1]+stepsize
+      thetaL_minus <- theta_LB[n,1]-stepsize
+      F_Lplus <- step_function_normal_cdf(X,thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Lminus <- step_function_normal_cdf(X,thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+      dFLdtheta <- (F_Lplus-F_Lminus)/(2*stepsize)
 
-      dFUdbeta=matrix(0,length(Psihat_use),1)
-      dFLdbeta=matrix(0,length(Psihat_use),1)
+      dFUdbeta <- matrix(0,length(Psihat_use),1)
+      dFLdbeta <- matrix(0,length(Psihat_use),1)
 
       for (n1 in c(1:length(Psihat_use))) {
-        Psi_plus=Psihat_use
-        Psi_plus[n1]=Psi_plus[n1]+stepsize
-        Psi_minus=Psihat_use
-        Psi_minus[n1]=Psi_minus[n1]-stepsize
+        Psi_plus <- Psihat_use
+        Psi_plus[n1] <- Psi_plus[n1]+stepsize
+        Psi_minus <- Psihat_use
+        Psi_minus[n1] <- Psi_minus[n1]-stepsize
 
-        F_Uplus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-        F_Uminus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
-        dFUdbeta[n1,1]=(F_Uplus-F_Uminus)/(2*stepsize)
+        F_Uplus <- step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Uminus <- step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+        dFUdbeta[n1,1] <- (F_Uplus-F_Uminus)/(2*stepsize)
 
-        F_Lplus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-        F_Lminus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
-        dFLdbeta[n1,1]=(F_Lplus-F_Lminus)/(2*stepsize)
+        F_Lplus <- step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Lminus <- step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+        dFLdbeta[n1,1] <- (F_Lplus-F_Lminus)/(2*stepsize)
       }
 
-      dFUdtheta=as.numeric(dFUdtheta)
-      dFLdtheta=as.numeric(dFLdtheta)
+      dFUdtheta <- as.numeric(dFUdtheta)
+      dFLdtheta <- as.numeric(dFLdtheta)
 
-      dthetaUdbeta=-dFUdbeta/dFUdtheta
-      dthetaLdbeta=-dFLdbeta/dFLdtheta
+      dthetaUdbeta <- -dFUdbeta/dFUdtheta
+      dthetaLdbeta <- -dFLdbeta/dFLdtheta
 
-      sigma_thetaU[n,1]=(t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
-      sigma_thetaL[n,1]=(t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
+      sigma_thetaU[n,1] <- (t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
+      sigma_thetaL[n,1] <- (t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
     }
 
-    Theta_UB_store=theta_UB+qnorm(1-bonf_beta)*sigma_thetaU
-    Theta_LB_store=theta_LB-qnorm(1-bonf_beta)*sigma_thetaL
+    Theta_UB_store <- theta_UB+qnorm(1-bonf_beta)*sigma_thetaU
+    Theta_LB_store <- theta_LB-qnorm(1-bonf_beta)*sigma_thetaL
   } else {
 
 
 ##--- Calculate corrected estimates and confidence bounds
-    xgrid=seq(-5,5,0.01)
-    alpha=0.05
+    xgrid <- seq(-5,5,0.01)
+    alpha <- 0.05
 
-    Theta_U_store=matrix(0,length(xgrid),1)
-    Theta_L_store=matrix(0,length(xgrid),1)
-    Theta_M_store=matrix(0,length(xgrid),1)
+    Theta_U_store <- matrix(0,length(xgrid),1)
+    Theta_L_store <- matrix(0,length(xgrid),1)
+    Theta_M_store <- matrix(0,length(xgrid),1)
 
-    theta_UB=matrix(0,length(xgrid),1)
-    theta_LB=matrix(0,length(xgrid),1)
+    theta_UB <- matrix(0,length(xgrid),1)
+    theta_LB <- matrix(0,length(xgrid),1)
 
-    sigma_thetaU=matrix(0,length(xgrid),1)
-    sigma_thetaL=matrix(0,length(xgrid),1)
+    sigma_thetaU <- matrix(0,length(xgrid),1)
+    sigma_thetaL <- matrix(0,length(xgrid),1)
 
     for (n in c(1:length(xgrid))) {
-      X=xgrid[n]
+      X <- xgrid[n]
 
-      g_U <- function(lambda) {
+      g_U  <-  function(lambda) {
         (alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
-      g_L <- function(lambda) {
+      g_L  <-  function(lambda) {
         (1-alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
-      g_M <- function(lambda) {
+      g_M  <-  function(lambda) {
         (1/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
-      min_U<-optim(par=X,fn=g_U)
-      min_U<-optim(par=min_U$par,fn=g_U,method="BFGS")
-      min_L<-optim(par=X,fn=g_L)
-      min_L<-optim(par=min_L$par,fn=g_L,method="BFGS")
-      min_M<-optim(par=X,fn=g_M)
-      min_M<-optim(par=min_M$par,fn=g_M,method="BFGS")
+      min_U <- optim(par=X,fn=g_U)
+      min_U <- optim(par=min_U$par,fn=g_U,method="BFGS")
+      min_L <- optim(par=X,fn=g_L)
+      min_L <- optim(par=min_L$par,fn=g_L,method="BFGS")
+      min_M <- optim(par=X,fn=g_M)
+      min_M <- optim(par=min_M$par,fn=g_M,method="BFGS")
 
-      theta_U=min_U$par
-      theta_L=min_L$par
-      theta_M=min_M$par
+      theta_U <- min_U$par
+      theta_L <- min_L$par
+      theta_M <- min_M$par
 
-      Theta_U_store[n,1]=theta_U
-      Theta_L_store[n,1]=theta_L
-      Theta_M_store[n,1]=theta_M
+      Theta_U_store[n,1] <- theta_U
+      Theta_L_store[n,1] <- theta_L
+      Theta_M_store[n,1] <- theta_M
 
 ##--- Calculate Bonferroni corrected estimates and confidence bounds
-      g_UB <- function(lambda) {
+      g_UB  <-  function(lambda) {
         (bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
-      g_LB <- function(lambda) {
+      g_LB  <-  function(lambda) {
         (1-bonf_alpha/2-step_function_normal_cdf(X,lambda,1,c(Psihat_use,1),cutoffs,symmetric))^2
       }
 
-      min_UB<-optim(par=Theta_U_store[n,1],fn=g_UB)
-      min_UB<-optim(par=min_UB$par,fn=g_UB,method="BFGS")
-      min_LB<-optim(par=Theta_L_store[n,1],fn=g_LB)
-      min_LB<-optim(par=min_LB$par,fn=g_LB,method="BFGS")
+      min_UB <- optim(par=Theta_U_store[n,1],fn=g_UB)
+      min_UB <- optim(par=min_UB$par,fn=g_UB,method="BFGS")
+      min_LB <- optim(par=Theta_L_store[n,1],fn=g_LB)
+      min_LB <- optim(par=min_LB$par,fn=g_LB,method="BFGS")
 
-      theta_UB[n,1]=min_UB$par
-      theta_LB[n,1]=min_LB$par
+      theta_UB[n,1] <- min_UB$par
+      theta_LB[n,1] <- min_LB$par
 
       #- Calculate derivatives of corrections with respect to parameters via implicit function theorem
-      thetaU_plus=theta_UB[n,1]+stepsize
-      thetaU_minus=theta_UB[n,1]-stepsize
-      F_Uplus=step_function_normal_cdf(X,thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-      F_Uminus=step_function_normal_cdf(X,thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
-      dFUdtheta=(F_Uplus-F_Uminus)/(2*stepsize)
+      thetaU_plus <- theta_UB[n,1]+stepsize
+      thetaU_minus <- theta_UB[n,1]-stepsize
+      F_Uplus <- step_function_normal_cdf(X,thetaU_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Uminus <- step_function_normal_cdf(X,thetaU_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+      dFUdtheta <- (F_Uplus-F_Uminus)/(2*stepsize)
 
-      thetaL_plus=theta_LB[n,1]+stepsize
-      thetaL_minus=theta_LB[n,1]-stepsize
-      F_Lplus=step_function_normal_cdf(X,thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
-      F_Lminus=step_function_normal_cdf(X,thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
-      dFLdtheta=(F_Lplus-F_Lminus)/(2*stepsize)
+      thetaL_plus <- theta_LB[n,1]+stepsize
+      thetaL_minus <- theta_LB[n,1]-stepsize
+      F_Lplus <- step_function_normal_cdf(X,thetaL_plus,1,c(Psihat_use,1),cutoffs,symmetric)
+      F_Lminus <- step_function_normal_cdf(X,thetaL_minus,1,c(Psihat_use,1),cutoffs,symmetric)
+      dFLdtheta <- (F_Lplus-F_Lminus)/(2*stepsize)
 
-      dFUdbeta=matrix(0,length(Psihat_use),1)
-      dFLdbeta=matrix(0,length(Psihat_use),1)
+      dFUdbeta <- matrix(0,length(Psihat_use),1)
+      dFLdbeta <- matrix(0,length(Psihat_use),1)
 
       for (n1 in c(1:length(Psihat_use))) {
-        Psi_plus=Psihat_use
-        Psi_plus[n1]=Psi_plus[n1]+stepsize
-        Psi_minus=Psihat_use
-        Psi_minus[n1]=Psi_minus[n1]-stepsize
+        Psi_plus <- Psihat_use
+        Psi_plus[n1] <- Psi_plus[n1]+stepsize
+        Psi_minus <- Psihat_use
+        Psi_minus[n1] <- Psi_minus[n1]-stepsize
 
-        F_Uplus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-        F_Uminus=step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
-        dFUdbeta[n1,1]=(F_Uplus-F_Uminus)/(2*stepsize)
+        F_Uplus <- step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Uminus <- step_function_normal_cdf(X,theta_UB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+        dFUdbeta[n1,1] <- (F_Uplus-F_Uminus)/(2*stepsize)
 
-        F_Lplus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
-        F_Lminus=step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
-        dFLdbeta[n1,1]=(F_Lplus-F_Lminus)/(2*stepsize)
+        F_Lplus <- step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_plus,1),cutoffs,symmetric)
+        F_Lminus <- step_function_normal_cdf(X,theta_LB[n,1],1,c(Psi_minus,1),cutoffs,symmetric)
+        dFLdbeta[n1,1] <- (F_Lplus-F_Lminus)/(2*stepsize)
       }
 
-      dFUdtheta=as.numeric(dFUdtheta)
-      dFLdtheta=as.numeric(dFLdtheta)
+      dFUdtheta <- as.numeric(dFUdtheta)
+      dFLdtheta <- as.numeric(dFLdtheta)
 
-      dthetaUdbeta=-dFUdbeta/dFUdtheta
-      dthetaLdbeta=-dFLdbeta/dFLdtheta
+      dthetaUdbeta <- -dFUdbeta/dFUdtheta
+      dthetaLdbeta <- -dFLdbeta/dFLdtheta
 
-      sigma_thetaU[n,1]=(t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
-      sigma_thetaL[n,1]=(t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
+      sigma_thetaU[n,1] <- (t(dthetaUdbeta)%*%Varhat%*%dthetaUdbeta)^0.5
+      sigma_thetaL[n,1] <- (t(dthetaLdbeta)%*%Varhat%*%dthetaLdbeta)^0.5
     }
 
-    Theta_UB_store=theta_UB+qnorm(1-bonf_beta)*sigma_thetaU
-    Theta_LB_store=theta_LB-qnorm(1-bonf_beta)*sigma_thetaL
+    Theta_UB_store <- theta_UB+qnorm(1-bonf_beta)*sigma_thetaU
+    Theta_LB_store <- theta_LB-qnorm(1-bonf_beta)*sigma_thetaL
 
   }
 
   })
+
 #-- Returning list for the final results and to plot all of the corrections
   return(list("original" = original,
               "adj_estimates"= adj_estimates,

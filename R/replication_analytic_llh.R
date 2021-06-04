@@ -35,7 +35,7 @@ replication_analytic_llh <-function(nuhat,tauhat, betap, cutoffs, symmetric,Z,si
 
     if (length(cutoffs) > 1) {
       for (m in 2:length(cutoffs)) {
-        Z1_dummies[, m] = (Z[, 1] < cutoffs[m]) * (Z[, 1] >= cutoffs[m - 1])
+        Z1_dummies[, m] <- (Z[, 1] < cutoffs[m]) * (Z[, 1] >= cutoffs[m - 1])
 
       }
     }
@@ -54,10 +54,10 @@ for (m in (1:ncol(Z1_dummies))) {
     phat <- phat + Cmat * betap[m]
   }
 
-# Inegration
+# Integration (add option for analytical integration?)
 if (symmetric == TRUE){
 
-    #Monte-carlo integration
+    # Monte-carlo integration
     set.seed(1)
     draw <- matrix(runif(10^5),1)
     theta_vec <- qgamma(draw, nuhat,scale = tauhat)
@@ -94,8 +94,8 @@ prob_vec<-rep(0,length(cutoffs)+2);
         mean_Z1<-prob_vec[2:length(prob_vec)]-prob_vec[1:(length(prob_vec)-1)]
     }
   } else {
-    mu=nuhat
-    sigma=sqrt((tauhat^2)+1)
+    mu <- nuhat
+    sigma <- sqrt((tauhat^2)+1)
 
     for (m in (1:length(cutoffs))){
       prob_vec[m+1] <- 0.5*pnorm((cutoffs[m]-mu)/sigma)+0.5*pnorm((cutoffs[m]+mu)/sigma)
@@ -108,18 +108,18 @@ prob_vec<-rep(0,length(cutoffs)+2);
   normalizingconst <- zeros(nrow(Z1_dummies),1)
 
   for (m in (1:ncol(Z1_dummies))){
-      Cmat<-mean_Z1[m]*C
-      normalizingconst=normalizingconst+Cmat*betap[m];
+      Cmat <- mean_Z1[m]*C
+      normalizingconst <- normalizingconst+Cmat*betap[m];
   }
 
   # Likelihood
   L <- as.vector(phat)*as.vector(piZ1Z2)/normalizingconst;
 
   # Loglikelihood
-  logL=log(L)
+  logL <- log(L)
 
   # Sum of Loglikelihood
-  LLH=-sum(log(L))
+  LLH <- -sum(log(L))
 
   # Return results
   return(list("LLH"= LLH, "logL" = logL))

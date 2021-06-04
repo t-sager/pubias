@@ -1,4 +1,5 @@
 step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
+
     # Throw error if betap "too short"
     if (length(betap) != (length(cutoffs) + 1)) {
         stop("length of betap must be one greater than length of cutoffs ")
@@ -27,7 +28,7 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
     prob_vec <- zeros(length(cutoffs_u) + 1, 1)
 
     for (m in (1:length(cutoffs_u))) {
-        prob_vec[m + 1] = pnorm((cutoffs_u[m] - theta) / sigma)
+        prob_vec[m + 1] <- pnorm((cutoffs_u[m] - theta) / sigma)
     }
 
     prob_vec <- rbind(prob_vec, 1)
@@ -53,7 +54,7 @@ step_function_normal_cdf <- function(X,theta,sigma,betap,cutoffs,symmetric) {
     }
 
     # CDF
-    cdf = numerator / denominator
+    cdf <- numerator / denominator
 
     # Return CDF
     return(cdf)

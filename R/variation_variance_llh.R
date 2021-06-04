@@ -13,13 +13,13 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
 
     if (length(cutoffs) > 1) {
       for (m in (2:length(cutoffs))) {
-        Tpowers[, m] = (abs(TT) < cutoffs[m]) * (abs(TT) >= cutoffs[m - 1])
+        Tpowers[, m] <- (abs(TT) < cutoffs[m]) * (abs(TT) >= cutoffs[m - 1])
 
       }
       Tpowers[, length(cutoffs) + 1] = abs(TT) >= cutoffs[length(cutoffs)]
 
     }
-    Tpowers[, ncol(Tpowers)] = abs(TT) >= cutoffs[length(cutoffs)]
+    Tpowers[, ncol(Tpowers)] <- abs(TT) >= cutoffs[length(cutoffs)]
 
   } else {
     Tpowers[, 1] <- TT < cutoffs[1]
@@ -31,9 +31,8 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
         Tpowers[, m] <- (TT < cutoffs[m]) * (TT >= cutoffs[m - 1])
 
       }
-
-
     }
+
     Tpowers[, length(cutoffs) + 1] <-
       (TT) >= cutoffs[length(cutoffs)]
 
@@ -47,7 +46,6 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
   for (m in (1:ncol(Tpowers))) {
     Cmat <- repmat(Tpowers[, m], 1, ncol(as.matrix(C))) * C
     phat <- phat + Cmat * betap[, m]
-
   }
 
   # Inegration
@@ -82,8 +80,7 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
 
     }
     prob_vec <- cbind(prob_vec, 1)
-    mean_Z1 <-
-      prob_vec[, 2:ncol(prob_vec)] - prob_vec[, 1:ncol(prob_vec) - 1]
+    mean_Z1 <- prob_vec[, 2:ncol(prob_vec)] - prob_vec[, 1:ncol(prob_vec) - 1]
 
   } else {
     for (m in (1:length(cutoffs))) {
@@ -91,8 +88,7 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
         pnorm((cutoffs[m] * sigma - mu_vec) / sigma_tilde_vec)
     }
     prob_vec <- cbind(prob_vec, 1)
-    mean_Z1 <-
-      prob_vec[, 2:ncol(prob_vec)] - prob_vec[, 1:ncol(prob_vec) - 1]
+    mean_Z1 <- prob_vec[, 2:ncol(prob_vec)] - prob_vec[, 1:ncol(prob_vec) - 1]
   }
 
   # normalizing constant
@@ -110,8 +106,7 @@ variation_variance_llh <- function(lambdabar, tauhat, betap, cutoffs, symmetric,
   logL <- log(phat) + log(fX) - log(normalizingconst)
 
   # Sum of Loglikelihood
-  LLH <-
-    -sum(log(L)) #objective function; note the sign flip, since minimization
+  LLH <- -sum(log(L)) #objective function; note the sign flip, since minimization
 
   # Return results
   return(list("LLH" = LLH, "logL" = logL))

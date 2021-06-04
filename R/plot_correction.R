@@ -24,14 +24,17 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   blue3 <- color[3]
 
   # GGPLOT: Plot original and adjusted confidence sets ------------------------------
-  Rl=min(min(adj_L),min(original)-2)-0.5
-  Ru=max(max(adj_U),max(original)+2)+0.5
-  R=Ru-Rl
+  # Preliminaries
+  Rl<-min(min(adj_L),min(original)-2)-0.5
+  Ru<-max(max(adj_U),max(original)+2)+0.5
+  R<-Ru-Rl
   W <- 7
   H <- 6.5
   ylabel <- studynames
   xlabel <- seq(ceiling(Rl/2)*2,floor(Ru/2)*2+10^-8,2)
+  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
+  # CIs
   segment_data_og <- data.frame(
     x = (original-1.96)/R*W,
     xend = (original+1.96)/R*W,
@@ -46,8 +49,7 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
     yend = c(1:n)/n*H
   )
 
-  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
-
+  # Plot
   g <- ggplot()+
     geom_point(aes(x = original/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
     geom_point(aes(x = adj_estimates/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
@@ -74,14 +76,17 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   OriginalAndAdjusted <- ggplotly(g)
 
   # GGPLOT: Original and adjusted confidence sets, including bonferroni ------------------------------
-  Rl=min(min(adj_LB),min(original)-2)-0.5
-  Ru=max(max(adj_UB),max(original)+2)+0.5
-  R=Ru-Rl
+  # Preliminaries
+  Rl<-min(min(adj_LB),min(original)-2)-0.5
+  Ru<max(max(adj_UB),max(original)+2)+0.5
+  R<-Ru-Rl
   W <- 7
   H <- 6.5
   ylabel <- studynames
   xlabel <- seq(ceiling(Rl/2)*2,floor(Ru/2)*2+10^-8,2)
+  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
 
+  # CIs
   segment_data_og <- data.frame(
     x = (original-1.96)/R*W,
     xend = (original+1.96)/R*W,
@@ -96,8 +101,7 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
     yend = c(1:n)/n*H
   )
 
-  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8])
-
+  # Plot
   g <- ggplot()+
     geom_point(aes(x = original/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
     geom_point(aes(x = adj_estimates/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
@@ -126,20 +130,22 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
   # GGPLOT: Original, adjusted & replication confidence sets, including Bonferroni ------------------------------
   if (identificationapproach == 1) {
 
-    Z2 <- X[ ,2]
-    Z2_rescaled <- Z2
+  # Preliminaries
+  Z2 <- X[ ,2]
+  Z2_rescaled <- Z2
 
-    Rl=min(min(adj_LB),min(Z2_rescaled)-2)-0.5
-    Ru=max(max(adj_UB),max(Z2_rescaled)+2)+0.5
-    R=Ru-Rl
+  Rl<-min(min(adj_LB),min(Z2_rescaled)-2)-0.5
+  Ru<-max(max(adj_UB),max(Z2_rescaled)+2)+0.5
+  R<-Ru-Rl
 
   # Uses Bonferroni
-
   W <- 7
   H <- 6.5
   ylabel <- studynames
   xlabel <- seq(ceiling(Rl/2)*2,floor(Ru/2)*2+10^-8,2)
+  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8], "Replication Estimates"=color[3])
 
+  # CIs
   segment_data_og <- data.frame(
     x = (original-1.96)/R*W,
     xend = (original+1.96)/R*W,
@@ -161,9 +167,7 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
     yend = c(1:n)/n*H+0.2
   )
 
-
-  cols <- c("Adjusted Estimates"=color[5],"Original Estimates"=color[8], "Replication Estimates"=color[3])
-
+  # Plot
   g <- ggplot()+
     geom_point(aes(x = original/R*W, y = c(1:n)/n*H+0.1, colour = "Original Estimates")) + # original
     geom_point(aes(x = adj_estimates/R*W, y = c(1:n)/n*H, colour = "Adjusted Estimates")) + # adjusted
@@ -195,14 +199,14 @@ plot_correction <- function(X, corrected_estimates,cutoffs,symmetric,studynames,
 
   # GGPLOT: Correction Plot  ------------------------------
 
-  xmin=min(xgrid)
-  xmax=max(xgrid)
-
-  ymin=min(min(Theta_LB_store,xmin-cutoffs))
-  ymax=max(max(Theta_UB_store,xmax+cutoffs))
-
+  # Preliminaries
+  xmin<-min(xgrid)
+  xmax<-max(xgrid)
+  ymin<-min(min(Theta_LB_store,xmin-cutoffs))
+  ymax<-max(max(Theta_UB_store,xmax+cutoffs))
   cols <- c("95% confidence Bounds"=color[5],"Bonferroni Corrected 95% Bounds"=color[8], "Median Unbiased Estimator"=color[3])
 
+  # Plot
   g <- ggplot()+
     geom_line(aes(x = xgrid, y = Theta_L_store,colour = "95% confidence Bounds"), lwd = 1) +
     geom_line(aes(x = xgrid, y = Theta_M_store,colour = "Median Unbiased Estimator"), lwd = 1) +

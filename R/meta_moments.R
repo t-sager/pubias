@@ -18,15 +18,15 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
         Tpowers[, length(cutoffs) + 1] <- ifelse(abs(T) >= cutoffs[length(cutoffs)], 1, 0)
 
     } else {
-        Tpowers[, 1] = ifelse(T < cutoffs[1], 1, 0)
+        Tpowers[, 1] <- ifelse(T < cutoffs[1], 1, 0)
 
         if (length(cutoffs) > 1) {
             for (m in c(2:length(cutoffs))) {
-                Tpowers[, m] = (ifelse(T < cutoffs[m], 1, 0)) * (ifelse(T >= cutoffs[m-1], 1, 0))
+                Tpowers[, m] <- (ifelse(T < cutoffs[m], 1, 0)) * (ifelse(T >= cutoffs[m-1], 1, 0))
 
             }
         }
-        Tpowers[, length(cutoffs) + 1] = ifelse(T >= cutoffs[length(cutoffs)], 1, 0)
+        Tpowers[, length(cutoffs) + 1] <- ifelse(T >= cutoffs[length(cutoffs)], 1, 0)
     }
 
     phat <- Tpowers %*% t(t(betap))
@@ -51,8 +51,8 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
 
   if (symmetric == TRUE) {
       for (k in (1:length(cutoffs))) {
-          c = cutoffs[k]
-          base_moments = (pmat2 ^ -1) * (pmat1 ^ -1) * indicator *
+          c <- cutoffs[k]
+          base_moments <- (pmat2 ^ -1) * (pmat1 ^ -1) * indicator *
               ((pnorm((c * sigmamat1 - Xmat2) / sigmadiff
               ) - pnorm((-c * sigmamat1 - Xmat2) / sigmadiff
               )) - (((
@@ -82,9 +82,9 @@ meta_moments <- function(betap, cutoffs, symmetric, X, sigma) {
               (pmat2 ^ -1) * (pmat1 ^ -1) * (1 - indicator) * (pnorm((c * sigmamat2 -
                                                                           Xmat1) / sigmadiff) - (ifelse(Xmat2 <= c * sigmamat2, 1, 0)))
           base_moments <- base_moments - diag(diag(base_moments))
-          base_moments[is.nan(base_moments)] = 0
-          moment_mean[1, k] = pracma::nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
-          rhat[, k] = 2 * ((n - 1) ^ -1) * as.matrix(rowSums(base_moments, na.rm <- FALSE))
+          base_moments[is.nan(base_moments)] <- 0
+          moment_mean[1, k] <- pracma::nchoosek(n,2)^(-1)/2*sum(sum(base_moments))
+          rhat[, k] <- 2 * ((n - 1) ^ -1) * as.matrix(rowSums(base_moments, na.rm <- FALSE))
       }
   }
 
