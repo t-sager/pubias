@@ -24,11 +24,11 @@ gmm_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs) {
   }
 
   # Optimizing the objective function w.r.t starting values
-  mini<-optim(par=Psihat0,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+  mini<-suppressWarnings(optim(par=Psihat0,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5)))
 
   # More accurate Optimization (optimizing again, based on first optimization)
   Psihat1 <- mini$par
-  mini<-optim(par=Psihat1,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5))
+  mini<-suppressWarnings(optim(par=Psihat1,fn=GMM_obj,method="BFGS",control = list(abstol=10^-8,maxit=10^5)))
 
   # Optimal Values
   Psihat <- mini$par

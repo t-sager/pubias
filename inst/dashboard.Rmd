@@ -15,6 +15,7 @@ params:
 
 
 ```
+suppressWarnings({
 
 Descriptives
 ===================================== 
@@ -71,3 +72,5 @@ params$plots$OriginalAndAdjusted
 ```{r}
 params$plots$OriginalAndAdjustedBonferroni
 ```
+
+})

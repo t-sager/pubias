@@ -19,6 +19,7 @@
 #'
 bias_correction <- function(X,sigma,result,cutoffs,symmetric,identificationapproach, GMM) {
 
+  suppressWarnings({
   # Getting estimation results
   Psihat_use <- result$Psihat
   Varhat <- result$Varhat
@@ -370,6 +371,7 @@ if (symmetric == TRUE) {
 
   }
 
+  })
 #-- Returning list for the final results and to plot all of the corrections
   return(list("original" = original,
               "adj_estimates"= adj_estimates,

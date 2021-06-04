@@ -56,21 +56,23 @@ mle_replication <- function(Z, sigmaZ2, symmetric, cluster_ID, cutoffs, C) {
 
   # Optimize based on starting values
   mini <-
-    nlminb(
+    suppressWarnings(nlminb(
       objective = LLH_only,
       start = Psihat0,
       lower = lower.b,
       upper = upper.b
     )
+    )
 
   # More accurate Optimization, aka. optimizing again
   Psihat1 <- mini$par
   mini <-
-    nlminb(
+    suppressWarnings(nlminb(
       objective = LLH_only,
       start = Psihat1,
       lower = lower.b,
       upper = upper.b
+    )
     )
 
   # Optimal values, Objval = max. likelihood

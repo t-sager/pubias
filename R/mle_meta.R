@@ -55,21 +55,23 @@ mle_meta <- function(X, sigma, symmetric, cluster_ID, cutoffs, C) {
 
   # Optimize based on starting values
   mini <-
-    optim(
+    suppressWarnings(optim(
       par = Psihat0,
       fn = LLH_only,
       method = "BFGS",
       control = list(abstol = 10 ^ -8, maxit = 10 ^ 5)
     )
+    )
 
   # More accurate Optimization, aka. optimizing again
   Psihat1 <- mini$par
   mini <-
-    optim(
+    suppressWarnings(optim(
       par = Psihat1,
       fn = LLH_only,
       method = "BFGS",
       control = list(abstol = 10 ^ -8, maxit = 10 ^ 5)
+    )
     )
 
   # Optimal values, Objval = max. likelihood

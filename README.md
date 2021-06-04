@@ -6,9 +6,9 @@ Code for an R Package which implements the identification of &amp; correction fo
 
 To install the package, use the following command:
 
-`remotes::install_github("t-sager/pubias", build_vignettes = TRUE)`
+`devtool::install_github("t-sager/pubias", build_vignettes = TRUE)`
 
-In case you run into problems, try updating `R` and/or the `remotes` package to the most recent version. 
+In case you run into problems, try updating `R` and/or the `devtools` package to the most recent version. 
 If you still struggle to install the package, please contact me at till.sager@students.unibe.ch.
 
 To get more information about the procedures implemented in the package and 
