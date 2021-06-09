@@ -4,7 +4,7 @@ abstract:
   "Following Andrews and Kasy (2019), this package implements the identification of and correction for publication bias. Also 
   known as the file drawer problem, the publication bias occurs when researchers submit their papers based on the likelihood of their publication. Therefore, some results have a higher publication probability than others. This package identifies the said bias and corrects for it by differentiating between replication and meta-studies as well as between a likelihood and GMM estimation procedure."
 author: "Till Sager^[University of Bern, till.sager@students.unibe.ch]"
-date: "May, 2021"
+date: "June, 2021"
 output:   
   pdf_document:
     toc: false
